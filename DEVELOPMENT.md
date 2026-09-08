@@ -26,6 +26,31 @@ All blocks must use `Arial, sans-serif` — never Roboto, Inter, or other Google
 
 ---
 
+## Header/Footer Configuration
+
+The header and footer are not hardcoded blocks of content — they're fragments loaded at runtime from
+dedicated pages, and every page on the site loads the same fragment unless told otherwise.
+
+- **Default paths (site-wide fallback):** hardcoded in [blocks/header/header.js](blocks/header/header.js#L175)
+  (`'/nav'`) and [blocks/footer/footer.js](blocks/footer/footer.js#L17) (`'/footer'`). Changing these two
+  lines is how you switch the source page for the **entire site**.
+- **Per-page override:** add a `nav` and/or `footer` row to a page's **Metadata** block
+  (e.g. `nav` → `/nav-v2`) to point just that page at a different header/footer page, without touching code.
+- **Fetch mechanism:** both blocks call `loadFragment(path)` in
+  [blocks/fragment/fragment.js](blocks/fragment/fragment.js#L17), which fetches `{rootPath}{path}.plain.html`.
+  The target page must be **Previewed + Published** or this 404s.
+- **Required content structure for a nav page** (read by [header.js](blocks/header/header.js#L206-L209) as
+  5 sections, in this exact order — each section is a section break in the doc):
+  1. **Announcements** — top promo/announcement bar content
+  2. **Brand** — logo image + home link
+  3. **Sections** — main menu; a nested `<ul>` under a menu item makes it an expandable dropdown
+  4. **Tools** — usually left empty; cart/search icons are injected here by JS
+  5. **Utility** — rendered as the top utility bar (e.g. Pay Bill, Sign In); authored as a simple link list
+- **Required content structure for a footer page:** no fixed section count — all top-level content is
+  copied as-is into the footer block.
+
+---
+
 ## CSS Rules (stylelint enforced — all fail CI if violated)
 
 ### Rule 1 — Modern color syntax

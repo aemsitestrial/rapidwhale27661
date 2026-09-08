@@ -14,7 +14,7 @@ export default async function decorate(block) {
     langRoot = `/${pathParts[0]}`;
   }
   const footerMeta = getMetadata('footer');
-  let footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
+  let footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer-v2';
   if (langRoot && !footerPath.startsWith(`${langRoot}/`)) {
     footerPath = `${langRoot}${footerPath}`;
   }
