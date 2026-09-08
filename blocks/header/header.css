@@ -142,6 +142,17 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 }
 
+/* brand (lives in the utility bar) */
+.nav-brand a {
+  display: flex;
+  align-items: center;
+}
+
+.nav-brand img {
+  width: 90px;
+  height: auto;
+}
+
 /* sections */
 header nav .nav-sections {
   grid-area: sections;
@@ -555,16 +566,6 @@ header .utility-bar .utility-bar-inner {
   margin: 0 auto;
   padding: 6px var(--spacing-medium);
   box-sizing: border-box;
-}
-
-header .utility-bar .nav-brand a {
-  display: flex;
-  align-items: center;
-}
-
-header .utility-bar .nav-brand img {
-  width: 90px;
-  height: auto;
 }
 
 header .utility-bar .nav-utility {
