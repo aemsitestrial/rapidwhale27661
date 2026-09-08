@@ -142,14 +142,14 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 }
 
-/* brand */
-header nav .nav-brand a {
-  grid-area: brand;
-  flex-basis: 128px;
+/* brand (lives in the utility bar) */
+.nav-brand a {
+  display: flex;
+  align-items: center;
 }
 
-header nav .nav-brand img {
-  width: 128px;
+.nav-brand img {
+  width: 90px;
   height: auto;
 }
 
@@ -552,20 +552,37 @@ header .announcement-wrapper .default-content-wrapper {
 
 /* Utility bar */
 header .utility-bar {
-  display: none;
+  display: flex;
   background-color: #8b1a2c;
 }
 
+header .utility-bar .utility-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-medium);
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 6px var(--spacing-medium);
+  box-sizing: border-box;
+}
+
+header .utility-bar .nav-utility {
+  display: none;
+}
+
 @media (width >= 900px) {
-  header .utility-bar {
+  header .utility-bar .utility-bar-inner {
+    padding: 6px var(--spacing-big);
+  }
+
+  header .utility-bar .nav-utility {
     display: block;
   }
 }
 
 header .utility-bar .nav-utility .default-content-wrapper {
-  max-width: 1360px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-big);
   display: flex;
   justify-content: flex-end;
 }

@@ -392,7 +392,11 @@ export default async function decorate(block) {
   if (navUtility) {
     const utilityBar = document.createElement('div');
     utilityBar.className = 'utility-bar';
-    utilityBar.append(navUtility);
+    const utilityBarInner = document.createElement('div');
+    utilityBarInner.className = 'utility-bar-inner';
+    utilityBarInner.append(navBrand);
+    utilityBarInner.append(navUtility);
+    utilityBar.append(utilityBarInner);
     navWrapper.prepend(utilityBar);
   }
 
