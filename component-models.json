@@ -6122,6 +6122,35 @@
     ]
   },
   {
+    "id": "xcel-faq",
+    "fields": [
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string",
+        "value": "Frequently Asked Questions"
+      }
+    ]
+  },
+  {
+    "id": "xcel-faq-item",
+    "fields": [
+      {
+        "component": "text",
+        "name": "question",
+        "label": "Question",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "answer",
+        "label": "Answer",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "xcel-feature-cards",
     "fields": [
       {
@@ -6345,6 +6374,42 @@
     ]
   },
   {
+    "id": "xcel-gallery",
+    "fields": [
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string",
+        "value": "Gallery"
+      }
+    ]
+  },
+  {
+    "id": "xcel-gallery-item",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Image Alt Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "caption",
+        "label": "Caption",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "xcel-hero",
     "fields": [
       {
@@ -6464,6 +6529,48 @@
         "label": "Link URL",
         "valueType": "string",
         "value": "/"
+      }
+    ]
+  },
+  {
+    "id": "xcel-testimonials",
+    "fields": [
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string",
+        "value": "What Our Customers Say"
+      }
+    ]
+  },
+  {
+    "id": "xcel-testimonial-item",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "quote",
+        "label": "Quote",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "authorName",
+        "label": "Author Name",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "name": "photo",
+        "label": "Photo",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "photoAlt",
+        "label": "Photo Alt Text",
+        "valueType": "string"
       }
     ]
   },

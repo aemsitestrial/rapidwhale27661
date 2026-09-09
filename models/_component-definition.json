@@ -65,6 +65,15 @@
           "...": "../blocks/xcel-link-list/_*.json#/definitions"
         },
         {
+          "...": "../blocks/xcel-faq/_*.json#/definitions"
+        },
+        {
+          "...": "../blocks/xcel-testimonials/_*.json#/definitions"
+        },
+        {
+          "...": "../blocks/xcel-gallery/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/xcel-video-feature/_*.json#/definitions"
         },
         {

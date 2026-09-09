@@ -1,0 +1,62 @@
+.xcel-faq {
+  width: 100%;
+  padding: 48px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.xcel-faq-heading::before {
+  content: "•••";
+  display: block;
+  color: #c8102e;
+  font-size: 1rem;
+  letter-spacing: 0.25em;
+  margin-bottom: 8px;
+}
+
+.xcel-faq-heading {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1.1;
+  margin: 0 0 24px;
+}
+
+.xcel-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.xcel-faq-item {
+  border-bottom: 1px solid #ddd;
+  padding: 16px 0;
+}
+
+.xcel-faq-question {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  list-style: none;
+}
+
+.xcel-faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.xcel-faq-question::after {
+  content: "+";
+  float: right;
+  font-weight: 400;
+}
+
+.xcel-faq-item[open] .xcel-faq-question::after {
+  content: "\2212";
+}
+
+.xcel-faq-answer {
+  margin-top: 12px;
+  color: #444;
+  line-height: 1.5;
+}
