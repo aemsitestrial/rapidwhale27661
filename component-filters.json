@@ -44,6 +44,9 @@
       "xcel-quick-links",
       "xcel-feature-cards",
       "xcel-link-list",
+      "xcel-faq",
+      "xcel-testimonials",
+      "xcel-gallery",
       "xcel-video-feature"
     ]
   },
@@ -104,10 +107,22 @@
     "components": []
   },
   {
+    "id": "xcel-faq",
+    "components": [
+      "xcel-faq-item"
+    ]
+  },
+  {
     "id": "xcel-feature-cards",
     "components": [
       "xcel-feature-card",
       "xcel-feature-card-icon"
+    ]
+  },
+  {
+    "id": "xcel-gallery",
+    "components": [
+      "xcel-gallery-item"
     ]
   },
   {
@@ -120,6 +135,12 @@
     "id": "xcel-quick-links",
     "components": [
       "xcel-quick-link"
+    ]
+  },
+  {
+    "id": "xcel-testimonials",
+    "components": [
+      "xcel-testimonial-item"
     ]
   }
 ]

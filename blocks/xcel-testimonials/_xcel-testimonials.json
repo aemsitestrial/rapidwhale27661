@@ -1,0 +1,87 @@
+{
+  "definitions": [
+    {
+      "title": "Xcel Testimonials",
+      "id": "xcel-testimonials",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Xcel Testimonials",
+              "model": "xcel-testimonials",
+              "filter": "xcel-testimonials"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Xcel Testimonial Item",
+      "id": "xcel-testimonial-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Xcel Testimonial Item",
+              "model": "xcel-testimonial-item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "xcel-testimonials",
+      "fields": [
+        {
+          "component": "text",
+          "name": "heading",
+          "label": "Heading",
+          "valueType": "string",
+          "value": "What Our Customers Say"
+        }
+      ]
+    },
+    {
+      "id": "xcel-testimonial-item",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "quote",
+          "label": "Quote",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "authorName",
+          "label": "Author Name",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "name": "photo",
+          "label": "Photo",
+          "valueType": "string",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "photoAlt",
+          "label": "Photo Alt Text",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "xcel-testimonials",
+      "components": [
+        "xcel-testimonial-item"
+      ]
+    }
+  ]
+}

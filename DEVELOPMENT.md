@@ -134,6 +134,48 @@ Alternative: use content-type detection in JS (detect a link by `/` or `http` pr
 
 ---
 
+## Repeating/Multi-Field Content — use container/filter blocks, NOT composite multi-fields
+
+For any content that repeats (FAQ items, testimonials, gallery images, link lists, etc.), use the
+**container block + filter** pattern — a parent block with a `filter` referencing a child
+`.../block/item` model, authored as separate repeatable child components in Universal Editor
+(see `xcel-quick-links`, `xcel-link-list`, `xcel-faq`, `xcel-testimonials`, `xcel-gallery` for
+working examples).
+
+```json
+// parent block definition
+{ "id": "xcel-faq", "template": { "model": "xcel-faq", "filter": "xcel-faq" } }
+// child item definition
+{ "id": "xcel-faq-item", "resourceType": "core/franklin/components/block/v1/block/item", "template": { "model": "xcel-faq-item" } }
+// filter
+{ "id": "xcel-faq", "components": ["xcel-faq-item"] }
+```
+
+### ⚠️ Do NOT use `"component": "container"` + `"multi": true` (composite multi-field)
+
+AEM's Universal Editor also supports a **composite multi-field** — a single field of
+`"component": "container", "multi": true` with nested `fields`, letting an author click "+ Add"
+to repeat a group of sub-fields inline in the properties panel (no separate child components).
+
+**This is confirmed broken on this AEM Cloud Service org as of 2026-09.** The UI works
+cosmetically — the "+ Add" button appears, you can fill in fields, even use the content
+picker — but **the data is never persisted**. Verified by inspecting raw page source
+(`Ctrl+U` → View Page Source, search the block name) after saving: the field's row always
+serializes as an empty `<div><div></div></div>`, regardless of how many items were added.
+This was diagnosed on the `xcel-link-list` block (PR #3 built it this way, PR #4 replaced it
+with the container/filter pattern above once the bug was confirmed).
+
+**Rule:** don't build with `"multi": true` composite container fields until this is verified
+fixed by Adobe. If you need to test whether it's fixed, verify with raw View Source (not just
+DevTools, which only shows the JS-decorated *output* — it won't reveal whether the underlying
+data was actually saved).
+
+A **simple** (non-composite) multi-field — e.g. a single `reference` or `text` field with
+`"multi": true` and no `container` wrapper — has not been tested here; it may or may not have
+the same issue. Test independently before relying on it.
+
+---
+
 ## ESLint Rules (airbnb-base — all fail CI if violated)
 
 ### Rule 1 — No `for...of` loops

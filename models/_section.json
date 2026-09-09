@@ -116,6 +116,9 @@
         "xcel-quick-links",
         "xcel-feature-cards",
         "xcel-link-list",
+        "xcel-faq",
+        "xcel-testimonials",
+        "xcel-gallery",
         "xcel-video-feature"
       ]
     }
