@@ -111,6 +111,12 @@
     ]
   },
   {
+    "id": "xcel-link-list",
+    "components": [
+      "xcel-link-list-item"
+    ]
+  },
+  {
     "id": "xcel-quick-links",
     "components": [
       "xcel-quick-link"

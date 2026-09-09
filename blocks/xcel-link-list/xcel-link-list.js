@@ -1,20 +1,62 @@
-/* JCR alphabetical field order: heading, links */
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+/*
+ * xcel-link-list — heading + repeatable link items, each authored as a child block instance.
+ */
 export default function decorate(block) {
   const rows = [...block.children];
-  const heading = rows[0]?.querySelector('div:last-child')?.textContent.trim() || '';
-  const linksRow = rows[1];
+  block.textContent = '';
 
-  const links = [...(linksRow?.querySelectorAll('a') || [])].map((a) => {
-    let type = 'default';
-    if (a.parentElement.tagName === 'STRONG') type = 'primary';
-    if (a.parentElement.tagName === 'EM') type = 'secondary';
-    return { href: a.getAttribute('href') || '#', text: a.textContent.trim(), type };
+  const heading = document.createElement('h2');
+  heading.className = 'xcel-link-list-heading';
+
+  const list = document.createElement('ul');
+  list.className = 'xcel-link-list-items';
+
+  rows.forEach((row) => {
+    const cells = [...row.children];
+
+    // Heading row: single cell, no link.
+    if (cells.length === 1 && !row.querySelector('a')) {
+      const text = (cells[0]?.textContent || '').trim();
+      if (text) heading.textContent = text;
+      return;
+    }
+
+    // Link item row — detect fields by content type (xwalk skips empty fields so indices shift).
+    let label = '';
+    let href = '#';
+    let style = '';
+
+    cells.forEach((cell) => {
+      const a = cell.querySelector('a');
+      if (a) {
+        href = a.getAttribute('href') || '#';
+        return;
+      }
+      const text = (cell.textContent || '').trim();
+      if (!text) return;
+      if (text.startsWith('/') || /^https?:\/\//.test(text)) {
+        href = text;
+      } else if (['primary', 'secondary'].includes(text.toLowerCase())) {
+        style = text.toLowerCase();
+      } else if (!label) {
+        label = text;
+      }
+    });
+
+    const li = document.createElement('li');
+    moveInstrumentation(row, li);
+
+    const link = document.createElement('a');
+    link.className = `button${style ? ` ${style}` : ''}`;
+    link.href = href;
+    link.textContent = label;
+
+    li.append(link);
+    list.append(li);
   });
 
-  block.innerHTML = `
-    ${heading ? `<h2 class="xcel-link-list-heading">${heading}</h2>` : ''}
-    <ul class="xcel-link-list-items">
-      ${links.map((l) => `<li><a class="button${l.type !== 'default' ? ` ${l.type}` : ''}" href="${l.href}">${l.text}</a></li>`).join('')}
-    </ul>
-  `;
+  if (heading.textContent) block.append(heading);
+  block.append(list);
 }
