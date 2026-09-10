@@ -6,14 +6,14 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 export default function decorate(block) {
   const rows = [...block.children];
   block.textContent = '';
-  
+
   block.classList.add('xcel-link-list-column');
 
- const heading = document.createElement('h2');
-heading.className = 'xcel-link-list-column-heading';
+  const heading = document.createElement('h2');
+  heading.className = 'xcel-link-list-column-heading';
 
-const list = document.createElement('ul');
-list.className = 'xcel-link-list-column-items';
+  const list = document.createElement('ul');
+  list.className = 'xcel-link-list-column-items';
 
   rows.forEach((row) => {
     const cells = [...row.children];
