@@ -72,7 +72,7 @@
       "xcel-text",
       "xcel-text-v2",
       "xcel-button",
-      "xcel-link-list"
+      "xcel-link-list-column"
     ]
   },
   {
@@ -124,6 +124,12 @@
     "id": "xcel-gallery",
     "components": [
       "xcel-gallery-item"
+    ]
+  },
+  {
+    "id": "xcel-link-list-column",
+    "components": [
+      "xcel-link-list-item"
     ]
   },
   {

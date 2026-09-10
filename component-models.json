@@ -6436,6 +6436,58 @@
     ]
   },
   {
+    "id": "xcel-link-list-column",
+    "fields": [
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string",
+        "value": "Helpful Resources"
+      }
+    ]
+  },
+  {
+    "id": "xcel-link-list-item",
+    "fields": [
+      {
+        "component": "text",
+        "name": "link",
+        "label": "Link URL",
+        "valueType": "string",
+        "value": "/"
+      },
+      {
+        "component": "text",
+        "name": "label",
+        "label": "Link Label",
+        "valueType": "string",
+        "value": ""
+      },
+      {
+        "component": "select",
+        "name": "style",
+        "label": "Style",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "default",
+            "value": ""
+          },
+          {
+            "name": "primary",
+            "value": "primary"
+          },
+          {
+            "name": "secondary",
+            "value": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "xcel-link-list",
     "fields": [
       {
