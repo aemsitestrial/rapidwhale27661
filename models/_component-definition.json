@@ -65,6 +65,9 @@
           "...": "../blocks/xcel-link-list/_*.json#/definitions"
         },
         {
+          "...": "../blocks/xcel-link-list-column/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/xcel-faq/_*.json#/definitions"
         },
         {
