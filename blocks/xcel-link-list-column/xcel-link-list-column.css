@@ -26,3 +26,15 @@
   border-radius: 0;
   font-weight: 600;
 }
+
+.columns .xcel-link-list-column {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.xcel-link-list-column .button,
+.xcel-link-list-column-items a {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
