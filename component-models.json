@@ -6801,5 +6801,174 @@
         "value": ""
       }
     ]
+  },
+  {
+    "id": "xe-banner",
+    "fields": [
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style",
+        "description": "Pick one option from each group.",
+        "valueType": "string",
+        "maxSize": 4,
+        "options": [
+          {
+            "name": "Spacing",
+            "children": [
+              {
+                "name": "Compact",
+                "value": "size-compact"
+              },
+              {
+                "name": "Default",
+                "value": "size-default"
+              },
+              {
+                "name": "Generous",
+                "value": "size-generous"
+              }
+            ]
+          },
+          {
+            "name": "Background",
+            "children": [
+              {
+                "name": "White (default)",
+                "value": "bg-default"
+              },
+              {
+                "name": "Cream",
+                "value": "bg-subtle"
+              },
+              {
+                "name": "Crimson",
+                "value": "bg-brand"
+              },
+              {
+                "name": "Dark",
+                "value": "bg-dark"
+              }
+            ]
+          },
+          {
+            "name": "Alignment",
+            "children": [
+              {
+                "name": "Left",
+                "value": "align-start"
+              },
+              {
+                "name": "Center",
+                "value": "align-center"
+              }
+            ]
+          },
+          {
+            "name": "Button Style",
+            "children": [
+              {
+                "name": "Outlined",
+                "value": "button-outlined"
+              },
+              {
+                "name": "Filled",
+                "value": "button-filled"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "buttonLabel",
+        "label": "Button Label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "buttonLink",
+        "label": "Button Link",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "headingLevel",
+        "label": "Heading Level",
+        "valueType": "string",
+        "value": "2",
+        "options": [
+          {
+            "name": "H1",
+            "value": "1"
+          },
+          {
+            "name": "H2",
+            "value": "2"
+          },
+          {
+            "name": "H3",
+            "value": "3"
+          },
+          {
+            "name": "H4",
+            "value": "4"
+          },
+          {
+            "name": "H5",
+            "value": "5"
+          },
+          {
+            "name": "H6",
+            "value": "6"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "icon",
+        "label": "Icon",
+        "valueType": "string",
+        "value": "faLeaf",
+        "options": [
+          {
+            "name": "None",
+            "value": "none"
+          },
+          {
+            "name": "Leaf",
+            "value": "faLeaf"
+          },
+          {
+            "name": "Lightning Bolt",
+            "value": "faBolt"
+          },
+          {
+            "name": "Light Bulb",
+            "value": "faLightbulb"
+          },
+          {
+            "name": "Piggy Bank",
+            "value": "faPiggyBank"
+          },
+          {
+            "name": "Flame",
+            "value": "faFire"
+          }
+        ]
+      },
+      {
+        "component": "richtext",
+        "name": "message",
+        "label": "Message",
+        "valueType": "string"
+      }
+    ]
   }
 ]

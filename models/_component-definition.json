@@ -80,6 +80,9 @@
           "...": "../blocks/xcel-video-feature/_*.json#/definitions"
         },
         {
+          "...": "../blocks/xe-banner/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/columns/_*.json#/definitions"
         },
         {
