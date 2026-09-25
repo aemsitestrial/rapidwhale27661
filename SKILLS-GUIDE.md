@@ -1,4 +1,4 @@
-# Skills & Agents Guide — keeneagle93325
+# Skills & Agents Guide — rapidwhale27661
 
 > **Before starting any task — read both files:**
 > 1. **`DEVELOPMENT.md`** — all coding rules, CSS/ESLint/JCR/design spec

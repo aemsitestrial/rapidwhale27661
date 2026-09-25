@@ -1,4 +1,4 @@
-# Development Conventions — keeneagle93325
+# Development Conventions — rapidwhale27661
 
 > **Before starting any task — read both files:**
 > 1. **This file** (`DEVELOPMENT.md`) — all coding rules, CSS/ESLint/JCR/design spec

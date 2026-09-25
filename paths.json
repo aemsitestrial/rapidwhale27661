@@ -1,20 +1,21 @@
 {
   "mappings": [
-    "/content/2026/35/keeneagle93325/:/",
-    "/content/2026/35/keeneagle93325/en/:/",
-    "/content/2026/35/keeneagle93325/en/locations/locationslist:/locations.json",
-    "/content/2026/35/keeneagle93325/es:/es",
-    "/content/2026/35/keeneagle93325/es/:/es/",
-    "/content/2026/35/keeneagle93325/fr:/fr",
-    "/content/2026/35/keeneagle93325/fr/:/fr/",
-    "/content/2026/35/keeneagle93325/jp:/jp",
-    "/content/2026/35/keeneagle93325/jp/:/jp/",
-    "/content/2026/35/keeneagle93325/configuration:/.helix/config.json",
-    "/content/2026/35/keeneagle93325/headers:/.helix/headers.json"
+    "/content/2026/39/rapidwhale27661/:/",
+    "/content/2026/39/rapidwhale27661/en/:/",
+    "/content/2026/39/rapidwhale27661/en/locations/locationslist:/locations.json",
+    "/content/2026/39/rapidwhale27661/es:/es",
+    "/content/2026/39/rapidwhale27661/es/:/es/",
+    "/content/2026/39/rapidwhale27661/fr:/fr",
+    "/content/2026/39/rapidwhale27661/fr/:/fr/",
+    "/content/2026/39/rapidwhale27661/jp:/jp",
+    "/content/2026/39/rapidwhale27661/jp/:/jp/",
+    "/content/2026/39/rapidwhale27661/configuration:/.helix/config.json",
+    "/content/2026/39/rapidwhale27661/headers:/.helix/headers.json",
+    "/content/2026/39/rapidwhale27661/metadata:/metadata.json"
   ],
   "includes": [
-    "/content/2026/35/keeneagle93325/",
-    "/content/dam/2026/35/keeneagle93325/",
+    "/content/2026/39/rapidwhale27661/",
+    "/content/dam/2026/39/rapidwhale27661/",
     "/content/dam/formsanddocuments/",
     "/content/forms/af/"
   ]
