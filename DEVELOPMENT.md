@@ -173,15 +173,67 @@ is made once in the primitive and applies site-wide.
 | `<xe-banner variant size background>` | — | Banner container |
 | `<xe-banner-column expand align heading-level>` | `xe-icon`, `xe-button` (slotted) | Banner column; slots: `icon`, `heading`, `message`, `action` |
 
+### Xcel design system — the source of truth for components
+
+Xcel has an `xe-*` design system, documented in its own Storybook under **Design System
+Primitives**. Every component in it is a web component: the tag in the docs (e.g.
+`<xe-action-link>`) is the custom element name, and its props are the element's attributes.
+
+**We only have the docs, not the code.** So this project builds its own implementation of each
+design system component it needs, in `scripts/components/`, and it must match the docs exactly:
+
+- **Same tag name** as the docs (never invent a different name for a component the DS already has).
+- **Same attributes, values and defaults** (props shown in camelCase in the docs, e.g. `linkType`,
+  are kebab-case attributes in HTML: `link-type`).
+- **Same slots** and the **same CSS custom properties** the docs mention (e.g. `--card-text-color`).
+- Anything we add beyond the docs is an extra, never a change to documented behavior.
+
+This keeps blocks visually and structurally consistent with the design system, and means the
+official library can replace our implementations later without changing any block.
+⚠️ If the official library is ever loaded on the site, remove our file for that component first —
+two definitions of the same tag name can't coexist on one page.
+
+**Design system catalog** (from the DS Storybook; ✅ = built in this project):
+
+| Category | Components | In this project |
+|---|---|---|
+| **Action** | Action Link (`xe-action-link`), Button Group, Button (`xe-button`), Floating Action Button, Hyperlink, Icon Button, Menu Button, Segmented Button, Split Button | ✅ `xe-button` |
+| **Content Display** | *(list to be added from the DS docs)* | — |
+| **Feedback** | *(list to be added from the DS docs)* | — |
+| **Input Control** | *(list to be added from the DS docs)* | — |
+| **Layout** | *(list to be added from the DS docs)* | — |
+| **Media** | *(list to be added from the DS docs)* | — |
+| **Navigation** | *(list to be added from the DS docs)* | — |
+| *Category to confirm* | Banner (`xe-banner`, `xe-banner-column`), Icon (`xe-icon`) | ✅ all three |
+
+Tag names are listed only where they've been seen in the DS docs — confirm the rest from the docs
+before building. When a component is built, mark it ✅ here and add it to the tables above.
+
+**Documented specs received so far** (build from these when the component is needed):
+
+- **Action Link — `<xe-action-link link-type href>`** *(DS status: Ready)*
+  A labeled link with a trailing directional icon, for card action slots and other inline actions.
+  - `link-type` (default `internal`) controls the trailing icon:
+    `internal` → arrow right (navigating within the site) ·
+    `external` → arrow up-right (new tab or external site) ·
+    `download` → arrow down (downloading a file)
+  - `href` — URL the link navigates to.
+  - Label is the default slot: `<xe-action-link link-type="external" href="…">Visit site</xe-action-link>`
+  - Color inherits from the parent card surface via `--card-text-color`, so it adapts to `xe-card`
+    variants (neutral, accent, brand…) with no extra configuration.
+  - DS stories: Default, External, Download, On Dark Surface.
+
 **Reuse-first checklist — before writing any new component:**
 1. Check the tables above. If an existing component fits, use it.
-2. If it *almost* fits, extend it with a new attribute or slot (keeping existing behavior unchanged)
-   instead of creating a near-duplicate.
-3. Only create a **new primitive** when no existing one covers the UI element, and make it generic
-   enough for other blocks to use (no block-specific names, content or layout).
-4. Create a **composite component** only for a layout that more than one block could use;
+2. Check the **design system catalog**. If the DS has the component, build it to the DS docs
+   (tag name, attributes, slots, custom properties) — get the docs page first if we don't have it.
+3. If an existing component *almost* fits, extend it with a new attribute or slot (keeping existing
+   behavior unchanged) instead of creating a near-duplicate.
+4. Only create a **new primitive** that isn't in the DS when nothing else covers the UI element,
+   and make it generic enough for other blocks to use (no block-specific names, content or layout).
+5. Create a **composite component** only for a layout that more than one block could use;
    otherwise keep the layout in the block adapter.
-5. Add every new component to the matching table above in the same PR.
+6. Add every new component to the matching table above, and mark it ✅ in the catalog, in the same PR.
 
 ### Block adapter pattern
 ```js

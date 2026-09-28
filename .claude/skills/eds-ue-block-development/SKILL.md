@@ -17,6 +17,8 @@ Create and evolve reusable blocks in Adobe EDS using boilerplate conventions.
 - Build every new block on web components (see "Web Components" in DEVELOPMENT.md):
   - Reuse existing primitives (xe-icon, xe-button, …) and composite components in
     scripts/components/ before creating new ones — follow the reuse-first checklist.
+  - Check the Xcel design system catalog in DEVELOPMENT.md: if the component exists in the design
+    system, build it to its docs exactly (same tag name, attributes, slots, custom properties).
   - New components go in scripts/components/xe-<name>.js (shadow DOM, attributes + slots).
   - The block JS is a thin adapter that maps authored rows to component attributes and slots.
 - Use robust DOM decoration patterns and tolerate missing authored fields.
