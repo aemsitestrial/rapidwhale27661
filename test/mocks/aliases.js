@@ -11,4 +11,6 @@ const mock = (file) => fileURLToPath(new URL(`./${file}`, import.meta.url));
 export default [
   { find: /^(?:\.\.?\/)+scripts\/aem\.js$/, replacement: mock('aem.js') },
   { find: /^(?:\.\.?\/)+scripts\/scripts\.js$/, replacement: mock('scripts.js') },
+  // Commerce drop-ins come from an import map on the site; stub them for tests
+  { find: /^@dropins\/.+$/, replacement: mock('dropins.js') },
 ];

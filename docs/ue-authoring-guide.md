@@ -24,8 +24,10 @@ Authors only ever place **blocks**. Each block is rendered by design system web 
 | **XE Banner** | `xe-banner` + `xe-icon` + `xe-button` | A message band: icon, big heading, short message, one button |
 | **XE Feature Cards** | `xe-feature-cards` + `xe-card` + `xe-action-link` | A full-width band of 2–3 tall cards that draw users into narrative/brand content |
 
-> The site header (from the `/nav` page) still appears at the top of every page. XE Navbar is a
-> separate block you place yourself.
+> **The site header is an XE Navbar.** Every page's header shows the XE Navbar from the
+> **`xe-navbar`** page. To change the header everywhere, edit that page and publish it — you don't
+> add XE Navbar to other pages. (A single page can use a different nav page via a `nav` row in its
+> Metadata.)
 
 ## 2. Plan the layout
 
@@ -33,10 +35,10 @@ A typical landing page, top to bottom — **one block per section**, so each ban
 
 | Section | Block | Tip |
 |---|---|---|
-| 1 | XE Navbar | Only if the page needs its own navigation |
-| 2 | XE Banner | The page's main message; heading level **H1** if it's the page title |
-| 3 | XE Feature Cards | 2–3 cards; band heading optional |
-| 4+ | Other blocks / default content | Text, images, other xcel blocks |
+| — | *(site header)* | Comes from the `xe-navbar` page automatically — nothing to add |
+| 1 | XE Banner | The page's main message; heading level **H1** if it's the page title |
+| 2 | XE Feature Cards | 2–3 cards; band heading optional |
+| 3+ | Other blocks / default content | Text, images, other xcel blocks |
 
 Check the **heading outline** as you go: one H1 per page, then H2s for sections. Feature Cards'
 band heading is an H2, and its card titles become H3 (or H2 when there's no band heading).
@@ -57,6 +59,9 @@ band heading is an H2, and its card titles become H3 (or H2 when there's no band
 ---
 
 ## 5. XE Navbar — step by step
+
+Do this on the **`xe-navbar`** page (it's the site header for every page). Publish that page to
+update the header everywhere.
 
 **Block fields** (select the XE Navbar):
 
