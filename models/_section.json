@@ -120,7 +120,8 @@
         "xcel-testimonials",
         "xcel-gallery",
         "xcel-video-feature",
-        "xe-banner"
+        "xe-banner",
+        "xe-navbar"
       ]
     }
   ]

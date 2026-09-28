@@ -6970,5 +6970,140 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "xe-navbar",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "logo",
+        "label": "Logo",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "logoAlt",
+        "label": "Logo Alt Text",
+        "valueType": "string",
+        "value": "Xcel Energy"
+      },
+      {
+        "component": "aem-content",
+        "name": "logoLink",
+        "label": "Logo Link",
+        "valueType": "string",
+        "value": "/"
+      }
+    ]
+  },
+  {
+    "id": "xe-navbar-link",
+    "fields": [
+      {
+        "component": "text",
+        "name": "label",
+        "label": "Label",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "boolean",
+        "name": "newTab",
+        "label": "Open in new tab",
+        "valueType": "boolean",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "xe-navbar-action",
+    "fields": [
+      {
+        "component": "text",
+        "name": "label",
+        "label": "Label",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "select",
+        "name": "location",
+        "label": "Location",
+        "valueType": "string",
+        "value": "location-actions",
+        "options": [
+          {
+            "name": "Main bar (right side)",
+            "value": "location-actions"
+          },
+          {
+            "name": "Top toolbar (right side)",
+            "value": "location-toolbar"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "placement",
+        "label": "On mobile",
+        "description": "Where this action shows when the navbar collapses to the menu.",
+        "valueType": "string",
+        "value": "placement-both",
+        "options": [
+          {
+            "name": "Navbar and menu",
+            "value": "placement-both"
+          },
+          {
+            "name": "Navbar only",
+            "value": "placement-navbar-only"
+          },
+          {
+            "name": "Menu only",
+            "value": "placement-drawer-only"
+          },
+          {
+            "name": "Navbar on desktop, menu on mobile",
+            "value": "placement-collapse-to-drawer"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "style",
+        "label": "Button Style",
+        "valueType": "string",
+        "value": "style-outlined",
+        "options": [
+          {
+            "name": "Outlined",
+            "value": "style-outlined"
+          },
+          {
+            "name": "Filled",
+            "value": "style-filled"
+          },
+          {
+            "name": "Text",
+            "value": "style-text"
+          }
+        ]
+      }
+    ]
   }
 ]
