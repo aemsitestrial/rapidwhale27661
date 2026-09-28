@@ -1,11 +1,15 @@
 # Changelog — rapidwhale27661
 
 What was built, when, and what's still open. The rules themselves live in `DEVELOPMENT.md`;
-this file is the history. Newest first.
+this file is the history. Newest first. Bugs and issues we ran into — with cause, fix and status —
+are tracked in **`docs/build-log.md`**.
 
 ---
 
 ## 2026-09-28 (later) — XE Navbar becomes the site header
+
+[#7](https://github.com/aemsitestrial/rapidwhale27661/pull/7), merged — the navbar is live on the
+home page and every other page.
 
 - **The header block now renders the XE Navbar site-wide.** It loads the nav page (default
   **`/xe-navbar`**, or a page's `nav` metadata) and, when that page contains an XE Navbar block,
@@ -15,7 +19,10 @@ this file is the history. Newest first.
   leaves the header empty with a console warning instead of an error.
 - Header tests added; drop-in stubs (`test/mocks/dropins.js`) so blocks importing `@dropins/*` can
   be tested.
-- Still open: the footer's default `/footer-v2` doesn't exist here either, so the footer is empty.
+- **Still open:**
+  - The page jumps ~66px when the header loads (PageSpeed on #7: mobile 91, CLS 0.073) —
+    build-log #I-24, fix postponed.
+  - The footer's default `/footer-v2` doesn't exist here either, so the footer is empty — #I-25.
 
 ## 2026-09-28 — Xcel design system web components
 
