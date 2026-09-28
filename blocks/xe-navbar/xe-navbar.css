@@ -1,0 +1,16 @@
+/* Let the navbar run edge to edge instead of the 1360px section width */
+main > .section > .xe-navbar-wrapper {
+  max-width: none;
+  padding: 0;
+}
+
+.xe-navbar {
+  display: block;
+}
+
+/* Slotted logo lives in light DOM, so its image is sized here */
+.xe-navbar [slot="logo"] img {
+  display: block;
+  width: auto;
+  height: 40px;
+}

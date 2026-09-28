@@ -168,12 +168,14 @@ is made once in the primitive and applies site-wide.
 |---|---|
 | `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) |
 | `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` |
+| `<xe-nav-item active href target>` | Navbar link/button; slots: default, `leading-icon` |
 
 **Available composite components:**
 | Component | Built from | Purpose |
 |---|---|---|
 | `<xe-banner variant size background>` | — | Banner container |
 | `<xe-banner-column expand align heading-level>` | `xe-icon`, `xe-button` (slotted) | Banner column; slots: `icon`, `heading`, `message`, `action` |
+| `<xe-navbar label>` | `xe-icon`; `xe-nav-item`, `xe-button` (slotted) | Navigation bar with built-in mobile drawer; slots: `logo`, `nav-items`, `search`, `actions`, `toolbar-selector`, `toolbar-actions` |
 
 ### Xcel design system — the source of truth for components
 
@@ -207,7 +209,7 @@ two definitions of the same tag name can't coexist on one page.
 | **Input Control** | *(list to be added from the DS docs)* | — |
 | **Layout** | *(list to be added from the DS docs)* | — |
 | **Media** | *(list to be added from the DS docs)* | — |
-| **Navigation** | *(list to be added from the DS docs)* | — |
+| **Navigation** | Navbar (`xe-navbar`), Nav Item (`xe-nav-item`) — *rest of the list to be added from the DS docs* | ✅ `xe-navbar`, `xe-nav-item` |
 | *Category to confirm* | Banner (`xe-banner`, `xe-banner-column`), Icon (`xe-icon`) | ✅ all three |
 
 Tag names are listed only where they've been seen in the DS docs — confirm the rest from the docs
@@ -226,6 +228,29 @@ before building. When a component is built, mark it ✅ here and add it to the t
   - Color inherits from the parent card surface via `--card-text-color`, so it adapts to `xe-card`
     variants (neutral, accent, brand…) with no extra configuration.
   - DS stories: Default, External, Download, On Dark Surface.
+
+- **Navbar — `<xe-navbar>`** *(DS status: Ready)* — ✅ built (`scripts/components/xe-navbar.js`)
+  Horizontal navigation bar that collapses to a hamburger layout when the nav items no longer fit
+  (content-based, not a fixed breakpoint). The mobile drawer is built in — no manual wiring.
+  - Slots: `logo` (always visible) · `nav-items` (`xe-nav-item`, hidden when collapsed) ·
+    `search` (`xe-search-bar[collapsed]`) · `actions` (right-aligned, forwarded to the drawer on
+    mobile) · `toolbar-selector` (full-width segmented button above the main bar) ·
+    `toolbar-actions` (right-aligned toolbar actions: sign in, language selector…)
+  - Action forwarding — elements in `actions` / `toolbar-actions`:
+    *(none)* navbar + drawer · `data-navbar-only` never in the drawer ·
+    `data-drawer-only` drawer only · `data-collapse-to-drawer` navbar on desktop, drawer when collapsed
+  - Not in the DS docs yet, so **not built**: how `search` switches between inline and delegate
+    routing (needs the Search Bar docs). Our extra: a `stacked` state that moves actions to their
+    own row when even the collapsed bar can't fit them (prevents horizontal page scroll).
+
+- **Nav Item — `<xe-nav-item active href target>`** — ✅ built (`scripts/components/xe-nav-item.js`)
+  Navigation item for use within `<xe-navbar>`.
+  - `active` (boolean, default false) · `href` (URL for link-style items) · `target`
+  - Slots: default (label), `leading-icon` (uncommon — most items are text only)
+  - Background overlay on hover (8% opacity) and active/pressed (12%); rounded corners from the
+    design tokens. **Token values aren't documented yet** — overlay color and radius are estimates
+    (`--xe-nav-item-overlay-color: #8b5a3c`, `--xe-nav-item-radius: 8px`) until we get them.
+  - DS stories: Default, Active, With Leading Icon.
 
 **Reuse-first checklist — before writing any new component:**
 1. Check the tables above. If an existing component fits, use it.

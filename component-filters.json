@@ -48,7 +48,8 @@
       "xcel-testimonials",
       "xcel-gallery",
       "xcel-video-feature",
-      "xe-banner"
+      "xe-banner",
+      "xe-navbar"
     ]
   },
   {
@@ -149,6 +150,13 @@
     "id": "xcel-testimonials",
     "components": [
       "xcel-testimonial-item"
+    ]
+  },
+  {
+    "id": "xe-navbar",
+    "components": [
+      "xe-navbar-link",
+      "xe-navbar-action"
     ]
   }
 ]
