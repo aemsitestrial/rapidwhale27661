@@ -3,6 +3,8 @@
 > **Before starting any task — read both files:**
 > 1. **This file** (`DEVELOPMENT.md`) — all coding rules, CSS/ESLint/JCR/design spec
 > 2. **`SKILLS-GUIDE.md`** — what skills and agents are available and when to use them
+>
+> AI agents: `AGENTS.md` summarizes the non-negotiables and points back here.
 
 ---
 
@@ -187,6 +189,8 @@ design system component it needs, in `scripts/components/`, and it must match th
   are kebab-case attributes in HTML: `link-type`).
 - **Same slots** and the **same CSS custom properties** the docs mention (e.g. `--card-text-color`).
 - Anything we add beyond the docs is an extra, never a change to documented behavior.
+- **The design system wins** over the "Xcel Site Design Spec" below (ALL CAPS arrow CTAs, red
+  dots, heading sizes…) for `xe-*` blocks. That spec applies to the existing `xcel-*` blocks.
 
 This keeps blocks visually and structurally consistent with the design system, and means the
 official library can replace our implementations later without changing any block.
@@ -363,11 +367,20 @@ picture.querySelector('img').alt = altText;
 
 ## Xcel Site Design Spec (extracted from xcelenergy.com screenshots)
 
-All block code must match these patterns. EMA: apply these before writing any CSS.
+These patterns apply to the **`xcel-*` blocks** (and `teaser`). EMA: apply these before writing any
+CSS for those blocks.
+
+> **`xe-*` web-component blocks follow the Xcel design system docs instead.** Where the design
+> system and this spec disagree (CTA style, red dots, heading size…), **the design system wins**.
+> Use this spec for `xe-*` blocks only for things the design system docs don't cover.
+
+> **Sizes are in px.** `styles/styles.css` sets `html { font-size: 62.5% }`, so `1rem` = 10px on
+> this site, not 16px. The values below were originally written in rem assuming a 16px base and
+> have been converted (e.g. `0.875rem` → `14px`). Write new CSS in px.
 
 ---
 
-### Universal Patterns — Apply to EVERY block
+### Universal Patterns — Apply to every `xcel-*` block
 
 #### 1. Red dots decorator above section headings
 Every section heading has 3 small red dots (`•••`) above it.
@@ -376,7 +389,7 @@ Every section heading has 3 small red dots (`•••`) above it.
   content: "•••";
   display: block;
   color: #c8102e;
-  font-size: 1rem;
+  font-size: 16px;
   letter-spacing: 0.25em;
   margin-bottom: 8px;
 }
@@ -392,7 +405,7 @@ Every CTA link is ALL CAPS with a `→` arrow and a bottom underline. No filled 
   gap: 6px;
   color: #8b1a2c;
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 14px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   text-decoration: underline;
@@ -407,7 +420,7 @@ Blocks that need this: `xcel-feature-cards`, `xcel-video-feature`, `teaser`.
 #### 3. Section heading typography
 ```css
 .my-block-heading {
-  font-size: 2.5rem;
+  font-size: 40px;
   font-weight: 800;
   color: #1a1a1a;
   line-height: 1.1;
@@ -445,7 +458,7 @@ Blocks that need this: `xcel-feature-cards`, `xcel-video-feature`, `teaser`.
 - Red `•••` dots above section heading
 - Each card: **photo on top**, then card body below
 - **Red left vertical bar** on card title — `border-left: 3px solid #c8102e`
-- Card title: bold, dark, ~1.25rem
+- Card title: bold, dark, ~20px
 - ALL CAPS CTA with → arrow at bottom
 
 #### xcel-feature-cards (Personalized Energy — 4 cards / media-object variant)
