@@ -8,6 +8,9 @@ two files below; this file only points to them so every agent and skill starts f
    web components (required for new blocks), the Xcel design system catalog, and the design spec.
 2. **`SKILLS-GUIDE.md`** — which skill or agent to use for which task.
 
+Also useful: **`CHANGELOG.md`** (what's been built, open items) and **`docs/ue-authoring-guide.md`**
+(how authors use the XE blocks in Universal Editor).
+
 ## Non-negotiables (summary — details in the files above)
 - **Workflow:** feature branch → PR → `main`. Never push straight to `main`.
 - **New blocks** are built on `xe-*` web components in `scripts/components/`, matching the Xcel
