@@ -148,13 +148,40 @@ until they are refactored. Reference implementation: `blocks/xe-banner/` + `scri
 | Block adapter | `blocks/<block>/<block>.js` — imports the components it needs |
 | Block CSS | `blocks/<block>/<block>.css` — only wrapper layout + slotted light-DOM content |
 
-Available components — **reuse before creating new ones**:
+### Primitives, composite components and blocks — reuse first
+
+Components are layered. Each layer is built from the one below it and never re-implements it.
+
+| Layer | What it is | Rule |
+|---|---|---|
+| **Primitives** | Small, generic UI pieces with no page-specific content or layout (icon, button, …) | Write once, reuse everywhere. Every block that needs an icon or button uses these — never its own |
+| **Composite components** | Larger layout pieces built *from* primitives (banner, card, …) | Reusable across blocks that share the same layout |
+| **Blocks** | What authors insert in Universal Editor; maps authored rows to components | One per content pattern; contains no UI of its own |
+
+Because every block shares the same primitives, a brand change (button color, radius, hover…)
+is made once in the primitive and applies site-wide.
+
+**Available primitives:**
 | Component | Purpose |
 |---|---|
 | `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) |
 | `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` |
-| `<xe-banner variant size background>` | Banner container |
-| `<xe-banner-column expand align heading-level>` | Banner column; slots: `icon`, `heading`, `message`, `action` |
+
+**Available composite components:**
+| Component | Built from | Purpose |
+|---|---|---|
+| `<xe-banner variant size background>` | — | Banner container |
+| `<xe-banner-column expand align heading-level>` | `xe-icon`, `xe-button` (slotted) | Banner column; slots: `icon`, `heading`, `message`, `action` |
+
+**Reuse-first checklist — before writing any new component:**
+1. Check the tables above. If an existing component fits, use it.
+2. If it *almost* fits, extend it with a new attribute or slot (keeping existing behavior unchanged)
+   instead of creating a near-duplicate.
+3. Only create a **new primitive** when no existing one covers the UI element, and make it generic
+   enough for other blocks to use (no block-specific names, content or layout).
+4. Create a **composite component** only for a layout that more than one block could use;
+   otherwise keep the layout in the block adapter.
+5. Add every new component to the matching table above in the same PR.
 
 ### Block adapter pattern
 ```js
