@@ -69,7 +69,7 @@ An **Agent** is a specialist that combines multiple skills and runs them in the 
 ---
 
 ### Skill 2 — `eds-ue-block-development`
-**What it does:** Enforces correct block structure — JS + CSS + JSON all present, CSS scoped, decorator handles missing fields gracefully.
+**What it does:** Enforces correct block structure — JS + CSS + JSON all present, CSS scoped, decorator handles missing fields gracefully. New blocks must be built on `xe-*` web components (see "Web Components" in `DEVELOPMENT.md`).
 
 **Workflow — when to trigger it:**
 ```

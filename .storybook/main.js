@@ -1,7 +1,4 @@
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
+import aliases from '../test/mocks/aliases.js';
 
 /** @type { import('@storybook/html-vite').StorybookConfig } */
 const config = {
@@ -15,11 +12,16 @@ const config = {
     options: {},
   },
   async viteFinal(viteConfig) {
-    viteConfig.resolve.alias = {
-      ...viteConfig.resolve.alias,
-      // Redirect AEM runtime imports to lightweight mocks so block code works in isolation
-      [path.resolve(__dirname, '../scripts/aem.js')]: path.resolve(__dirname, '../test/mocks/aem.js'),
-      [path.resolve(__dirname, '../scripts/scripts.js')]: path.resolve(__dirname, '../test/mocks/scripts.js'),
+    // Redirect AEM runtime imports to lightweight mocks so block code works in isolation
+    const existing = viteConfig.resolve?.alias || [];
+    viteConfig.resolve = {
+      ...viteConfig.resolve,
+      alias: [
+        ...(Array.isArray(existing)
+          ? existing
+          : Object.entries(existing).map(([find, replacement]) => ({ find, replacement }))),
+        ...aliases,
+      ],
     };
     return viteConfig;
   },

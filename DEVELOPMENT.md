@@ -3,6 +3,8 @@
 > **Before starting any task — read both files:**
 > 1. **This file** (`DEVELOPMENT.md`) — all coding rules, CSS/ESLint/JCR/design spec
 > 2. **`SKILLS-GUIDE.md`** — what skills and agents are available and when to use them
+>
+> AI agents: `AGENTS.md` summarizes the non-negotiables and points back here.
 
 ---
 
@@ -134,6 +136,153 @@ Alternative: use content-type detection in JS (detect a link by `/` or `http` pr
 
 ---
 
+## Web Components — required for all new blocks
+
+**Rule (from 2026-09):** every **new** block renders its UI with web components (custom elements).
+The block decorator is a thin adapter: it reads the authored rows and builds the custom elements;
+all markup, styling and behavior live in the components. Existing `xcel-*` blocks stay as they are
+until they are refactored. Reference implementation: `blocks/xe-banner/` + `scripts/components/`.
+
+### Where things live
+| What | Where |
+|---|---|
+| Web components (shared, reusable) | `scripts/components/xe-<name>.js` — one component per file |
+| Block adapter | `blocks/<block>/<block>.js` — imports the components it needs |
+| Block CSS | `blocks/<block>/<block>.css` — only wrapper layout + slotted light-DOM content |
+
+### Primitives, composite components and blocks — reuse first
+
+Components are layered. Each layer is built from the one below it and never re-implements it.
+
+| Layer | What it is | Rule |
+|---|---|---|
+| **Primitives** | Small, generic UI pieces with no page-specific content or layout (icon, button, …) | Write once, reuse everywhere. Every block that needs an icon or button uses these — never its own |
+| **Composite components** | Larger layout pieces built *from* primitives (banner, card, …) | Reusable across blocks that share the same layout |
+| **Blocks** | What authors insert in Universal Editor; maps authored rows to components | One per content pattern; contains no UI of its own |
+
+Because every block shares the same primitives, a brand change (button color, radius, hover…)
+is made once in the primitive and applies site-wide.
+
+**Available primitives:**
+| Component | Purpose |
+|---|---|
+| `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) |
+| `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` |
+
+**Available composite components:**
+| Component | Built from | Purpose |
+|---|---|---|
+| `<xe-banner variant size background>` | — | Banner container |
+| `<xe-banner-column expand align heading-level>` | `xe-icon`, `xe-button` (slotted) | Banner column; slots: `icon`, `heading`, `message`, `action` |
+
+### Xcel design system — the source of truth for components
+
+Xcel has an `xe-*` design system, documented in its own Storybook under **Design System
+Primitives**. Every component in it is a web component: the tag in the docs (e.g.
+`<xe-action-link>`) is the custom element name, and its props are the element's attributes.
+
+**We only have the docs, not the code.** So this project builds its own implementation of each
+design system component it needs, in `scripts/components/`, and it must match the docs exactly:
+
+- **Same tag name** as the docs (never invent a different name for a component the DS already has).
+- **Same attributes, values and defaults** (props shown in camelCase in the docs, e.g. `linkType`,
+  are kebab-case attributes in HTML: `link-type`).
+- **Same slots** and the **same CSS custom properties** the docs mention (e.g. `--card-text-color`).
+- Anything we add beyond the docs is an extra, never a change to documented behavior.
+- **The design system wins** over the "Xcel Site Design Spec" below (ALL CAPS arrow CTAs, red
+  dots, heading sizes…) for `xe-*` blocks. That spec applies to the existing `xcel-*` blocks.
+
+This keeps blocks visually and structurally consistent with the design system, and means the
+official library can replace our implementations later without changing any block.
+⚠️ If the official library is ever loaded on the site, remove our file for that component first —
+two definitions of the same tag name can't coexist on one page.
+
+**Design system catalog** (from the DS Storybook; ✅ = built in this project):
+
+| Category | Components | In this project |
+|---|---|---|
+| **Action** | Action Link (`xe-action-link`), Button Group, Button (`xe-button`), Floating Action Button, Hyperlink, Icon Button, Menu Button, Segmented Button, Split Button | ✅ `xe-button` |
+| **Content Display** | *(list to be added from the DS docs)* | — |
+| **Feedback** | *(list to be added from the DS docs)* | — |
+| **Input Control** | *(list to be added from the DS docs)* | — |
+| **Layout** | *(list to be added from the DS docs)* | — |
+| **Media** | *(list to be added from the DS docs)* | — |
+| **Navigation** | *(list to be added from the DS docs)* | — |
+| *Category to confirm* | Banner (`xe-banner`, `xe-banner-column`), Icon (`xe-icon`) | ✅ all three |
+
+Tag names are listed only where they've been seen in the DS docs — confirm the rest from the docs
+before building. When a component is built, mark it ✅ here and add it to the tables above.
+
+**Documented specs received so far** (build from these when the component is needed):
+
+- **Action Link — `<xe-action-link link-type href>`** *(DS status: Ready)*
+  A labeled link with a trailing directional icon, for card action slots and other inline actions.
+  - `link-type` (default `internal`) controls the trailing icon:
+    `internal` → arrow right (navigating within the site) ·
+    `external` → arrow up-right (new tab or external site) ·
+    `download` → arrow down (downloading a file)
+  - `href` — URL the link navigates to.
+  - Label is the default slot: `<xe-action-link link-type="external" href="…">Visit site</xe-action-link>`
+  - Color inherits from the parent card surface via `--card-text-color`, so it adapts to `xe-card`
+    variants (neutral, accent, brand…) with no extra configuration.
+  - DS stories: Default, External, Download, On Dark Surface.
+
+**Reuse-first checklist — before writing any new component:**
+1. Check the tables above. If an existing component fits, use it.
+2. Check the **design system catalog**. If the DS has the component, build it to the DS docs
+   (tag name, attributes, slots, custom properties) — get the docs page first if we don't have it.
+3. If an existing component *almost* fits, extend it with a new attribute or slot (keeping existing
+   behavior unchanged) instead of creating a near-duplicate.
+4. Only create a **new primitive** that isn't in the DS when nothing else covers the UI element,
+   and make it generic enough for other blocks to use (no block-specific names, content or layout).
+5. Create a **composite component** only for a layout that more than one block could use;
+   otherwise keep the layout in the block adapter.
+6. Add every new component to the matching table above, and mark it ✅ in the catalog, in the same PR.
+
+### Block adapter pattern
+```js
+import '../../scripts/components/xe-banner.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const cells = [...block.children].map((row) => row.lastElementChild);
+  const [headingCell] = cells; // read rows in JCR alphabetical order (see below)
+
+  const banner = document.createElement('xe-banner');
+  const heading = document.createElement('span');
+  heading.slot = 'heading';
+  heading.textContent = headingCell?.textContent.trim() || '';
+  moveInstrumentation(headingCell, heading); // keep fields selectable in Universal Editor
+  banner.append(heading);
+
+  block.replaceChildren(banner);
+}
+```
+- Style options (size, background, alignment…) come in as block classes via a `classes`
+  multiselect and are mapped to component **attributes**.
+- Authored content goes into **light-DOM slotted elements** (never into the shadow DOM) so it stays
+  crawlable and editable in Universal Editor. Always `moveInstrumentation` onto the slotted element.
+- Build elements with `createElement`/`textContent` — don't interpolate authored text into `innerHTML`.
+
+### Component rules
+1. **Naming:** `xe-` prefix, kebab-case, e.g. `xe-card`, `xe-card-item`.
+2. **Shadow DOM** (`attachShadow({ mode: 'open' })`) with styles in a `<style>` in the shadow root.
+   Public API = **attributes + named slots**, documented in a comment at the top of the file.
+3. **Register safely:** `if (!customElements.get('xe-x')) customElements.define('xe-x', XeX);`
+4. **ESLint:** one class per file (`max-classes-per-file`), `export default class …`.
+5. **Units in px, not rem** — `styles/styles.css` sets `html { font-size: 62.5% }`, so `1rem` = 10px.
+6. **Font:** `Arial, sans-serif` (brand rule above) and brand colors from the table above.
+7. **Theming** via CSS custom properties with fallbacks (`var(--xe-button-accent, #c8102e)`) so
+   parents can restyle children — don't hard-set the public custom property on `:host`.
+8. **Slotted light-DOM content is styled by the page**, not the component. Style it in the block CSS
+   and reset global rules there (e.g. `font: inherit` — the global `p` rule forces Roboto).
+9. **Accessibility:** wrap heading slots in a real `<h1>`–`<h6>` inside the shadow root; use a real
+   `<a>`/`<button>` for actions (`delegatesFocus: true`); decorative icons get `aria-hidden="true"`.
+10. **Hide empty slot wrappers** (listen to `slotchange`) so empty headings/spacing aren't rendered.
+11. The stylelint rules above (modern `rgb()`, range media queries) also apply to CSS inside components.
+
+---
+
 ## Repeating/Multi-Field Content — use container/filter blocks, NOT composite multi-fields
 
 For any content that repeats (FAQ items, testimonials, gallery images, link lists, etc.), use the
@@ -218,11 +367,20 @@ picture.querySelector('img').alt = altText;
 
 ## Xcel Site Design Spec (extracted from xcelenergy.com screenshots)
 
-All block code must match these patterns. EMA: apply these before writing any CSS.
+These patterns apply to the **`xcel-*` blocks** (and `teaser`). EMA: apply these before writing any
+CSS for those blocks.
+
+> **`xe-*` web-component blocks follow the Xcel design system docs instead.** Where the design
+> system and this spec disagree (CTA style, red dots, heading size…), **the design system wins**.
+> Use this spec for `xe-*` blocks only for things the design system docs don't cover.
+
+> **Sizes are in px.** `styles/styles.css` sets `html { font-size: 62.5% }`, so `1rem` = 10px on
+> this site, not 16px. The values below were originally written in rem assuming a 16px base and
+> have been converted (e.g. `0.875rem` → `14px`). Write new CSS in px.
 
 ---
 
-### Universal Patterns — Apply to EVERY block
+### Universal Patterns — Apply to every `xcel-*` block
 
 #### 1. Red dots decorator above section headings
 Every section heading has 3 small red dots (`•••`) above it.
@@ -231,7 +389,7 @@ Every section heading has 3 small red dots (`•••`) above it.
   content: "•••";
   display: block;
   color: #c8102e;
-  font-size: 1rem;
+  font-size: 16px;
   letter-spacing: 0.25em;
   margin-bottom: 8px;
 }
@@ -247,7 +405,7 @@ Every CTA link is ALL CAPS with a `→` arrow and a bottom underline. No filled 
   gap: 6px;
   color: #8b1a2c;
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 14px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   text-decoration: underline;
@@ -262,7 +420,7 @@ Blocks that need this: `xcel-feature-cards`, `xcel-video-feature`, `teaser`.
 #### 3. Section heading typography
 ```css
 .my-block-heading {
-  font-size: 2.5rem;
+  font-size: 40px;
   font-weight: 800;
   color: #1a1a1a;
   line-height: 1.1;
@@ -300,7 +458,7 @@ Blocks that need this: `xcel-feature-cards`, `xcel-video-feature`, `teaser`.
 - Red `•••` dots above section heading
 - Each card: **photo on top**, then card body below
 - **Red left vertical bar** on card title — `border-left: 3px solid #c8102e`
-- Card title: bold, dark, ~1.25rem
+- Card title: bold, dark, ~20px
 - ALL CAPS CTA with → arrow at bottom
 
 #### xcel-feature-cards (Personalized Energy — 4 cards / media-object variant)

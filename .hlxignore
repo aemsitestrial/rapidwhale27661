@@ -14,3 +14,7 @@ tools/picker/src/*
 tools/pdp-metadata/*
 _*.json
 plugins/experimentation/documentation/images/*
+vitest.config.js
+*.stories.js
+*.test.js
+storybook-static/
