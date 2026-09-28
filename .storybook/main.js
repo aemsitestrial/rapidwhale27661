@@ -2,7 +2,7 @@ import aliases from '../test/mocks/aliases.js';
 
 /** @type { import('@storybook/html-vite').StorybookConfig } */
 const config = {
-  stories: ['../blocks/**/*.stories.js'],
+  stories: ['../blocks/**/*.stories.js', '../scripts/components/**/*.stories.js'],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-a11y',

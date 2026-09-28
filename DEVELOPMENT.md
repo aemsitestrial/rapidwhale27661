@@ -149,6 +149,7 @@ until they are refactored. Reference implementation: `blocks/xe-banner/` + `scri
 | Web components (shared, reusable) | `scripts/components/xe-<name>.js` — one component per file |
 | Block adapter | `blocks/<block>/<block>.js` — imports the components it needs |
 | Block CSS | `blocks/<block>/<block>.css` — only wrapper layout + slotted light-DOM content |
+| Component stories & tests | `scripts/components/xe-<name>.stories.js` / `.test.js` — Storybook title `Design System Primitives/<Category>/<Name>`, matching the DS Storybook |
 
 ### Primitives, composite components and blocks — reuse first
 
@@ -169,6 +170,7 @@ is made once in the primitive and applies site-wide.
 | `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) |
 | `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` |
 | `<xe-nav-item active href target>` | Navbar link/button; slots: default, `leading-icon` |
+| `<xe-action-link link-type href>` | Labeled link with a trailing direction icon (internal / external / download); color from `--card-text-color` |
 
 **Available composite components:**
 | Component | Built from | Purpose |
@@ -203,7 +205,7 @@ two definitions of the same tag name can't coexist on one page.
 
 | Category | Components | In this project |
 |---|---|---|
-| **Action** | Action Link (`xe-action-link`), Button Group, Button (`xe-button`), Floating Action Button, Hyperlink, Icon Button, Menu Button, Segmented Button, Split Button | ✅ `xe-button` |
+| **Action** | Action Link (`xe-action-link`), Button Group, Button (`xe-button`), Floating Action Button, Hyperlink, Icon Button, Menu Button, Segmented Button, Split Button | ✅ `xe-button`, `xe-action-link` |
 | **Content Display** | *(list to be added from the DS docs)* | — |
 | **Feedback** | *(list to be added from the DS docs)* | — |
 | **Input Control** | *(list to be added from the DS docs)* | — |
@@ -217,7 +219,7 @@ before building. When a component is built, mark it ✅ here and add it to the t
 
 **Documented specs received so far** (build from these when the component is needed):
 
-- **Action Link — `<xe-action-link link-type href>`** *(DS status: Ready)*
+- **Action Link — `<xe-action-link link-type href>`** *(DS status: Ready)* — ✅ built (`scripts/components/xe-action-link.js`)
   A labeled link with a trailing directional icon, for card action slots and other inline actions.
   - `link-type` (default `internal`) controls the trailing icon:
     `internal` → arrow right (navigating within the site) ·
@@ -228,6 +230,11 @@ before building. When a component is built, mark it ✅ here and add it to the t
   - Color inherits from the parent card surface via `--card-text-color`, so it adapts to `xe-card`
     variants (neutral, accent, brand…) with no extra configuration.
   - DS stories: Default, External, Download, On Dark Surface.
+  - External icon: the docs table says "arrow up-right", but the docs example shows an arrow
+    leaving a box, so we use `faArrowUpRightFromSquare` to match the example.
+  - Our extras (the docs say when to use each type, not how the link behaves): `external` opens
+    in a new tab with `rel="noopener noreferrer"` and adds "(opens in a new tab)" for screen
+    readers; `download` sets the native `download` attribute. The icon scales with the label (1em).
 
 - **Navbar — `<xe-navbar>`** *(DS status: Ready)* — ✅ built (`scripts/components/xe-navbar.js`)
   Horizontal navigation bar that collapses to a hamburger layout when the nav items no longer fit
