@@ -49,7 +49,8 @@
       "xcel-gallery",
       "xcel-video-feature",
       "xe-banner",
-      "xe-navbar"
+      "xe-navbar",
+      "xe-feature-cards"
     ]
   },
   {
@@ -150,6 +151,12 @@
     "id": "xcel-testimonials",
     "components": [
       "xcel-testimonial-item"
+    ]
+  },
+  {
+    "id": "xe-feature-cards",
+    "components": [
+      "xe-feature-card"
     ]
   },
   {

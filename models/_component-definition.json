@@ -86,6 +86,9 @@
           "...": "../blocks/xe-navbar/_*.json#/definitions"
         },
         {
+          "...": "../blocks/xe-feature-cards/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/columns/_*.json#/definitions"
         },
         {
