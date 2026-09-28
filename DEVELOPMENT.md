@@ -5,6 +5,8 @@
 > 2. **`SKILLS-GUIDE.md`** — what skills and agents are available and when to use them
 >
 > AI agents: `AGENTS.md` summarizes the non-negotiables and points back here.
+> History of what's been built: `CHANGELOG.md` · Authoring the XE blocks in Universal Editor:
+> `docs/ue-authoring-guide.md`.
 
 ---
 
