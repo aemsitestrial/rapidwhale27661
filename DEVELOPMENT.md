@@ -134,6 +134,72 @@ Alternative: use content-type detection in JS (detect a link by `/` or `http` pr
 
 ---
 
+## Web Components — required for all new blocks
+
+**Rule (from 2026-09):** every **new** block renders its UI with web components (custom elements).
+The block decorator is a thin adapter: it reads the authored rows and builds the custom elements;
+all markup, styling and behavior live in the components. Existing `xcel-*` blocks stay as they are
+until they are refactored. Reference implementation: `blocks/xe-banner/` + `scripts/components/`.
+
+### Where things live
+| What | Where |
+|---|---|
+| Web components (shared, reusable) | `scripts/components/xe-<name>.js` — one component per file |
+| Block adapter | `blocks/<block>/<block>.js` — imports the components it needs |
+| Block CSS | `blocks/<block>/<block>.css` — only wrapper layout + slotted light-DOM content |
+
+Available components — **reuse before creating new ones**:
+| Component | Purpose |
+|---|---|
+| `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) |
+| `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` |
+| `<xe-banner variant size background>` | Banner container |
+| `<xe-banner-column expand align heading-level>` | Banner column; slots: `icon`, `heading`, `message`, `action` |
+
+### Block adapter pattern
+```js
+import '../../scripts/components/xe-banner.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+export default function decorate(block) {
+  const cells = [...block.children].map((row) => row.lastElementChild);
+  const [headingCell] = cells; // read rows in JCR alphabetical order (see below)
+
+  const banner = document.createElement('xe-banner');
+  const heading = document.createElement('span');
+  heading.slot = 'heading';
+  heading.textContent = headingCell?.textContent.trim() || '';
+  moveInstrumentation(headingCell, heading); // keep fields selectable in Universal Editor
+  banner.append(heading);
+
+  block.replaceChildren(banner);
+}
+```
+- Style options (size, background, alignment…) come in as block classes via a `classes`
+  multiselect and are mapped to component **attributes**.
+- Authored content goes into **light-DOM slotted elements** (never into the shadow DOM) so it stays
+  crawlable and editable in Universal Editor. Always `moveInstrumentation` onto the slotted element.
+- Build elements with `createElement`/`textContent` — don't interpolate authored text into `innerHTML`.
+
+### Component rules
+1. **Naming:** `xe-` prefix, kebab-case, e.g. `xe-card`, `xe-card-item`.
+2. **Shadow DOM** (`attachShadow({ mode: 'open' })`) with styles in a `<style>` in the shadow root.
+   Public API = **attributes + named slots**, documented in a comment at the top of the file.
+3. **Register safely:** `if (!customElements.get('xe-x')) customElements.define('xe-x', XeX);`
+4. **ESLint:** one class per file (`max-classes-per-file`), `export default class …`.
+5. **Units in px, not rem** — `styles/styles.css` sets `html { font-size: 62.5% }`, so `1rem` = 10px.
+6. **Font:** `Arial, sans-serif` (brand rule above) and brand colors from the table above.
+7. **Theming** via CSS custom properties with fallbacks (`var(--xe-button-accent, #c8102e)`) so
+   parents can restyle children — don't hard-set the public custom property on `:host`.
+8. **Slotted light-DOM content is styled by the page**, not the component. Style it in the block CSS
+   and reset global rules there (e.g. `font: inherit` — the global `p` rule forces Roboto).
+9. **Accessibility:** wrap heading slots in a real `<h1>`–`<h6>` inside the shadow root; use a real
+   `<a>`/`<button>` for actions (`delegatesFocus: true`); decorative icons get `aria-hidden="true"`.
+10. **Hide empty slot wrappers** (listen to `slotchange`) so empty headings/spacing aren't rendered.
+11. The stylelint rules above (modern `rgb()`, range media queries) also apply to CSS inside components.
+
+---
+
 ## Repeating/Multi-Field Content — use container/filter blocks, NOT composite multi-fields
 
 For any content that repeats (FAQ items, testimonials, gallery images, link lists, etc.), use the

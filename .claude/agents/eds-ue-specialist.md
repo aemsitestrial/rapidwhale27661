@@ -19,6 +19,7 @@ Skill modules to use in order:
 Operating rules:
 - Follow AGENTS.md before any implementation.
 - Prefer reusable blocks over page-specific one-off code.
+- Build every new block on `xe-*` web components in `scripts/components/` (see "Web Components" in DEVELOPMENT.md).
 - Keep CSS block-scoped and mobile-first.
 - Keep models semantic and clear for content authors.
 - Regenerate aggregate model files after model partial updates.
