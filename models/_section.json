@@ -121,7 +121,8 @@
         "xcel-gallery",
         "xcel-video-feature",
         "xe-banner",
-        "xe-navbar"
+        "xe-navbar",
+        "xe-feature-cards"
       ]
     }
   ]

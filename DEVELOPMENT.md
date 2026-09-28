@@ -178,6 +178,8 @@ is made once in the primitive and applies site-wide.
 | `<xe-banner variant size background>` | — | Banner container |
 | `<xe-banner-column expand align heading-level>` | `xe-icon`, `xe-button` (slotted) | Banner column; slots: `icon`, `heading`, `message`, `action` |
 | `<xe-navbar label>` | `xe-icon`; `xe-nav-item`, `xe-button` (slotted) | Navigation bar with built-in mobile drawer; slots: `logo`, `nav-items`, `search`, `actions`, `toolbar-selector`, `toolbar-actions` |
+| `<xe-card variant treatment interactive actions-placement>` | `xe-icon`, `xe-action-link` (slotted) | Card surface; sets `--card-text-color`; slots: `icon`, `title`, default (body), `actions`, `decorative` |
+| `<xe-feature-cards columns mobile-layout heading subheading header-align background>` | `xe-card` (slotted) | Full-width band of 2–3 equal-height cards; carousel on mobile |
 
 ### Xcel design system — the source of truth for components
 
@@ -212,7 +214,7 @@ two definitions of the same tag name can't coexist on one page.
 | **Layout** | *(list to be added from the DS docs)* | — |
 | **Media** | *(list to be added from the DS docs)* | — |
 | **Navigation** | Navbar (`xe-navbar`), Nav Item (`xe-nav-item`) — *rest of the list to be added from the DS docs* | ✅ `xe-navbar`, `xe-nav-item` |
-| *Category to confirm* | Banner (`xe-banner`, `xe-banner-column`), Icon (`xe-icon`) | ✅ all three |
+| *Category to confirm* | Banner (`xe-banner`, `xe-banner-column`), Icon (`xe-icon`), Card (`xe-card`), Feature Cards (`xe-feature-cards`) | ✅ all five |
 
 Tag names are listed only where they've been seen in the DS docs — confirm the rest from the docs
 before building. When a component is built, mark it ✅ here and add it to the tables above.
@@ -235,6 +237,40 @@ before building. When a component is built, mark it ✅ here and add it to the t
   - Our extras (the docs say when to use each type, not how the link behaves): `external` opens
     in a new tab with `rel="noopener noreferrer"` and adds "(opens in a new tab)" for screen
     readers; `download` sets the native `download` attribute. The icon scales with the label (1em).
+
+- **Feature Cards — `<xe-feature-cards>`** *(DS status: Ready)* — ✅ built
+  (`scripts/components/xe-feature-cards.js`, block `blocks/xe-feature-cards/`)
+  Section-level composition that draws users into narrative and brand content: a full-width band
+  of tall cards with an optional heading and body copy. Slot 2–3 `<xe-card>` elements as children.
+  - Attributes (values seen in the docs): `columns` (`2` | `3`) · `mobile-layout` (`carousel`) ·
+    `heading` · `subheading` · `header-align` (`left`) · `background` (`default`)
+  - Rules: 2–3 cards max, all the same height · full-width band, cards fill the width equally ·
+    mobile: carousel · each card is entirely clickable
+  - Card design: usage — narrative/brand content · format — full-width band, tall cards · band
+    content — title, body copy · card content — title, body copy, link · content position —
+    vertical-top · style — photo, illustration or solid colors · icons — categorical only
+  - Accessibility: no implicit landmark role (add `role="region"` + `aria-label` to the host if it
+    should be a named landmark) · slotted `xe-card`s carry their own semantics · the title renders
+    as `<h2>`, so make sure that fits the page outline
+  - DS stories: default (3 cards), 2 Cards
+  - Our choices: the mobile carousel switches on the component's own width (container query),
+    not the window; `header-align="center"` and a stacked mobile layout for other
+    `mobile-layout` values are extras.
+
+- **Card — `<xe-card>`** — ✅ built from its usage in the Feature Cards docs
+  (`scripts/components/xe-card.js`). **The Card docs page itself hasn't been received**, so only
+  the values seen so far are supported:
+  - `variant`: `surface` (light) · `primary-variant` (dark). The Action Link docs also mention
+    `neutral`, `accent`, `brand` — naming to confirm against the Card docs.
+  - `treatment`: `filled` · `interactive`: `"true"` (whole card follows its first action link;
+    ctrl/cmd-click opens a new tab) · `actions-placement`: `inline`
+  - Slots: `icon` (`xe-icon size="xl"`) · `title` (author's `<h3>`) · default (body `<p>`) ·
+    `actions` (`xe-action-link`) · `decorative` (`xe-svg` or `<img alt="">`)
+  - Sets `--card-text-color` per variant; slotted `xe-action-link`s inherit it.
+  - Unknown until we get the Card docs: the `style="--xe-card-decorative-…"` custom property in the
+    docs example (cut off in the screenshot), other `treatment` / `actions-placement` values, and
+    exact colors/radius (current values are estimates from the screenshots).
+  - Not built: `<xe-svg name="…">` (DS illustration component) — use an `<img>` in `decorative`.
 
 - **Navbar — `<xe-navbar>`** *(DS status: Ready)* — ✅ built (`scripts/components/xe-navbar.js`)
   Horizontal navigation bar that collapses to a hamburger layout when the nav items no longer fit
