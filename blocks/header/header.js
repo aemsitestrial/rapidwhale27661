@@ -172,11 +172,27 @@ export default async function decorate(block) {
     langRoot = `/${pathParts[0]}`;
   }
   const navMeta = getMetadata('nav');
-  let navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav-v2';
+  let navPath = navMeta ? new URL(navMeta, window.location).pathname : '/xe-navbar';
   if (langRoot && !navPath.startsWith(`${langRoot}/`)) {
     navPath = `${langRoot}${navPath}`;
   }
   const fragment = await loadFragment(navPath);
+
+  // XE Navbar header: when the nav page contains an XE Navbar block, that block is the header
+  const xeNavbar = fragment?.querySelector('.xe-navbar');
+  if (xeNavbar) {
+    block.replaceChildren(xeNavbar);
+    block.closest('header')?.classList.add('header-xe-navbar');
+    return;
+  }
+
+  // Legacy nav page: needs its sections (announcements, brand, sections, tools[, utility]).
+  // Leave the header empty rather than crash when the page is missing or incomplete.
+  if (!fragment || fragment.children.length < 4) {
+    block.textContent = '';
+    console.warn(`header: nav page "${navPath}" is missing or has fewer than 4 sections`);
+    return;
+  }
 
   // decorate nav DOM
   block.textContent = '';

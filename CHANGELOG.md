@@ -5,10 +5,21 @@ this file is the history. Newest first.
 
 ---
 
+## 2026-09-28 (later) — XE Navbar becomes the site header
+
+- **The header block now renders the XE Navbar site-wide.** It loads the nav page (default
+  **`/xe-navbar`**, or a page's `nav` metadata) and, when that page contains an XE Navbar block,
+  shows it as the whole header on every page. Authors edit the header on the `xe-navbar` page.
+- **The empty header is fixed.** The old default `/nav-v2` came from the keeneagle93325 site and
+  doesn't exist here, so the header crashed on every page. A missing or incomplete nav page now
+  leaves the header empty with a console warning instead of an error.
+- Header tests added; drop-in stubs (`test/mocks/dropins.js`) so blocks importing `@dropins/*` can
+  be tested.
+- Still open: the footer's default `/footer-v2` doesn't exist here either, so the footer is empty.
+
 ## 2026-09-28 — Xcel design system web components
 
-Everything below is in open pull requests. **Merge in order: #2 → #3 → #4 → #5 → #6** — each
-branch builds on the previous one, so until then each PR's diff also shows the earlier commits.
+All merged into `main` in order: #2 → #3 → #4 → #5 → #6.
 
 ### Components & blocks
 

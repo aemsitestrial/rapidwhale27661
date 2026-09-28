@@ -1,5 +1,10 @@
 /* stylelint-disable selector-class-pattern */
 
+/* XE Navbar as the site header: size to the navbar instead of the fixed legacy nav height */
+header.header-xe-navbar {
+  height: auto;
+}
+
 /* header and nav layout */
 header .nav-wrapper {
   background-color: #F5EDE8;

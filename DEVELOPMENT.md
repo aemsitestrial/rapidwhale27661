@@ -36,15 +36,25 @@ The header and footer are not hardcoded blocks of content — they're fragments 
 dedicated pages, and every page on the site loads the same fragment unless told otherwise.
 
 - **Default paths (site-wide fallback):** hardcoded in [blocks/header/header.js](blocks/header/header.js#L175)
-  (`'/nav'`) and [blocks/footer/footer.js](blocks/footer/footer.js#L17) (`'/footer'`). Changing these two
-  lines is how you switch the source page for the **entire site**.
+  (`'/xe-navbar'`) and [blocks/footer/footer.js](blocks/footer/footer.js#L17) (`'/footer-v2'`). Changing
+  these two lines is how you switch the source page for the **entire site**.
+  ⚠️ `/footer-v2` doesn't exist on this site yet (it came from the old keeneagle93325 site), so the
+  footer is currently empty on every page.
 - **Per-page override:** add a `nav` and/or `footer` row to a page's **Metadata** block
-  (e.g. `nav` → `/nav-v2`) to point just that page at a different header/footer page, without touching code.
+  (e.g. `nav` → `/nav-landing`) to point just that page at a different header/footer page, without
+  touching code.
 - **Fetch mechanism:** both blocks call `loadFragment(path)` in
   [blocks/fragment/fragment.js](blocks/fragment/fragment.js#L17), which fetches `{rootPath}{path}.plain.html`.
   The target page must be **Previewed + Published** or this 404s.
-- **Required content structure for a nav page** (read by [header.js](blocks/header/header.js#L206-L209) as
-  5 sections, in this exact order — each section is a section break in the doc):
+- **XE Navbar header (current setup):** if the nav page contains an **XE Navbar** block, the header
+  renders that block as the whole header (everything else on the page is ignored) and the `<header>`
+  gets the `header-xe-navbar` class so its height follows the navbar. Authors edit the site header by
+  editing the XE Navbar on the `xe-navbar` page in Universal Editor and publishing it.
+- **If the nav page is missing** (or a legacy nav page has fewer than 4 sections), the header stays
+  empty and logs a console warning instead of crashing the page.
+- **Legacy nav page structure** (only used when the nav page has no XE Navbar — read by
+  [header.js](blocks/header/header.js#L203) as 5 sections, in this exact order — each section is a
+  section break in the doc):
   1. **Announcements** — top promo/announcement bar content
   2. **Brand** — logo image + home link
   3. **Sections** — main menu; a nested `<ul>` under a menu item makes it an expandable dropdown

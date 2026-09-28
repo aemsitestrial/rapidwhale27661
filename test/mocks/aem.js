@@ -31,8 +31,12 @@ export function createOptimizedPicture(src, alt = '') {
   return picture;
 }
 
-export function getMetadata() {
-  return '';
+// Reads <meta> tags like the real getMetadata
+export function getMetadata(name, doc = document) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  return [...doc.head.querySelectorAll(`meta[${attr}="${name}"]`)]
+    .map((m) => m.content)
+    .join(', ');
 }
 
 export function buildBlock(blockName, content) {
