@@ -176,22 +176,26 @@ Components are layered. Each layer is built from the one below it and never re-i
 Because every block shares the same primitives, a brand change (button color, radius, hover…)
 is made once in the primitive and applies site-wide.
 
+**Docs status** (see "Building primitives" below): **Verified** = matches a full DS docs page ·
+**Partial** = built from an incomplete page or from usage examples, fixes may be pending ·
+**Not from DS docs** = built from a design screenshot, DS page not received yet.
+
 **Available primitives:**
-| Component | Purpose |
-|---|---|
-| `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) |
-| `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` |
-| `<xe-nav-item active href target>` | Navbar link/button; slots: default, `leading-icon` |
-| `<xe-action-link link-type href>` | Labeled link with a trailing direction icon (internal / external / download); color from `--card-text-color` |
+| Component | Purpose | Docs status |
+|---|---|---|
+| `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) | Not from DS docs |
+| `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` | Partial (from the banner example only) |
+| `<xe-nav-item active href target>` | Navbar link/button; slots: default, `leading-icon` | Verified (tokens still estimated) |
+| `<xe-action-link link-type href>` | Labeled link with a trailing direction icon (internal / external / download); color from `--card-text-color` | Partial — **fixes pending** (full docs received 2026-10-01) |
 
 **Available composite components:**
-| Component | Built from | Purpose |
-|---|---|---|
-| `<xe-banner variant size background>` | — | Banner container |
-| `<xe-banner-column expand align heading-level>` | `xe-icon`, `xe-button` (slotted) | Banner column; slots: `icon`, `heading`, `message`, `action` |
-| `<xe-navbar label>` | `xe-icon`; `xe-nav-item`, `xe-button` (slotted) | Navigation bar with built-in mobile drawer; slots: `logo`, `nav-items`, `search`, `actions`, `toolbar-selector`, `toolbar-actions` |
-| `<xe-card variant treatment interactive actions-placement>` | `xe-icon`, `xe-action-link` (slotted) | Card surface; sets `--card-text-color`; slots: `icon`, `title`, default (body), `actions`, `decorative` |
-| `<xe-feature-cards columns mobile-layout heading subheading header-align background>` | `xe-card` (slotted) | Full-width band of 2–3 equal-height cards; carousel on mobile |
+| Component | Built from | Purpose | Docs status |
+|---|---|---|---|
+| `<xe-banner variant size background>` | — | Banner container | Not from DS docs |
+| `<xe-banner-column expand align heading-level>` | `xe-icon`, `xe-button` (slotted) | Banner column; slots: `icon`, `heading`, `message`, `action` | Not from DS docs |
+| `<xe-navbar label>` | `xe-icon`; `xe-nav-item`, `xe-button` (slotted) | Navigation bar with built-in mobile drawer; slots: `logo`, `nav-items`, `search`, `actions`, `toolbar-selector`, `toolbar-actions` | Verified (search/toolbar contents pending) |
+| `<xe-card variant treatment interactive actions-placement>` | `xe-icon`, `xe-action-link` (slotted) | Card surface; sets `--card-text-color`; slots: `icon`, `title`, default (body), `actions`, `decorative` | Partial (from Feature Cards usage) |
+| `<xe-feature-cards columns mobile-layout heading subheading header-align background>` | `xe-card` (slotted) | Full-width band of 2–3 equal-height cards; carousel on mobile | Verified |
 
 ### Xcel design system — the source of truth for components
 
@@ -233,22 +237,37 @@ before building. When a component is built, mark it ✅ here and add it to the t
 
 **Documented specs received so far** (build from these when the component is needed):
 
-- **Action Link — `<xe-action-link link-type href>`** *(DS status: Ready)* — ✅ built (`scripts/components/xe-action-link.js`)
+- **Action Link — `<xe-action-link link-type href target>`** *(DS status: Ready)* — ✅ built
+  (`scripts/components/xe-action-link.js`) · **Docs status: Partial — fixes pending.** Built
+  2026-09-28 from the first half of the docs page; the full page (Usage, CSS custom properties,
+  Accessibility) was received 2026-10-01.
   A labeled link with a trailing directional icon, for card action slots and other inline actions.
   - `link-type` (default `internal`) controls the trailing icon:
     `internal` → arrow right (navigating within the site) ·
     `external` → arrow up-right (new tab or external site) ·
     `download` → arrow down (downloading a file)
   - `href` — URL the link navigates to.
-  - Label is the default slot: `<xe-action-link link-type="external" href="…">Visit site</xe-action-link>`
+  - `target` — separate attribute, used together with `link-type="external"` (docs usage):
+    `<xe-action-link href="https://example.com" target="_blank" link-type="external">Visit site</xe-action-link>`
+  - Label is the default slot.
   - Color inherits from the parent card surface via `--card-text-color`, so it adapts to `xe-card`
-    variants (neutral, accent, brand…) with no extra configuration.
+    variants (neutral, accent, brand…) with no extra configuration. Docs card example:
+    `<xe-card variant="accent" treatment="filled">` with `<div slot="title">` and
+    `<xe-action-link slot="actions" href="/solar">Learn more</xe-action-link>`.
+  - **CSS custom properties:**
+    `--xe-action-link-color` (default: inherits `--card-text-color`) — link and icon color ·
+    `--xe-action-link-underline-height` (default `2px`) — thickness of the **animated** underline on
+    hover · `--xe-action-link-icon-nudge` (default `0`) — vertical offset for the trailing icon
+    (e.g. `1px` to optically align with descenders)
+  - **Accessibility:** sets `rel="noopener noreferrer"` automatically when `target="_blank"` ·
+    supports `aria-label` when the visible label needs more context ("Learn more about solar
+    rebates") · focus ring `outline: 2px solid currentColor`, inheriting the link color.
   - DS stories: Default, External, Download, On Dark Surface.
   - External icon: the docs table says "arrow up-right", but the docs example shows an arrow
     leaving a box, so we use `faArrowUpRightFromSquare` to match the example.
-  - Our extras (the docs say when to use each type, not how the link behaves): `external` opens
-    in a new tab with `rel="noopener noreferrer"` and adds "(opens in a new tab)" for screen
-    readers; `download` sets the native `download` attribute. The icon scales with the label (1em).
+  - Extras we keep: "(opens in a new tab)" for screen readers — shown only when `target="_blank"`;
+    the native `download` attribute for `download` links; the icon scales with the label (1em).
+  - Fixes pending — see "Pending fixes for components already built" (PF-01).
 
 - **Feature Cards — `<xe-feature-cards>`** *(DS status: Ready)* — ✅ built
   (`scripts/components/xe-feature-cards.js`, block `blocks/xe-feature-cards/`)
@@ -283,6 +302,8 @@ before building. When a component is built, mark it ✅ here and add it to the t
     docs example (cut off in the screenshot), other `treatment` / `actions-placement` values, and
     exact colors/radius (current values are estimates from the screenshots).
   - Not built: `<xe-svg name="…">` (DS illustration component) — use an `<img>` in `decorative`.
+  - The Action Link docs show `<xe-card variant="accent" treatment="filled">` with a
+    `<div slot="title">` — see PF-03.
 
 - **Navbar — `<xe-navbar>`** *(DS status: Ready)* — ✅ built (`scripts/components/xe-navbar.js`)
   Horizontal navigation bar that collapses to a hamburger layout when the nav items no longer fit
@@ -310,7 +331,8 @@ before building. When a component is built, mark it ✅ here and add it to the t
 **Reuse-first checklist — before writing any new component:**
 1. Check the tables above. If an existing component fits, use it.
 2. Check the **design system catalog**. If the DS has the component, build it to the DS docs
-   (tag name, attributes, slots, custom properties) — get the docs page first if we don't have it.
+   (tag name, attributes, slots, custom properties) — get the **full** docs page first if we don't
+   have it (see "Building primitives" → step 1).
 3. If an existing component *almost* fits, extend it with a new attribute or slot (keeping existing
    behavior unchanged) instead of creating a near-duplicate.
 4. Only create a **new primitive** that isn't in the DS when nothing else covers the UI element,
@@ -318,6 +340,87 @@ before building. When a component is built, mark it ✅ here and add it to the t
 5. Create a **composite component** only for a layout that more than one block could use;
    otherwise keep the layout in the block adapter.
 6. Add every new component to the matching table above, and mark it ✅ in the catalog, in the same PR.
+
+### Building primitives — how we work (agreed 2026-10-01)
+
+**Step 1 — Get the full docs page before building.** Action Link was built from half its page and
+missed `target`, `aria-label` and three CSS custom properties (PF-01). Every primitive needs:
+
+| Docs section | Why we need it |
+|---|---|
+| **Props table** — name, type, default, allowed values | Attributes and defaults |
+| **Slots** | What authors and blocks can put inside |
+| **Usage** code examples | Shows attributes the props table leaves out (e.g. `target`) |
+| **CSS custom properties** | What colors/sizes/spacing other components may override |
+| **Accessibility** | `aria-*`, focus, keyboard behavior |
+| **Stories** list | The states that must work (Default, Disabled, On Dark Surface…) |
+
+If a section isn't on the page, treat it as **unknown** — don't guess. Record what's missing in the
+component's spec entry above. When the user shares docs, first read and compare them with what's
+built (gap table + recommendations); change code only when asked.
+
+**Step 2 — Design tokens first.** Colors, radius, spacing and typography are currently estimates
+copied into each component. Once the DS token values are received, put them in one shared tokens
+file (e.g. `--xe-color-primary`, `--xe-radius-md`) that every component reads. Surfaces such as
+cards set context tokens that children inherit (as `--card-text-color` already does for Action
+Link). A brand change then happens in one place.
+
+**Step 3 — Build order** (what our blocks already need comes first):
+
+| Priority | Primitive | Why |
+|---|---|---|
+| 1 | **Button** — verify against its docs | Used by XE Banner and XE Navbar; built from the banner example only |
+| 2 | **Action Link** — apply PF-01 | Full docs already received |
+| 3 | **Icon Button** | Navbar actions (search, menu) |
+| 4 | **Menu Button** | Navbar language selector; possibly nav dropdowns |
+| 5 | **Segmented Button** | Navbar `toolbar-selector` (e.g. Residential / Business) |
+| 6 | **Hyperlink** | Inline links in body copy |
+| 7 | **Button Group** | Groups of actions in banners and cards |
+| 8 | **Split Button**, **Floating Action Button** | Not needed by any block yet |
+
+Then the other categories — **Content Display** (Card), **Input Control** (Search Bar) and
+**Feedback** (alerts, e.g. for an announcement bar) unlock the most.
+
+**Step 4 — One shared pattern for every primitive.** Add a small shared helper module in
+`scripts/components/` (planned, not built yet) so every primitive gets the same behavior instead of
+re-implementing it:
+- **Shared styles** via one constructable stylesheet per component (`adoptedStyleSheets`), shared by
+  all instances — faster than a `<style>` copy per instance.
+- **Standard link/button behavior**, written once: `href`, `target`, `rel="noopener noreferrer"` on
+  `target="_blank"`, `aria-label` passthrough to the inner control, focus ring
+  `outline: 2px solid currentColor`.
+- **Properties as well as attributes:** the docs list props in camelCase (`linkType`), so
+  `el.linkType = 'external'` should work alongside `link-type="external"` (properties reflect to
+  attributes).
+- **Respect user settings:** no hover/underline animation under `prefers-reduced-motion: reduce`;
+  stay visible in Windows high-contrast mode (`forced-colors: active`).
+
+**Step 5 — Check every component against its docs automatically.** Record each docs page as a
+small spec file (props + defaults, slots, CSS custom properties, stories) and add one shared test
+that checks each primitive against its spec. Drift from the docs then fails the tests.
+
+**Step 6 — Storybook mirrors the DS Storybook.** Same folders and story names
+(*Design System Primitives › Action › Action Link* → Default, External, Download, On Dark Surface),
+with controls taken from the spec, so our stories can be reviewed side by side with the official
+docs.
+
+**Step 7 — Track docs status.** Keep the **Docs status** column in the component tables above up
+to date (Verified / Partial / Not from DS docs) and note the date each docs page was received.
+
+### Pending fixes for components already built
+
+Apply these when the component is next worked on (or when asked). Each fix updates the component,
+its story/tests, any block that uses it, the spec entry above, and `docs/build-log.md`.
+
+| ID | Component | Fix | Source |
+|---|---|---|---|
+| PF-01 | `xe-action-link` | (a) Add a **`target`** attribute; `rel="noopener noreferrer"` follows `target="_blank"`, not `link-type`. (b) **`link-type="external"` only changes the icon** — stop opening a new tab automatically; the XE Feature Cards block sets `target="_blank"` for external links instead. (c) Pass **`aria-label`** to the inner link. (d) Add **`--xe-action-link-color`** (default `--card-text-color`). (e) **Animated** hover underline with thickness **`--xe-action-link-underline-height`** (2px). (f) Add **`--xe-action-link-icon-nudge`** (0) for the icon's vertical offset. (g) Show "(opens in a new tab)" only when `target="_blank"`. | Full Action Link docs, 2026-10-01 |
+| PF-02 | `xe-button` | Verify every attribute, value, slot, custom property and accessibility rule against the Button docs page (built from the banner example only). | Waiting for the Button docs |
+| PF-03 | `xe-card` | Align `variant` names with the Card docs: our `surface` / `primary-variant` vs `neutral` / `accent` / `brand` in the Action Link docs; title slot used as `<div slot="title">` there. Add the cut-off `--xe-card-decorative-…` property. | Waiting for the Card docs |
+| PF-04 | All `xe-*` components | Replace estimated colors/radius/spacing with the DS design tokens (Step 2). | Waiting for the tokens docs |
+| PF-05 | All primitives | Move to the shared pattern (Step 4) and add spec-based tests (Step 5). | Planned |
+| PF-06 | XE Navbar header | Reserve the header height up front, fixed navbar row heights, smaller logo rendition — stops the ~66px page jump (build-log I-24, I-28). | Postponed by the user 2026-09-28 |
+| PF-07 | XE Banner block | Reads fields by position — confirm with an empty field in Universal Editor; switch to content detection if a field shifts (build-log I-26). | Needs a UE test |
 
 ### Block adapter pattern
 ```js

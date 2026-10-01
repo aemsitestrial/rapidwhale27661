@@ -6,6 +6,16 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-01 — How we build primitives (docs only)
+
+- **"Building primitives"** added to `DEVELOPMENT.md`: full DS docs page before building, design
+  tokens first, build order (Button → Action Link fixes → Icon Button → Menu Button → Segmented
+  Button → Hyperlink → Button Group → Split Button / FAB), one shared pattern for all primitives,
+  spec-based tests, Storybook mirroring the DS Storybook, and a **Docs status** per component.
+- **Pending fixes** for components already built (PF-01 … PF-07) — starting with `xe-action-link`,
+  which was built from half its docs page (build-log #I-32).
+- No code changes; the components are fixed when they're next worked on.
+
 ## 2026-09-28 (later) — XE Navbar becomes the site header
 
 [#7](https://github.com/aemsitestrial/rapidwhale27661/pull/7), merged — the navbar is live on the

@@ -46,6 +46,17 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - PageSpeed check on PR #7 flagged a layout shift from the new header. → #I-24 (open)
 - The navbar is now visible on the home page (confirmed by the user).
 
+### 2026-10-01 — Focus on primitives
+
+- Received the **full Action Link docs page** (Usage, CSS custom properties, Accessibility) — more
+  than the page `xe-action-link` was built from. Compared it with the built component: 7 gaps
+  recorded as pending fix **PF-01** in `DEVELOPMENT.md`. → #I-32
+- **Agreed way of working for primitives** written into `DEVELOPMENT.md` → "Building primitives":
+  full docs page first, design tokens first, build order, a shared pattern for all primitives,
+  spec-based tests, Storybook mirroring the DS Storybook, and a Docs status per component.
+- **Pending fixes** list (PF-01 … PF-07) added to `DEVELOPMENT.md` for components already built.
+- When the user shares DS docs: read and compare first; change code only when asked.
+
 ---
 
 ## Issue tracker
@@ -61,6 +72,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-03 | 09-25 | Commit refused: "Author identity unknown" | No git author configured in this environment | ✅ Set a repo-local author (user's choice) |
 | I-12 | 09-28 | Work pushed after PR #1 never reached `main` | PR #1 was merged minutes after opening; later commits went to the merged branch | ✅ Opened PR #2 for them. Rule: check a PR is still open before adding commits |
 | I-20 | 09-28 | Couldn't read the site's publish log (`admin.hlx.page/log` → 403) | Adobe credentials for the assistant are off (separate from the git permission) | ℹ️ Optional: enable "Adobe credentials" in Settings → LLM Permissions |
+| I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ⏳ Re-enable or refresh the git permission / token in Settings → LLM Permissions; docs work committed locally until then |
 
 ### Styling & components
 
@@ -77,6 +89,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-17 | 09-28 | Card title/body lost the design system look | Site-wide `h1`–`h6` / `p` rules beat a component's `::slotted()` styles | ✅ Slotted typography marked `!important` (rule in `DEVELOPMENT.md`) |
 | I-18 | 09-28 | Mobile carousel: cards had different heights | `xe-card`'s `height: 100%` blocked the flex row's stretch | ✅ `height: auto` in carousel mode |
 | I-19 | 09-28 | Carousel only triggered by window width, not a narrow section | Media query instead of a container query | ✅ Container query on the component's own width |
+| I-32 | 10-01 | `xe-action-link` doesn't match the full docs: no `target` attribute, `external` auto-opens a new tab, no `aria-label` passthrough, missing `--xe-action-link-color` / `-underline-height` (animated underline) / `-icon-nudge` | Built on 09-28 from the first half of the docs page only | ⏳ Pending fix **PF-01** (`DEVELOPMENT.md`). Rule added: get the full docs page before building |
 
 ### Tests & tooling
 
@@ -117,8 +130,13 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 
 ## Still waiting on design system docs
 
+Priority order from `DEVELOPMENT.md` → "Building primitives" (full page each time: props, slots,
+usage, CSS custom properties, accessibility, stories):
+
 - **Design tokens** (colors, radius, spacing, typography, breakpoints) — current values are estimates
-- **Card** page — other variants/treatments, the cut-off `--xe-card-decorative-…` property
+- **Button** — to verify `xe-button` (PF-02)
+- **Card** page — variant names (`accent`…), other treatments, the cut-off `--xe-card-decorative-…`
+  property (PF-03)
 - **Dropdown / menu** for nav items with sub-links
 - **Search Bar**, **Segmented Button**, **Icon Button**, **Menu Button**
 - **`xe-svg`** and the brand illustrations

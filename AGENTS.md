@@ -16,6 +16,10 @@ bug/issue we hit — check it before debugging, and log new ones there), and
 - **Workflow:** feature branch → PR → `main`. Never push straight to `main`.
 - **New blocks** are built on `xe-*` web components in `scripts/components/`, matching the Xcel
   design system docs (tag names, attributes, slots). Reuse existing components first.
+- **Primitives:** follow `DEVELOPMENT.md` → "Building primitives" — get the **full** DS docs page
+  (props, slots, usage, CSS custom properties, accessibility, stories) before building; check
+  **"Pending fixes for components already built"** (PF-xx) and apply the ones for any component you
+  touch. When the user shares DS docs, read and compare first; change code only when asked.
 - **Every new or changed block** has a `.stories.js` and `.test.js`; `npm test` and `npm run lint`
   must pass, and Storybook's a11y panel must show 0 violations.
 - **Model changes** (`_*.json`): run `npm run build:json` (the pre-commit hook also does this).
