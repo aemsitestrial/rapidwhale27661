@@ -57,6 +57,17 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - **Pending fixes** list (PF-01 … PF-07) added to `DEVELOPMENT.md` for components already built.
 - When the user shares DS docs: read and compare first; change code only when asked.
 
+### 2026-10-02 — First primitive built the new way: Hyperlink
+
+- Received the **Hyperlink docs page**; built **`<xe-hyperlink>`** to it — the first primitive that
+  follows "Building primitives" end to end: full docs first, shared helper (`xe-link-helpers.js`),
+  properties + attributes, a `DOCS_SPEC` contract test, stories mirroring the DS Storybook.
+- Checked in the browser: matches the DS Link List / Variant On Dark previews; Tab shows the focus
+  ring, a mouse click doesn't; long links wrap inside a sentence and use the paragraph's font;
+  `aria-label` names the inner link. 96/96 tests, 35 stories with 0 accessibility violations.
+  → #I-34, #I-35
+- GitHub access worked again (I-33); the 2026-10-01 docs commit was added to PR #8.
+
 ---
 
 ## Issue tracker
@@ -72,7 +83,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-03 | 09-25 | Commit refused: "Author identity unknown" | No git author configured in this environment | ✅ Set a repo-local author (user's choice) |
 | I-12 | 09-28 | Work pushed after PR #1 never reached `main` | PR #1 was merged minutes after opening; later commits went to the merged branch | ✅ Opened PR #2 for them. Rule: check a PR is still open before adding commits |
 | I-20 | 09-28 | Couldn't read the site's publish log (`admin.hlx.page/log` → 403) | Adobe credentials for the assistant are off (separate from the git permission) | ℹ️ Optional: enable "Adobe credentials" in Settings → LLM Permissions |
-| I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ⏳ Re-enable or refresh the git permission / token in Settings → LLM Permissions; docs work committed locally until then |
+| I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ✅ Worked again on 10-02 (no change needed on our side); docs commit pushed to PR #8 |
 
 ### Styling & components
 
@@ -100,6 +111,8 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-10 | 09-28 | New dev dependencies added critical/high security advisories | Older Storybook/Vitest/happy-dom/Vite versions | ✅ Upgraded to patched versions. ℹ️ 1 moderate advisory left (Storybook 8 addon, dev-only, no fix) |
 | I-11 | 09-28 | Lint scanned the Storybook build output; `.eslintignore` line got merged | `storybook-static/` not ignored; file had no final newline | ✅ Ignored `storybook-static/` and `coverage/`; fixed the file |
 | I-23 | 09-28 | Header tests couldn't load `header.js` | It imports Commerce `@dropins/*` (import map) and needs a `<header>` when the module loads | ✅ `test/mocks/dropins.js` + import after creating a `<header>` |
+| I-34 | 10-02 | A focus test failed only in unit tests | happy-dom doesn't implement `delegatesFocus` | ✅ Unit test checks the link is focusable; real Tab / `:focus-visible` behavior checked in the browser |
+| I-35 | 10-02 | DS Hyperlink examples use `href="javascript:void(0)"` | Storybook placeholder in the DS docs | ℹ️ Our component refuses `javascript:` URLs (security); our stories use `#` |
 
 ### Content, Universal Editor & publishing
 
@@ -135,6 +148,8 @@ usage, CSS custom properties, accessibility, stories):
 
 - **Design tokens** (colors, radius, spacing, typography, breakpoints) — current values are estimates
 - **Button** — to verify `xe-button` (PF-02)
+- **Hyperlink** follow-ups — hover/active/visited states, CSS custom properties (if any), the link
+  color token, and whether links inside paragraphs are underlined by default
 - **Card** page — variant names (`accent`…), other treatments, the cut-off `--xe-card-decorative-…`
   property (PF-03)
 - **Dropdown / menu** for nav items with sub-links

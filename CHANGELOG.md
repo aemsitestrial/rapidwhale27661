@@ -6,6 +6,19 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-02 — `xe-hyperlink` primitive
+
+- **`<xe-hyperlink>`** built to the Hyperlink docs page: `href`, `variant` (`default` / `variant`
+  for dark surfaces), `trailing-icon`, `link-type` (external ↗ default, internal →, download ↓),
+  `target`; `rel` for `target="_blank"`, `aria-label`, focus ring on `:focus-visible` only. Works
+  standalone, in link lists and inside body copy (wraps with the sentence).
+- **`xe-link-helpers.js`** — the first shared helper from "Building primitives" step 4 (link
+  behavior, safe URLs, shared stylesheets); `xe-action-link` moves to it with PF-01.
+- 5 stories (the 4 DS stories + In Body Text) and 16 unit tests, including a contract test that
+  checks the component against the docs page.
+- Component only — no block uses it yet. Good next candidates: the empty footer's legal links
+  (build-log #I-25) and links in XE Banner / XE Feature Card text.
+
 ## 2026-10-01 — How we build primitives (docs only)
 
 - **"Building primitives"** added to `DEVELOPMENT.md`: full DS docs page before building, design
