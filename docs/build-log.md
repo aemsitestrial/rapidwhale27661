@@ -67,6 +67,10 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   `aria-label` names the inner link. 96/96 tests, 35 stories with 0 accessibility violations.
   → #I-34, #I-35
 - GitHub access worked again (I-33); the 2026-10-01 docs commit was added to PR #8.
+- **PR #9** opened for Hyperlink (stacked on #8). CI green. The PageSpeed check failed (mobile 99,
+  desktop 84) because of the existing header layout shift, not the new component. → #I-24
+- Docs and this log updated first, then **#8 → #9 merged into `main`** at the user's request.
+  `xe-hyperlink` is in the live code; no page uses it yet.
 
 ---
 
@@ -128,7 +132,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 
 | # | Date | What we saw | Cause | Fix / status |
 |---|---|---|---|---|
-| I-24 | 09-28 | PageSpeed check failed on PR #7: mobile performance 91 (was 99–100), CLS 0.073 (was 0), Speed Index 4.3 s | The page reserves 70px for the header; the XE Navbar loads later at 136px (desktop) / 186px (mobile with current settings) and pushes the page down ~66px | ⏳ Open (postponed). Plan: reserve the header height up front, fixed navbar row heights, smaller logo rendition. Author side: set Pay Bill + Sign In to "Navbar on desktop, menu on mobile" and Contact Us to "Menu only" |
+| I-24 | 09-28 | PageSpeed check failed on PR #7: mobile performance 91 (was 99–100), CLS 0.073 (was 0), Speed Index 4.3 s | The page reserves 70px for the header; the XE Navbar loads later at 136px (desktop) / 186px (mobile with current settings) and pushes the page down ~66px | ⏳ Open (postponed). Plan: reserve the header height up front, fixed navbar row heights, smaller logo rendition. Author side: set Pay Bill + Sign In to "Navbar on desktop, menu on mobile" and Contact Us to "Menu only". **10-02:** same shift seen on PR #9 (mobile CLS 0.073, desktop CLS 0.045 → desktop score 84) — the PageSpeed check now **fails on every PR** until this is fixed (PF-06) |
 | I-28 | 09-28 | Logo image much larger than shown | Logo uploaded at 1360×480 and served at up to 2000px wide for a 113×40 display | ⏳ Open — part of the I-24 fix |
 
 ### Docs & housekeeping

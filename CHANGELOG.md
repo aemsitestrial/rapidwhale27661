@@ -8,6 +8,9 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-02 — `xe-hyperlink` primitive
 
+[#9](https://github.com/aemsitestrial/rapidwhale27661/pull/9), merged into `main` after #8 (merge
+order #8 → #9). The component is on the live site's code but not used by any page yet.
+
 - **`<xe-hyperlink>`** built to the Hyperlink docs page: `href`, `variant` (`default` / `variant`
   for dark surfaces), `trailing-icon`, `link-type` (external ↗ default, internal →, download ↓),
   `target`; `rel` for `target="_blank"`, `aria-label`, focus ring on `:focus-visible` only. Works
@@ -18,8 +21,14 @@ are tracked in **`docs/build-log.md`**.
   checks the component against the docs page.
 - Component only — no block uses it yet. Good next candidates: the empty footer's legal links
   (build-log #I-25) and links in XE Banner / XE Feature Card text.
+- **PageSpeed check failed on #9** (mobile 99, desktop 84) — not because of Hyperlink (no page loads
+  it) but because of the header layout shift from #7 (CLS 0.073 mobile / 0.045 desktop, build-log
+  #I-24). It will fail on every PR until the header fix **PF-06** is done.
 
 ## 2026-10-01 — How we build primitives (docs only)
+
+[#8](https://github.com/aemsitestrial/rapidwhale27661/pull/8), merged 2026-10-02 together with the
+build log and issue tracker (`docs/build-log.md`, written 2026-09-28).
 
 - **"Building primitives"** added to `DEVELOPMENT.md`: full DS docs page before building, design
   tokens first, build order (Button → Action Link fixes → Icon Button → Menu Button → Segmented
