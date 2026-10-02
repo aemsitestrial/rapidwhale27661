@@ -8,13 +8,18 @@ two files below; this file only points to them so every agent and skill starts f
    web components (required for new blocks), the Xcel design system catalog, and the design spec.
 2. **`SKILLS-GUIDE.md`** — which skill or agent to use for which task.
 
-Also useful: **`CHANGELOG.md`** (what's been built, open items) and **`docs/ue-authoring-guide.md`**
-(how authors use the XE blocks in Universal Editor).
+Also useful: **`CHANGELOG.md`** (what's been built, open items), **`docs/build-log.md`** (every
+bug/issue we hit — check it before debugging, and log new ones there), and
+**`docs/ue-authoring-guide.md`** (how authors use the XE blocks in Universal Editor).
 
 ## Non-negotiables (summary — details in the files above)
 - **Workflow:** feature branch → PR → `main`. Never push straight to `main`.
 - **New blocks** are built on `xe-*` web components in `scripts/components/`, matching the Xcel
   design system docs (tag names, attributes, slots). Reuse existing components first.
+- **Primitives:** follow `DEVELOPMENT.md` → "Building primitives" — get the **full** DS docs page
+  (props, slots, usage, CSS custom properties, accessibility, stories) before building; check
+  **"Pending fixes for components already built"** (PF-xx) and apply the ones for any component you
+  touch. When the user shares DS docs, read and compare first; change code only when asked.
 - **Every new or changed block** has a `.stories.js` and `.test.js`; `npm test` and `npm run lint`
   must pass, and Storybook's a11y panel must show 0 violations.
 - **Model changes** (`_*.json`): run `npm run build:json` (the pre-commit hook also does this).

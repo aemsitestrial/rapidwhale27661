@@ -20,6 +20,9 @@ Create and evolve reusable blocks in Adobe EDS using boilerplate conventions.
   - Check the Xcel design system catalog in DEVELOPMENT.md: if the component exists in the design
     system, build it to its docs exactly (same tag name, attributes, slots, custom properties).
   - New components go in scripts/components/xe-<name>.js (shadow DOM, attributes + slots).
+  - For primitives, follow "Building primitives" in DEVELOPMENT.md: full docs page first (props,
+    slots, usage, CSS custom properties, accessibility, stories), and apply any "Pending fixes"
+    (PF-xx) listed for a component you change.
   - The block JS is a thin adapter that maps authored rows to component attributes and slots.
 - Use robust DOM decoration patterns and tolerate missing authored fields.
 - Keep CSS selectors block-scoped and mobile-first.
