@@ -446,7 +446,7 @@ its story/tests, any block that uses it, the spec entry above, and `docs/build-l
 | PF-03 | `xe-card` | Align `variant` names with the Card docs: our `surface` / `primary-variant` vs `neutral` / `accent` / `brand` in the Action Link docs; title slot used as `<div slot="title">` there. Add the cut-off `--xe-card-decorative-…` property. | Waiting for the Card docs |
 | PF-04 | All `xe-*` components | Replace estimated colors/radius/spacing with the DS design tokens (Step 2). | Waiting for the tokens docs |
 | PF-05 | All primitives | Move to the shared pattern (Step 4) and add spec-based tests (Step 5). `xe-hyperlink` is the first to follow both (`xe-link-helpers.js`, `DOCS_SPEC` in its test) — use it as the template. | In progress |
-| PF-06 | XE Navbar header | Reserve the header height up front, fixed navbar row heights, smaller logo rendition — stops the ~66px page jump (build-log I-24, I-28). Until this is done the AEM PageSpeed check fails on **every** PR (seen again on #9: desktop 84). | Postponed by the user 2026-09-28 — recommended next |
+| PF-06 | XE Navbar header | Reserve the header height up front, fixed navbar row heights, smaller logo rendition — stops the ~66px page jump (build-log I-24, I-28). Until this is done the shift shows up in every AEM PageSpeed run and can make the check fail (it did on #7 and on #9's first run). | Postponed by the user 2026-09-28 — recommended next |
 | PF-07 | XE Banner block | Reads fields by position — confirm with an empty field in Universal Editor; switch to content detection if a field shifts (build-log I-26). | Needs a UE test |
 
 ### Block adapter pattern
