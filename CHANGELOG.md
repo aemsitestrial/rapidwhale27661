@@ -21,9 +21,10 @@ order #8 → #9). The component is on the live site's code but not used by any p
   checks the component against the docs page.
 - Component only — no block uses it yet. Good next candidates: the empty footer's legal links
   (build-log #I-25) and links in XE Banner / XE Feature Card text.
-- **PageSpeed check failed on #9** (mobile 99, desktop 84) — not because of Hyperlink (no page loads
-  it) but because of the header layout shift from #7 (CLS 0.073 mobile / 0.045 desktop, build-log
-  #I-24). It will fail on every PR until the header fix **PF-06** is done.
+- **PageSpeed:** the first run on #9 failed (mobile 99, desktop 84); the run on its final commit
+  passed (98 / 100), as did #8 (98 / 100). Hyperlink isn't the cause — no page loads it. The header
+  layout shift from #7 shows up in **every** run (CLS ~0.073 mobile / ~0.046 desktop, build-log
+  #I-24) and, combined with a slow run, can push the score under the pass line. Fix: **PF-06**.
 
 ## 2026-10-01 — How we build primitives (docs only)
 
