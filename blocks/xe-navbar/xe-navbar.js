@@ -1,6 +1,7 @@
 import '../../scripts/components/xe-navbar.js';
 import '../../scripts/components/xe-nav-item.js';
 import '../../scripts/components/xe-button.js';
+import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /*
@@ -79,6 +80,24 @@ function buildAction({ label, href, options }) {
   return button;
 }
 
+// The logo is shown ~40px tall: request a small rendition of authored AEM media instead of the
+// default up-to-2000px one (build-log I-28). Other images (e.g. data: URIs) are left as they are.
+const LOGO_WIDTH = '300';
+
+function logoPicture(picture) {
+  const img = picture.querySelector('img') || picture;
+  const src = img.getAttribute('src') || '';
+  const { pathname } = new URL(src, window.location.href);
+  if (!pathname.includes('/media_')) return picture;
+  const optimized = createOptimizedPicture(src, img.getAttribute('alt') || '', true, [{ width: LOGO_WIDTH }]);
+  const optimizedImg = optimized.querySelector('img');
+  if (img.getAttribute('width') && img.getAttribute('height')) {
+    optimizedImg.setAttribute('width', img.getAttribute('width'));
+    optimizedImg.setAttribute('height', img.getAttribute('height'));
+  }
+  return optimized;
+}
+
 export default function decorate(block) {
   const navbar = document.createElement('xe-navbar');
   let picture;
@@ -114,7 +133,7 @@ export default function decorate(block) {
     logo.slot = 'logo';
     logo.href = logoHref || '/';
     moveInstrumentation(logoRow, logo);
-    logo.append(picture);
+    logo.append(logoPicture(picture));
     navbar.prepend(logo);
   }
 

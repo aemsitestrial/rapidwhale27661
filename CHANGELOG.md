@@ -6,6 +6,20 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-05 — Header no longer makes the page jump (PF-06)
+
+[#11](https://github.com/aemsitestrial/rapidwhale27661/pull/11)
+
+- **Layout shift from the XE Navbar header fixed:** CLS **0** at every width tested (360–1920px),
+  down from 0.27 at 412px. Build-log #I-24, #I-28.
+- `styles/styles.css` reserves the header's height up front (`--xe-header-height`: 137px, 199.5px
+  below 480px); `xe-navbar` uses fixed row heights (toolbar 64px, bar 72px); the header keeps its
+  reserved height with the navbar invisible for two frames while the navbar measures itself.
+- The logo is requested at 300px wide instead of up to 2000px.
+- ⚠️ Changing the navbar's toolbar items, button styles or "On mobile" settings needs the
+  reserved height re-measured (documented in `DEVELOPMENT.md` and the UE authoring guide).
+- Also: #10 (PageSpeed note correction) merged.
+
 ## 2026-10-02 — `xe-hyperlink` primitive
 
 [#9](https://github.com/aemsitestrial/rapidwhale27661/pull/9), merged into `main` after #8 (merge

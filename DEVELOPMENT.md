@@ -52,6 +52,18 @@ dedicated pages, and every page on the site loads the same fragment unless told 
   editing the XE Navbar on the `xe-navbar` page in Universal Editor and publishing it.
 - **If the nav page is missing** (or a legacy nav page has fewer than 4 sections), the header stays
   empty and logs a console warning instead of crashing the page.
+- **No layout shift (fixed 2026-10-05, build-log I-24):** the header loads after the page appears,
+  so its space is reserved up front in `styles/styles.css` as **`--xe-header-height`** — `137px`
+  (toolbar 64px + bar 72px + 1px border; fixed row heights in `xe-navbar.js`) and `199.5px` below
+  480px, where the current always-visible buttons wrap onto a second row. While the navbar lays
+  itself out (two frames), the header keeps that height and the navbar stays invisible; then
+  `header.js` adds `.header-xe-navbar` and the header follows the navbar's real height.
+  ⚠️ **These values depend on the navbar's content on the `/xe-navbar` page.** If authors add or
+  remove toolbar items, change button styles, or change an action's "On mobile" setting,
+  re-measure the header (e.g. at 412px and 1350px — the PageSpeed widths) and update
+  `--xe-header-height`, or the page will jump again. Example: with the recommended mobile settings
+  (Pay Bill + Sign In "Navbar on desktop, menu on mobile", Contact Us "Menu only") the collapsed
+  header has no toolbar row and is 73px.
 - **Legacy nav page structure** (only used when the nav page has no XE Navbar — read by
   [header.js](blocks/header/header.js#L203) as 5 sections, in this exact order — each section is a
   section break in the doc):
@@ -343,6 +355,10 @@ before building. When a component is built, mark it ✅ here and add it to the t
   - Not in the DS docs yet, so **not built**: how `search` switches between inline and delegate
     routing (needs the Search Bar docs). Our extra: a `stacked` state that moves actions to their
     own row when even the collapsed bar can't fit them (prevents horizontal page scroll).
+  - Fixed row heights (our extra, 2026-10-05): toolbar `64px`, bar `72px` (+1px border), so the
+    header height is predictable and can be reserved (see "Header/Footer Configuration").
+    Overridable via `--xe-navbar-toolbar-height` / `--xe-navbar-bar-height`; the stacked bar is
+    `height: auto`.
 
 - **Nav Item — `<xe-nav-item active href target>`** — ✅ built (`scripts/components/xe-nav-item.js`)
   Navigation item for use within `<xe-navbar>`.
@@ -446,7 +462,7 @@ its story/tests, any block that uses it, the spec entry above, and `docs/build-l
 | PF-03 | `xe-card` | Align `variant` names with the Card docs: our `surface` / `primary-variant` vs `neutral` / `accent` / `brand` in the Action Link docs; title slot used as `<div slot="title">` there. Add the cut-off `--xe-card-decorative-…` property. | Waiting for the Card docs |
 | PF-04 | All `xe-*` components | Replace estimated colors/radius/spacing with the DS design tokens (Step 2). | Waiting for the tokens docs |
 | PF-05 | All primitives | Move to the shared pattern (Step 4) and add spec-based tests (Step 5). `xe-hyperlink` is the first to follow both (`xe-link-helpers.js`, `DOCS_SPEC` in its test) — use it as the template. | In progress |
-| PF-06 | XE Navbar header | Reserve the header height up front, fixed navbar row heights, smaller logo rendition — stops the ~66px page jump (build-log I-24, I-28). Until this is done the shift shows up in every AEM PageSpeed run and can make the check fail (it did on #7 and on #9's first run). | Postponed by the user 2026-09-28 — recommended next |
+| PF-06 | XE Navbar header | Reserve the header height up front, fixed navbar row heights, smaller logo rendition — stops the ~66px page jump (build-log I-24, I-28). Until this is done the shift shows up in every AEM PageSpeed run and can make the check fail (it did on #7 and on #9's first run). | ✅ Done 2026-10-05 (PR #11) — layout shift 0 at 360–1920px; keep `--xe-header-height` in sync with the navbar's content |
 | PF-07 | XE Banner block | Reads fields by position — confirm with an empty field in Universal Editor; switch to content detection if a field shifts (build-log I-26). | Needs a UE test |
 
 ### Block adapter pattern

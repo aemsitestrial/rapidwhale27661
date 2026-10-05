@@ -71,9 +71,26 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   99, desktop 84); the run on #9's final commit passed (98 / 100), as did #8 (98 / 100). The header
   layout shift is in every run; the failure was that plus one slow desktop run. → #I-24
 - Docs and this log updated first, then **#8 → #9 merged into `main`** at the user's request.
-- Correction: the merged docs said the check "fails on every PR" — not true (it's intermittent);
-  fixed in a follow-up docs PR.
   `xe-hyperlink` is in the live code; no page uses it yet.
+- Correction: the merged docs said the check "fails on every PR" — not true (it's intermittent);
+  fixed in PR #10 (merged 2026-10-05).
+
+### 2026-10-05 — Header layout shift fixed (PF-06)
+
+- **Measured first** (live site, published `/xe-navbar` page): the page reserved 70px for the
+  header; the XE Navbar is 135.5px at 480px and wider and 186px below that (always-visible buttons
+  wrap onto a second row). Layout shift at 412px: **CLS 0.27**.
+- **Reserving the right height alone wasn't enough** — CLS stayed 0.26. The navbar first rendered
+  at its wide layout (137px) and only then measured itself and wrapped (200px), moving the page
+  twice in two frames. → #I-24
+- **Fix:** fixed navbar row heights (toolbar 64px, bar 72px → 137px); reserve `--xe-header-height`
+  in `styles/styles.css` (137px, 199.5px below 480px); keep the header at that height with the
+  navbar invisible for two frames while it settles, then let the header follow the navbar. Logo
+  now requested at 300px wide instead of up to 2000px. → #I-28
+- **Result:** CLS **0** at every width tested (360, 412, 470, 490, 600, 900, 1000, 1350, 1440,
+  1920px), collapsed and expanded. 99/99 tests, 35 stories with 0 accessibility violations.
+- ⚠️ The reserved heights match the navbar's current content. Changing toolbar items, button styles
+  or "On mobile" settings on `/xe-navbar` means re-measuring and updating `--xe-header-height`.
 
 ---
 
@@ -135,8 +152,8 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 
 | # | Date | What we saw | Cause | Fix / status |
 |---|---|---|---|---|
-| I-24 | 09-28 | PageSpeed check failed on PR #7: mobile performance 91 (was 99–100), CLS 0.073 (was 0), Speed Index 4.3 s | The page reserves 70px for the header; the XE Navbar loads later at 136px (desktop) / 186px (mobile with current settings) and pushes the page down ~66px | ⏳ Open (postponed). Plan: reserve the header height up front, fixed navbar row heights, smaller logo rendition. Author side: set Pay Bill + Sign In to "Navbar on desktop, menu on mobile" and Contact Us to "Menu only". **10-02:** the shift shows in **every** PageSpeed run (CLS ~0.073 mobile / ~0.046 desktop). Pass/fail varies: #8 and #9's final run passed (98 / 100); #9's first run failed (desktop 84, with a one-off slow TBT of 229ms). Fixing it (PF-06) removes the main reason the check can fail |
-| I-28 | 09-28 | Logo image much larger than shown | Logo uploaded at 1360×480 and served at up to 2000px wide for a 113×40 display | ⏳ Open — part of the I-24 fix |
+| I-24 | 09-28 | PageSpeed check failed on PR #7: mobile performance 91 (was 99–100), CLS 0.073 (was 0), Speed Index 4.3 s | The page reserves 70px for the header; the XE Navbar loads later at 136px (desktop) / 186px (mobile with current settings) and pushes the page down ~66px | ⏳ Open (postponed). Plan: reserve the header height up front, fixed navbar row heights, smaller logo rendition. Author side: set Pay Bill + Sign In to "Navbar on desktop, menu on mobile" and Contact Us to "Menu only". **10-02:** the shift shows in **every** PageSpeed run (CLS ~0.073 mobile / ~0.046 desktop). Pass/fail varies: #8 and #9's final run passed (98 / 100); #9's first run failed (desktop 84, with a one-off slow TBT of 229ms). Fixing it (PF-06) removes the main reason the check can fail. ✅ **Fixed 10-05 (PR #11):** reserved `--xe-header-height` (137px / 199.5px below 480px) + fixed navbar row heights + navbar kept invisible for two frames while it measures itself — the in-between frame at its wide layout was a second cause. CLS 0 at 360–1920px. Keep the reservation in sync with the navbar's content |
+| I-28 | 09-28 | Logo image much larger than shown | Logo uploaded at 1360×480 and served at up to 2000px wide for a 113×40 display | ✅ Fixed 10-05 (PR #11): authored AEM logos are requested at 300px wide (shown at ~113×40) |
 
 ### Docs & housekeeping
 
