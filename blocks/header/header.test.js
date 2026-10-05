@@ -84,6 +84,30 @@ describe('header block', () => {
     });
   });
 
+  describe('no layout shift while the navbar settles (build-log I-24)', () => {
+    it('keeps the reserved height until the navbar has had two frames to lay itself out', async () => {
+      const frames = [];
+      const raf = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+        frames.push(cb);
+        return frames.length;
+      });
+      loadFragment.mockResolvedValue(navPage(XE_NAVBAR_SECTION));
+      const { header, block } = renderHeader();
+
+      const done = decorate(block);
+      await vi.waitFor(() => expect(block.querySelector('xe-navbar')).not.toBeNull());
+      // Navbar is in place but the header still uses its reserved height (no class yet)
+      expect(header.classList.contains('header-xe-navbar')).toBe(false);
+
+      frames.shift()();
+      expect(header.classList.contains('header-xe-navbar')).toBe(false);
+      frames.shift()();
+      await done;
+      expect(header.classList.contains('header-xe-navbar')).toBe(true);
+      raf.mockRestore();
+    });
+  });
+
   describe('missing or incomplete nav page', () => {
     it('leaves the header empty instead of crashing when the nav page is missing', async () => {
       loadFragment.mockResolvedValue(null);

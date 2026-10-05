@@ -127,6 +127,17 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
+// Resolves after the given number of animation frames (layout + resize observers have run)
+function afterFrames(count) {
+  return new Promise((resolve) => {
+    const step = (remaining) => {
+      if (!remaining) resolve();
+      else requestAnimationFrame(() => step(remaining - 1));
+    };
+    step(count);
+  });
+}
+
 const subMenuHeader = document.createElement('div');
 subMenuHeader.classList.add('submenu-header');
 subMenuHeader.innerHTML = '<h5 class="back-link">All Categories</h5><hr />';
@@ -182,6 +193,10 @@ export default async function decorate(block) {
   const xeNavbar = fragment?.querySelector('.xe-navbar');
   if (xeNavbar) {
     block.replaceChildren(xeNavbar);
+    // The navbar measures itself (collapse / stacked) over the next frame or two. Until then the
+    // header keeps its reserved height and the navbar stays invisible (header.css), so the page
+    // doesn't jump while it settles (build-log I-24).
+    await afterFrames(2);
     block.closest('header')?.classList.add('header-xe-navbar');
     return;
   }

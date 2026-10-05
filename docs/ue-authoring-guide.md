@@ -98,6 +98,12 @@ The link for the page you're on is highlighted automatically.
   If too many actions stay visible on a phone, they move to their own row under the logo.
 - Reorder links/actions by dragging them in the Content Tree.
 
+> ⚠️ **Tell the dev team when you change the navbar's toolbar or buttons.** The site reserves the
+> header's exact height before it loads so the page doesn't jump. Adding/removing a **Top toolbar**
+> action, changing a **Button Style**, or changing an action's **On mobile** setting changes that
+> height — the reserved value (`--xe-header-height`) then needs re-measuring. Changing link labels
+> or URLs is fine.
+
 ---
 
 ## 6. XE Banner — step by step

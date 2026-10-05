@@ -1,5 +1,5 @@
 import {
-  describe, it, expect, beforeEach,
+  describe, it, expect, beforeEach, vi,
 } from 'vitest';
 import decorate from './xe-navbar.js';
 import { buildBlock, LINKS, ACTIONS } from './xe-navbar.stories.js';
@@ -52,6 +52,29 @@ describe('xe-navbar block', () => {
       const logo = block.querySelector('xe-navbar > a[slot="logo"]');
       expect(logo.getAttribute('href')).toBe('/home');
       expect(logo.querySelector('img').alt).toBe('Xcel Energy');
+    });
+
+    it('requests a small logo rendition for authored AEM media (build-log I-28)', async () => {
+      const aem = await import('../../scripts/aem.js');
+      const spy = vi.spyOn(aem, 'createOptimizedPicture');
+      const block = render({ logo: '/media_123abc.png?width=750&format=png&optimize=medium' });
+      expect(spy).toHaveBeenCalledWith(
+        expect.stringContaining('/media_123abc.png'),
+        'Xcel Energy',
+        true,
+        [{ width: '300' }],
+      );
+      expect(block.querySelector('[slot="logo"] img').alt).toBe('Xcel Energy');
+      spy.mockRestore();
+    });
+
+    it('leaves non-AEM logo images (e.g. data: URIs) as authored', async () => {
+      const aem = await import('../../scripts/aem.js');
+      const spy = vi.spyOn(aem, 'createOptimizedPicture');
+      const block = render({});
+      expect(spy).not.toHaveBeenCalled();
+      expect(block.querySelector('[slot="logo"] img').getAttribute('src')).toMatch(/^data:image\/svg/);
+      spy.mockRestore();
     });
 
     it('links the logo to the home page when no logo link is set', () => {

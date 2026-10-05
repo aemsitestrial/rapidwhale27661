@@ -210,9 +210,26 @@ body:not(.appear) {
   display: none;
 }
 
+/*
+ * Space reserved for the XE Navbar site header before it loads, so the page doesn't jump when it
+ * appears (build-log I-24 / PF-06). The values must match the navbar on the /xe-navbar page:
+ *   137px = toolbar 64px + bar 72px + 1px border (fixed row heights in xe-navbar.js)
+ *   narrow screens: the always-visible buttons wrap onto a second row ("stacked")
+ * Re-measure and update these if the navbar's toolbar, buttons or "On mobile" settings change.
+ */
+:root {
+  --xe-header-height: 137px;
+}
+
+@media (width < 480px) {
+  :root {
+    --xe-header-height: 199.5px;
+  }
+}
+
 header {
   grid-row: 1;
-  height: var(--nav-height);
+  height: var(--xe-header-height);
 }
 
 main {

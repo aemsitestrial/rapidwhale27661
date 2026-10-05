@@ -1,6 +1,14 @@
 /* stylelint-disable selector-class-pattern */
 
-/* XE Navbar as the site header: size to the navbar instead of the fixed legacy nav height */
+/*
+ * XE Navbar as the site header. While it lays itself out, the header keeps the height reserved in
+ * styles.css (--xe-header-height) and the navbar stays invisible; header.js then adds
+ * .header-xe-navbar and the header follows the navbar's real height (build-log I-24).
+ */
+header:not(.header-xe-navbar) .xe-navbar {
+  visibility: hidden;
+}
+
 header.header-xe-navbar {
   height: auto;
 }

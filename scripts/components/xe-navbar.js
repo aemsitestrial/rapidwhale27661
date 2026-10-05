@@ -67,10 +67,14 @@ const styles = `
     background-color: var(--_toolbar-bg);
     font-size: 14px;
   }
+  /*
+   * Fixed row heights so the header's height is predictable and can be reserved before it loads
+   * (no layout shift — build-log I-24): toolbar 64px + bar 72px + 1px border = 137px.
+   * Mirrored by --xe-header-height in styles/styles.css; keep the two in sync.
+   */
   .toolbar {
     gap: 16px;
-    min-height: 40px;
-    padding-block: 4px;
+    height: var(--xe-navbar-toolbar-height, 64px);
   }
   .toolbar-selector {
     flex: 1 1 auto;
@@ -86,8 +90,7 @@ const styles = `
   .bar-wrap { border-bottom: 1px solid var(--_border); }
   .bar {
     gap: 24px;
-    min-height: 72px;
-    padding-block: 8px;
+    height: var(--xe-navbar-bar-height, 72px);
   }
 
   .logo {
@@ -126,6 +129,8 @@ const styles = `
   :host([stacked]) .bar {
     flex-wrap: wrap;
     row-gap: 8px;
+    height: auto;
+    padding-block: 14px;
   }
   :host([stacked]) .actions {
     flex-wrap: wrap;
