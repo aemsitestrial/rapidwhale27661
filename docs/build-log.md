@@ -89,6 +89,9 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   now requested at 300px wide instead of up to 2000px. → #I-28
 - **Result:** CLS **0** at every width tested (360, 412, 470, 490, 600, 900, 1000, 1350, 1440,
   1920px), collapsed and expanded. 99/99 tests, 35 stories with 0 accessibility violations.
+- **PR #11:** CI green; AEM PageSpeed **mobile 100 (CLS 0.000), desktop 100 (CLS 0.001)** — was
+  mobile 91 (CLS 0.073) on #7. Docs updated first, then **merged into `main`** at the user's
+  request; the fix is live on every page.
 - ⚠️ The reserved heights match the navbar's current content. Changing toolbar items, button styles
   or "On mobile" settings on `/xe-navbar` means re-measuring and updating `--xe-header-height`.
 
