@@ -5,7 +5,7 @@ import './xe-banner.css';
  * Builds the markup Universal Editor delivers for an xe-banner block, before decoration.
  * One row per model field, in JCR alphabetical order:
  *   buttonLabel, buttonLink, heading, headingLevel, icon, message
- * Style options are block classes (size-*, bg-*, align-*, button-*).
+ * Style options are block classes (size-*, bg-*, align-*, button-*, icon-size-*).
  * Pass `rows: false` to build a block with no rows at all.
  */
 export function buildBlock({
@@ -72,10 +72,12 @@ function renderInPage(options) {
 }
 
 const fromArgs = ({
-  size, background, align, buttonStyle, ...fields
+  size, background, align, buttonStyle, iconSize, ...fields
 }) => ({
   ...fields,
-  classes: [`size-${size}`, `bg-${background}`, `align-${align}`, `button-${buttonStyle}`],
+  classes: [
+    `size-${size}`, `bg-${background}`, `align-${align}`, `button-${buttonStyle}`, `icon-size-${iconSize}`,
+  ],
 });
 
 export default {
@@ -88,10 +90,14 @@ export default {
     background: { control: 'inline-radio', options: ['default', 'subtle', 'brand', 'dark'] },
     align: { control: 'inline-radio', options: ['start', 'center'] },
     buttonStyle: { control: 'inline-radio', options: ['outlined', 'filled'] },
+    iconSize: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
     headingLevel: { control: 'select', options: ['1', '2', '3', '4', '5', '6'] },
     icon: {
       control: 'select',
-      options: ['none', 'faLeaf', 'faBolt', 'faLightbulb', 'faPiggyBank', 'faFire'],
+      options: [
+        'none', 'faLeaf', 'faBolt', 'faLightbulb', 'faPiggyBank', 'faFire', 'faSolarPanel', 'faStar',
+        'faHeart', 'faUser', 'faRocket', 'faWrench',
+      ],
     },
     message: { control: 'text' },
   },
@@ -101,6 +107,7 @@ export default {
     background: 'default',
     align: 'center',
     buttonStyle: 'outlined',
+    iconSize: 'lg',
   },
 };
 
@@ -133,6 +140,10 @@ export const Dark = {
 // Edge cases: optional content missing
 export const NoIcon = {
   args: { icon: 'none' },
+};
+
+export const ExtraLargeIcon = {
+  args: { iconSize: 'xl', icon: 'faLightbulb' },
 };
 
 export const NoButton = {

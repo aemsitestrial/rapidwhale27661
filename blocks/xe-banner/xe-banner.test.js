@@ -117,6 +117,15 @@ describe('xe-banner block', () => {
       expect(message.dataset.richtextProp).toBe('message');
     });
 
+    it('sizes the icon from the Icon Size style option (default lg)', () => {
+      const size = (classes) => render({ ...FULL, classes }).querySelector('xe-icon[slot="icon"]')
+        .getAttribute('size');
+      expect(size(['icon-size-xs'])).toBe('xs');
+      expect(size(['icon-size-xl'])).toBe('xl');
+      expect(size([])).toBe('lg');
+      expect(size(['icon-size-huge'])).toBe('lg');
+    });
+
     describe('missing optional fields', () => {
       it('omits the icon when "none" or an unknown icon is chosen', () => {
         expect(render({ ...FULL, icon: 'none' }).querySelector('xe-icon[slot="icon"]')).toBeNull();
@@ -199,16 +208,15 @@ describe('xe-banner block', () => {
       expect(button.shadowRoot.querySelector('button.control').type).toBe('button');
     });
 
-    it('<xe-icon> renders a decorative SVG, or a labelled one when label is set', () => {
+    it('<xe-icon> is always decorative — label the parent, not the icon', () => {
       const icon = document.createElement('xe-icon');
       icon.setAttribute('icon', 'faLeaf');
+      icon.setAttribute('label', 'Leaf'); // not an Ignite attribute — ignored
       document.body.append(icon);
-      expect(icon.shadowRoot.querySelector('svg').getAttribute('aria-hidden')).toBe('true');
-
-      icon.setAttribute('label', 'Leaf');
       const svg = icon.shadowRoot.querySelector('svg');
-      expect(svg.getAttribute('role')).toBe('img');
-      expect(svg.getAttribute('aria-label')).toBe('Leaf');
+      expect(svg.getAttribute('aria-hidden')).toBe('true');
+      expect(svg.hasAttribute('role')).toBe(false);
+      expect(svg.hasAttribute('aria-label')).toBe(false);
       expect(icon.shadowRoot.querySelectorAll('svg')).toHaveLength(1);
     });
 

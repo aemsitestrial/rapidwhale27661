@@ -110,8 +110,8 @@ The link for the page you're on is highlighted automatically.
 
 | Field | What to enter |
 |---|---|
-| Style | Pick **one option from each group**: Spacing (Compact / Default / Generous), Background (White / Cream / Crimson / Dark), Alignment (Left / Center), Button Style (Outlined / Filled) |
-| Icon | Leaf, Lightning Bolt, Light Bulb, Piggy Bank, Flame — or None |
+| Style | Pick **one option from each group**: Spacing (Compact / Default / Generous), Background (White / Cream / Crimson / Dark), Alignment (Left / Center), Button Style (Outlined / Filled), Icon Size (Extra Small → Extra Large; default Large) |
+| Icon | Leaf, Lightning Bolt, Light Bulb, Piggy Bank, Flame, Solar Panel, Star, Heart, Person, Rocket, Wrench — or None |
 | Heading | Short and punchy (it's shown in capitals) |
 | Heading Level | H1 if it's the page title, otherwise H2 |
 | Message | One or two sentences |

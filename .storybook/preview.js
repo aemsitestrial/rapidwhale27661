@@ -1,4 +1,6 @@
 import '../styles/styles.css';
+// Site-level icon registration, as on the live site
+import '../scripts/icons.js';
 
 /** @type { import('@storybook/html').Preview } */
 const preview = {

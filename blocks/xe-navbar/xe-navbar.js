@@ -1,3 +1,4 @@
+import '../../scripts/icons.js';
 import '../../scripts/components/xe-navbar.js';
 import '../../scripts/components/xe-nav-item.js';
 import '../../scripts/components/xe-button.js';

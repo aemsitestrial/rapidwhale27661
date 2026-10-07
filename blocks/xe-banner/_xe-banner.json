@@ -10,7 +10,7 @@
             "template": {
               "name": "XE Banner",
               "model": "xe-banner",
-              "classes": ["size-generous", "bg-default", "align-center", "button-outlined"],
+              "classes": ["size-generous", "bg-default", "align-center", "button-outlined", "icon-size-lg"],
               "buttonLabel": "Explore Programs",
               "heading": "Save Energy, Save Money",
               "headingLevel": "2",
@@ -32,7 +32,7 @@
           "label": "Style",
           "description": "Pick one option from each group.",
           "valueType": "string",
-          "maxSize": 4,
+          "maxSize": 5,
           "options": [
             {
               "name": "Spacing",
@@ -63,6 +63,16 @@
               "children": [
                 { "name": "Outlined", "value": "button-outlined" },
                 { "name": "Filled", "value": "button-filled" }
+              ]
+            },
+            {
+              "name": "Icon Size",
+              "children": [
+                { "name": "Extra Small", "value": "icon-size-xs" },
+                { "name": "Small", "value": "icon-size-sm" },
+                { "name": "Medium", "value": "icon-size-md" },
+                { "name": "Large (default)", "value": "icon-size-lg" },
+                { "name": "Extra Large", "value": "icon-size-xl" }
               ]
             }
           ]
@@ -112,7 +122,13 @@
             { "name": "Lightning Bolt", "value": "faBolt" },
             { "name": "Light Bulb", "value": "faLightbulb" },
             { "name": "Piggy Bank", "value": "faPiggyBank" },
-            { "name": "Flame", "value": "faFire" }
+            { "name": "Flame", "value": "faFire" },
+            { "name": "Solar Panel", "value": "faSolarPanel" },
+            { "name": "Star", "value": "faStar" },
+            { "name": "Heart", "value": "faHeart" },
+            { "name": "Person", "value": "faUser" },
+            { "name": "Rocket", "value": "faRocket" },
+            { "name": "Wrench", "value": "faWrench" }
           ]
         },
         {

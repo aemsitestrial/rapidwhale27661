@@ -494,7 +494,8 @@
                     "size-generous",
                     "bg-default",
                     "align-center",
-                    "button-outlined"
+                    "button-outlined",
+                    "icon-size-lg"
                   ],
                   "buttonLabel": "Explore Programs",
                   "heading": "Save Energy, Save Money",

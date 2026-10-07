@@ -2,6 +2,7 @@ import {
   describe, it, expect, beforeEach,
 } from 'vitest';
 import './xe-action-link.js';
+import '../icons.js'; // site-level icon registration, as on a page
 
 function create(attrs = {}, label = 'Learn more') {
   const el = document.createElement('xe-action-link');
