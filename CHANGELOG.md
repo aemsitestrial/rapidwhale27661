@@ -8,7 +8,9 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-08 — XE Icon: Color dropdown
 
-Branch `feature/xe-icon-color` — PR open for review, **not merged yet**.
+[#14](https://github.com/aemsitestrial/rapidwhale27661/pull/14), reviewed and merged into `main` on
+2026-10-08 — live (checked: new block code and Color options served). AEM PageSpeed on #14: mobile
+**100**, desktop **100** (CLS 0).
 
 - **XE Icon block** gets a **Color** dropdown: **Inherit** (default — follows the section's text
   color, as before) · **Brand Primary** (`--xe-color-brand-primary`) · **Brand Accent**

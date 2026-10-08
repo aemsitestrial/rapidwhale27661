@@ -155,6 +155,11 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - Found while testing: an unknown authored value was read as the icon name and hid the icon. ✅
   Fixed — unrecognized values are ignored. → #I-42
 
+- PR #14 (XE Icon Color dropdown) — checks: build ✅ · PageSpeed mobile 100 / desktop 100 (CLS 0).
+  Merged at the user's request; live site checked.
+- `AGENTS.md` now points to the Ignite three-tier rules and the primitive rendering pattern, so
+  every agent starts from them.
+
 ---
 
 ## Issue tracker
