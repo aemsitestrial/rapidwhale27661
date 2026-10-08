@@ -6,6 +6,25 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-07 — `xe-icon` to the Ignite docs (Path A) · Ignite integration architecture
+
+Branch `feature/xe-icon-ignite` — PR open for review, **not merged yet**.
+
+- **Docs:** `DEVELOPMENT.md` → "Ignite Design System Integration" — three-tier model (Tier 1
+  page blocks · Tier 2 container-children · Tier 3 internal components), our components by tier,
+  integration rules, and **Path B** (`@ignite/web` direct import, starting with `xe-icon`) as the
+  future direction pending npm access.
+- **`xe-icon`** rebuilt to the Icon docs: `registerIcons()` with site-level registration in
+  `scripts/icons.js` · sizes `xs`–`xl` from design tokens (px fallbacks 14 / 16 / 20 / 28 / 36 —
+  estimates) · color inherited · always decorative (`label` attribute removed) · Ignite's
+  registered icon names, the `faExternalLink` alias and footer brand icons (Facebook, X,
+  Instagram, LinkedIn, YouTube).
+- ⚠️ Font Awesome **Free** stands in for Pro (acceptance criterion 1 — partial). Build-log #I-36.
+- **XE Banner:** new **Icon Size** style option (default Large) and 6 more icon choices.
+- Visible change: icons are a little smaller on the new scale (banner 36 → 28px, feature cards
+  48 → 36px, navbar menu 24 → 20px) until the design tokens confirm the sizes. Build-log #I-37.
+- New: `xe-icon` stories (Design System Primitives › Media › Icon) and unit tests.
+
 ## 2026-10-05 — Header no longer makes the page jump (PF-06)
 
 [#11](https://github.com/aemsitestrial/rapidwhale27661/pull/11), merged into `main` on

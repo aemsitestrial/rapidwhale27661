@@ -1,13 +1,14 @@
 import '../../scripts/components/xe-banner.js';
 import '../../scripts/components/xe-button.js';
-import { ICONS } from '../../scripts/components/xe-icon.js';
+import '../../scripts/icons.js';
+import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /*
  * xe-banner — renders authored content with the <xe-banner> web component family.
  * JCR alphabetical field order (matches model order):
  *   buttonLabel, buttonLink, heading, headingLevel, icon, message
- * Style options (size-*, bg-*, align-*, button-*) arrive as block classes.
+ * Style options (size-*, bg-*, align-*, button-*, icon-size-*) arrive as block classes.
  */
 
 const DEFAULTS = {
@@ -15,6 +16,7 @@ const DEFAULTS = {
   bg: 'default',
   align: 'center',
   button: 'outlined',
+  'icon-size': 'lg',
 };
 
 function getOption(block, prefix) {
@@ -39,11 +41,12 @@ export default function decorate(block) {
   banner.append(column);
 
   const iconName = text(iconCell);
-  if (ICONS[iconName]) {
+  if (isIconRegistered(iconName)) {
     const icon = document.createElement('xe-icon');
     icon.slot = 'icon';
     icon.setAttribute('icon', iconName);
-    icon.setAttribute('size', 'lg');
+    const iconSize = getOption(block, 'icon-size');
+    icon.setAttribute('size', ICON_SIZES.includes(iconSize) ? iconSize : DEFAULTS['icon-size']);
     column.append(icon);
   }
 

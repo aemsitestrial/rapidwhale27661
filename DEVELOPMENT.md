@@ -160,6 +160,80 @@ Alternative: use content-type detection in JS (detect a link by `/` or `http` pr
 
 ---
 
+## Ignite Design System Integration (from the Ignite integration strategy, 2026-10-07)
+
+**Ignite** is Xcel's design system. Its components are the `xe-*` web components, published as the
+**`@ignite/web`** package (Xcel internal GitLab:
+`gitlab.com/xcel-master/experience-design/ignite-design-system`, currently **v0.42.0**). Its Storybook
+is organised as **Design System Primitives**, **Design System Compositions** and **Platform
+Experiences** (Adobe Experience Manager, Kubernetes).
+
+### Three-tier architecture — how AEM/EDS blocks relate to Ignite components
+
+| Tier | What it is | Block definition in UE? | Palette-exposed? |
+|---|---|---|---|
+| **Tier 1** | Page-level block (a composition placed in a page section) | Yes | Yes |
+| **Tier 2** | Container-child block (editable unit within a Tier 1 composition) | Yes | No — scoped to its parent via filter |
+| **Tier 3** | Internal component (wired by the block decorator to the `@ignite/web` API) | No | No |
+
+**Tier 1 blocks** (authors place these from the palette): `xe-banner`, `xe-feature-cards`,
+`xe-footer`, `xe-hero`, `xe-highlight`, `xe-multi-card-gallery`, `xe-nav-drawer`, `xe-navbar`,
+`xe-quick-actions`, `xe-tile-group`, `xe-utility-actions`
+
+**Tier 2 blocks** (container-children, scoped to their parent):
+
+| Tier 2 block | Parent(s) |
+|---|---|
+| `xe-banner-column` | `xe-banner` |
+| `xe-card` | `xe-feature-cards`, `xe-multi-card-gallery`, `xe-quick-actions`, `xe-utility-actions` |
+| `xe-footer-column` | `xe-footer` |
+| `xe-nav-drawer-item` | `xe-nav-drawer` |
+| `xe-nav-item` | `xe-navbar` |
+| `xe-tile` | `xe-tile-group` |
+
+**Tier 3 internal components** (no block definition is ever needed — wired by the decorator):
+
+| Component | How it gets its content |
+|---|---|
+| `xe-action-link` | Derived from card title/link fields |
+| `xe-button` | CTA label + URL on the parent block |
+| `xe-hyperlink` | Link text + URL on the parent block or container-child |
+| `xe-icon` | Fixed by the composition, or derived from a select field |
+| `xe-icon-button` | Fixed by the composition (search, close, social) |
+| `xe-search-menu` | Internal to `xe-navbar`, opened by the search trigger |
+
+### Where our work sits today
+
+| Tier | Built in this project | Not built yet |
+|---|---|---|
+| **Tier 1** | **XE Banner** (`xe-banner` block), **XE Feature Cards** (`xe-feature-cards`), **XE Navbar** (`xe-navbar`, also the site header) | `xe-footer`, `xe-hero`, `xe-highlight`, `xe-multi-card-gallery`, `xe-nav-drawer`, `xe-quick-actions`, `xe-tile-group`, `xe-utility-actions` |
+| **Tier 2** | `xe-card` (UE item **XE Feature Card**, parent XE Feature Cards) · `xe-nav-item` (UE item **XE Navbar Link**, parent XE Navbar) · `xe-banner-column` (component only — see notes) | `xe-footer-column`, `xe-nav-drawer-item`, `xe-tile` |
+| **Tier 3** | `xe-icon`, `xe-button`, `xe-action-link`, `xe-hyperlink` | `xe-icon-button`, `xe-search-menu` |
+
+Alignment notes (review before changing — renaming UE ids affects content already authored):
+- Our Tier 2 UE item ids differ from the Ignite names: **`xe-feature-card`** (renders `xe-card`) and
+  **`xe-navbar-link`** (renders `xe-nav-item`).
+- **`xe-banner-column`** exists as a component but **not** as a UE container-child yet: the XE Banner
+  block builds one column from its own fields.
+- **XE Navbar Action** (`xe-navbar-action`, renders `xe-button`) is a project-specific child item;
+  in Ignite's model `xe-button` is Tier 3 (CTA label + URL on the parent).
+
+### Integration rules
+
+- A **design token change** in Ignite flows to AEM automatically via the package version.
+- A **component API change** is absorbed by updating the **decorator** — not AEM block artifacts.
+- **AEM/EDS controls content authoring and page assembly only.**
+- The **Ignite repo is platform-agnostic** — no AEM-specific code belongs there.
+- **Tier 3 components follow the `@ignite/web` component API** — slot names, prop names and valid
+  attribute values are defined by Ignite, not AEM.
+
+> 🔜 **Path B (future, pending team confirmation of npm access):** install **`@ignite/web`** from the
+> Xcel internal GitLab as an npm dependency and **replace our custom `scripts/components/xe-*.js`
+> files with direct imports from the package**, one component at a time, **starting with
+> `xe-icon`**. Until then (**Path A**), our implementations are **temporary stand-ins** built to the
+> Ignite docs. When a component is replaced, delete our file first (two definitions of the same tag
+> can't coexist) and keep the block decorators unchanged — they already produce Ignite markup.
+
 ## Web Components — required for all new blocks
 
 **Rule (from 2026-09):** every **new** block renders its UI with web components (custom elements).
@@ -195,11 +269,15 @@ is made once in the primitive and applies site-wide.
 **Available primitives:**
 | Component | Purpose | Docs status |
 |---|---|---|
-| `<xe-icon icon="faLeaf" size="sm\|md\|lg\|xl">` | Inline SVG icons (Font Awesome Free registry in `xe-icon.js`) | Not from DS docs |
+| `<xe-icon icon="faBolt" size="xs\|sm\|md\|lg\|xl">` | Font Awesome icon, sized from the token scale, color inherited; always decorative. Icons registered at site level (`scripts/icons.js`) | Partial (2026-10-07 — Font Awesome **Free** stand-in for Pro; sizes estimated until the tokens docs) |
 | `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` | Partial (from the banner example only) |
 | `<xe-nav-item active href target>` | Navbar link/button; slots: default, `leading-icon` | Verified (tokens still estimated) |
 | `<xe-action-link link-type href>` | Labeled link with a trailing direction icon (internal / external / download); color from `--card-text-color` | Partial — **fixes pending** (full docs received 2026-10-01) |
 | `<xe-hyperlink href variant trailing-icon link-type target>` | Native link for standalone links, link lists and body copy; optional trailing icon; `variant="variant"` = white for dark surfaces | Verified (2026-10-02; hover/visited states and colors not in the docs — estimates) |
+
+> These are **Tier 3 internal components** — no block definition is ever needed for them. Authors
+> configure them indirectly via Tier 1/2 authoring fields or composition defaults.
+> (Exception: `xe-nav-item` is **Tier 2** in Ignite's model — a container-child of XE Navbar.)
 
 **Available composite components:**
 | Component | Built from | Purpose | Docs status |
@@ -241,14 +319,51 @@ two definitions of the same tag name can't coexist on one page.
 | **Feedback** | *(list to be added from the DS docs)* | — |
 | **Input Control** | *(list to be added from the DS docs)* | — |
 | **Layout** | *(list to be added from the DS docs)* | — |
-| **Media** | *(list to be added from the DS docs)* | — |
+| **Media** | Icon (`xe-icon`) — *rest of the list to be added from the DS docs* | ✅ `xe-icon` |
 | **Navigation** | Navbar (`xe-navbar`), Nav Item (`xe-nav-item`) — *rest of the list to be added from the DS docs* | ✅ `xe-navbar`, `xe-nav-item` |
-| *Category to confirm* | Banner (`xe-banner`, `xe-banner-column`), Icon (`xe-icon`), Card (`xe-card`), Feature Cards (`xe-feature-cards`) | ✅ all five |
+| **Design System Compositions** | Banner (`xe-banner`), Feature Cards (`xe-feature-cards`), Footer (`xe-footer`), Hero, Highlight, Nav Drawer, Navbar (`xe-navbar`), Quick Actions, Tile Group, Utility Actions (+ Multi-card Gallery in the integration strategy) | ✅ `xe-banner`, `xe-feature-cards`, `xe-navbar` |
+| *Category to confirm* | Banner Column (`xe-banner-column`), Card (`xe-card`) — Tier 2 children | ✅ both |
 
 Tag names are listed only where they've been seen in the DS docs — confirm the rest from the docs
 before building. When a component is built, mark it ✅ here and add it to the tables above.
 
 **Documented specs received so far** (build from these when the component is needed):
+
+- **Icon — `<xe-icon icon size>`** *(Design System Primitives › Media › Icon)* — ✅ built
+  2026-10-07 (`scripts/components/xe-icon.js`) · **Docs status: Partial** — Path A stand-in.
+  Font Awesome icon wrapper with consistent sizing that inherits its color from the parent text.
+  Tier 3 — no block definition; the composition fixes the icon or offers it as an authoring select.
+  - Props → attributes: `icon` (Font Awesome name, e.g. `faBolt`) · `size` (`xs` | `sm` |
+    `md` default | `lg` | `xl`).
+  - **Registration before use** — icons are registered once at the site level, never inside a
+    component: `scripts/icons.js` calls `registerIcons({ faBolt, … })` (Ignite:
+    `@ignite/web/utils/icon-resolver.js`). Every block that renders icons imports
+    `scripts/icons.js`; so do Storybook's preview and the tests. To add an icon: add it to
+    `scripts/components/icons/fa-free.js` (Font Awesome package shape `{ prefix, iconName, icon:
+    [width, height, aliases, unicode, svgPathData] }`) and list it in `scripts/icons.js`.
+    Blocks check `isIconRegistered(name)` before adding an icon. An unregistered icon renders empty
+    and fills in when it's registered.
+  - Registered (Ignite's "All Registered Icons"): faPlus, faDownload, faBolt, faArrowRight,
+    faExternalLink (alias of faArrowUpRightFromSquare), faChevronRight, faChevronDown, faHeart,
+    faUser, faLightbulb, faStar, faRocket, faFire · plus ours: faArrowDown,
+    faArrowUpRightFromSquare, faBars, faXmark, faMagnifyingGlass, faFileInvoiceDollar, faLeaf,
+    faPiggyBank, faSolarPanel, faWrench · footer brands: faSquareFacebook, faXTwitter,
+    faSquareXTwitter, faInstagram, faSquareLinkedin, faYoutube.
+  - **Sizes from design tokens** with px fallbacks: `--xe-sizing-icon-xs` 14px · `-sm` 16px ·
+    `-md` 20px · `-lg` 28px · `-xl` 36px. ⚠️ Token names are placeholders and the px values
+    estimates until the design tokens docs arrive (build-log #I-37). One-off override:
+    `--xe-icon-size` on the icon or a parent (our link components use `1em` so the icon follows
+    the label).
+  - **Color:** inherits the text color (`currentcolor`); override with CSS `color` on the icon or
+    its parent. No color attribute (the DS Storybook color control is a story control only).
+  - **Accessibility:** always `aria-hidden="true"` and not focusable. There's no `label`
+    attribute — **label the parent, not the icon** (e.g. `aria-label` on the icon button/link).
+  - DS stories: Default, Sizes, Color Inheritance, All Registered Icons. We add Social Brands.
+  - ⚠️ **Path A stand-in:** Ignite uses Font Awesome **Pro** (`@fortawesome/pro-solid-svg-icons`);
+    we use Font Awesome **Free** 7.3.1 (solid + brands) in the same package shape until Pro /
+    `@ignite/web` access is confirmed. Some shapes differ (e.g. Ignite's faBolt is an outline).
+    Path B: replace `xe-icon.js` and the definitions file with `@ignite/web` + Pro imports —
+    `scripts/icons.js` stays the single registration point (build-log #I-36).
 
 - **Action Link — `<xe-action-link link-type href target>`** *(DS status: Ready)* — ✅ built
   (`scripts/components/xe-action-link.js`) · **Docs status: Partial — fixes pending.** Built

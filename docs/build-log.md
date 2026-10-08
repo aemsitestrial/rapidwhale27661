@@ -95,6 +95,33 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - ⚠️ The reserved heights match the navbar's current content. Changing toolbar items, button styles
   or "On mobile" settings on `/xe-navbar` means re-measuring and updating `--xe-header-height`.
 
+### 2026-10-07 — Ignite integration architecture; `xe-icon` to the Ignite docs (Path A)
+
+- **Ignite integration architecture documented** in `DEVELOPMENT.md` → "Ignite Design System
+  Integration", from the team's Ignite integration strategy docs.
+- **Three-tier model established:** Tier 1 page-level blocks (palette), Tier 2 container-child
+  blocks (scoped to their parent via filter), Tier 3 internal components (no block definition,
+  wired by the decorator to the `@ignite/web` API). Our components mapped to their tiers; alignment
+  notes recorded (Tier 2 UE item ids `xe-feature-card` / `xe-navbar-link` vs Ignite's `xe-card` /
+  `xe-nav-item`; `xe-banner-column` not yet a UE container-child; `xe-navbar-action` is
+  project-specific).
+- **Path B identified as the future direction** — install **`@ignite/web`** (Xcel GitLab, v0.42.0)
+  as an npm dependency and replace our `xe-*.js` files with direct imports, starting with `xe-icon`
+  — **pending npm access** (the user is checking with the team). Until then, **Path A**: our
+  components are stand-ins built to the Ignite docs.
+- Received the **Icon docs page** (Design System Primitives › **Media** › Icon) and the Jira
+  acceptance criteria (CMS-040 / CMS-041 / CMS-019; testing at composition level via "Banner -
+  Action"). Started `xe-icon` Path A: `registerIcons()`, five token-based sizes, Ignite's registered
+  icon names + footer brand icons, `faExternalLink` alias, `label` removed. Font Awesome **Free** is a
+  stand-in — the criteria require **Pro** (access pending). → #I-36, #I-37
+- `xe-icon` rebuilt: site-level registration in `scripts/icons.js` (28 icons + `faExternalLink`
+  alias); XE Banner / XE Feature Cards / XE Navbar import it. **Visible change:** sizes follow the
+  new scale — banner icon 36 → 28px (lg), feature card icon 48 → 36px (xl), navbar menu button
+  icon 24 → 20px (md). XE Banner gets an authorable **Icon Size** style option (default Large) and
+  more icon choices. → #I-38
+- Checked: lint, 114 unit tests, all 38 icon-using Storybook stories render (no empty icons),
+  axe: no violations, every icon `aria-hidden`.
+
 ---
 
 ## Issue tracker
@@ -140,6 +167,9 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-23 | 09-28 | Header tests couldn't load `header.js` | It imports Commerce `@dropins/*` (import map) and needs a `<header>` when the module loads | ✅ `test/mocks/dropins.js` + import after creating a `<header>` |
 | I-34 | 10-02 | A focus test failed only in unit tests | happy-dom doesn't implement `delegatesFocus` | ✅ Unit test checks the link is focusable; real Tab / `:focus-visible` behavior checked in the browser |
 | I-35 | 10-02 | DS Hyperlink examples use `href="javascript:void(0)"` | Storybook placeholder in the DS docs | ℹ️ Our component refuses `javascript:` URLs (security); our stories use `#` |
+| I-36 | 10-07 | Icon acceptance criterion 1 needs Font Awesome **Pro** icons | Ignite imports `@fortawesome/pro-solid-svg-icons`; we have no Pro (or `@ignite/web`) npm access | ⏳ Partial — Font Awesome **Free** 7.3.1 stand-in in the same package shape; some shapes differ (Ignite's faBolt is an outline). Swap when access is confirmed (Path B) |
+| I-37 | 10-07 | Icon docs give no px values or token names for xs–xl; the DS Storybook shows a color control that isn't in the props table; the docs list both faXTwitter and faSquareXTwitter | Design tokens docs not received yet; Storybook-only control | ⏳ Sizes estimated (14 / 16 / 20 / 28 / 36px) behind placeholder tokens `--xe-sizing-icon-*`; color is CSS-only (inherits); both X icons registered until the Footer docs confirm one |
+| I-38 | 10-07 | Link component tests lost their icons after the change | Icons now come from the site-level registration, not built into `xe-icon` | ✅ Tests import `scripts/icons.js`, like a page does |
 
 ### Content, Universal Editor & publishing
 

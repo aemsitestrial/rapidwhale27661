@@ -2,6 +2,7 @@ import {
   describe, it, expect, beforeEach,
 } from 'vitest';
 import './xe-hyperlink.js';
+import '../icons.js'; // site-level icon registration, as on a page
 import { safeHref } from './xe-link-helpers.js';
 
 // The Hyperlink docs page (DS status: Ready), recorded as data — the component must match it

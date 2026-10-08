@@ -1,7 +1,8 @@
 import '../../scripts/components/xe-feature-cards.js';
 import '../../scripts/components/xe-card.js';
 import '../../scripts/components/xe-action-link.js';
-import { ICONS } from '../../scripts/components/xe-icon.js';
+import '../../scripts/icons.js';
+import { isIconRegistered } from '../../scripts/components/xe-icon.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /*
@@ -63,7 +64,7 @@ function buildCard(data, titleTag) {
   card.setAttribute('actions-placement', 'inline');
 
   const iconName = data.options.icon;
-  if (ICONS[iconName]) {
+  if (isIconRegistered(iconName)) {
     const icon = document.createElement('xe-icon');
     icon.slot = 'icon';
     icon.setAttribute('icon', iconName);
