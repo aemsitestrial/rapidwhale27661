@@ -610,7 +610,8 @@
                   "name": "XE Icon",
                   "model": "xe-icon",
                   "icon": "faArrowRight",
-                  "size": "md"
+                  "size": "md",
+                  "color": "inherit"
                 }
               }
             }
