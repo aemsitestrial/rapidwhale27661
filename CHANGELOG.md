@@ -6,6 +6,24 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-09 — `xe-icon-button` primitive + XE Icon Button block
+
+Branch `feature/xe-icon-button` — PR open for review, **not merged yet**.
+
+- **`xe-icon-button`** built to the Ignite Icon Button docs (status Ready): `treatment`
+  (default / filled / outlined), `size` (xxs–2xl), `href` → `<a>`, `target`, `disabled`,
+  required `aria-label` forwarded to the inner control; always a 48×48px touch target.
+- **Documented extensions:** `aria-expanded` / `aria-haspopup` forwarding (navbar extension, not in
+  Ignite spec); xxs / 2xl handled by the icon button so `xe-icon` stays at its documented xs–xl;
+  disabled links use `aria-disabled`.
+- **New XE Icon Button block** (`blocks/xe-icon-button/`, any section) — Accessible Label
+  (required), Icon, Icon Size, Treatment, Link, Open In (only with a Link). Primitive API ready for
+  the footer's social links.
+- **XE Navbar:** ☰ / ✕ are now `xe-icon-button`s. ⚠️ Visible change: touch target 44 → **48px**
+  (fits the fixed 72px bar — header height unchanged) and the icon color is Ignite's warm grey
+  (`#5c534e`) instead of near-black.
+- Icons `faGear` and `faPen` added (Icon Button docs examples) — also in the XE Icon dropdown.
+
 ## 2026-10-08 — XE Icon: Color dropdown
 
 [#14](https://github.com/aemsitestrial/rapidwhale27661/pull/14), reviewed and merged into `main` on

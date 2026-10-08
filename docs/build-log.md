@@ -160,6 +160,17 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - `AGENTS.md` now points to the Ignite three-tier rules and the primitive rendering pattern, so
   every agent starts from them.
 
+### 2026-10-09 — `xe-icon-button` (Icon Button docs) + XE Icon Button block
+
+- Received the **Icon Button** docs (props, treatments, sizes, states, as a link, slots,
+  accessibility, usage). Analysed first; user decisions: sizes **option A** (icon button handles
+  xxs / 2xl, `xe-icon` unchanged) · forward `aria-expanded` / `aria-haspopup` (navbar extension) ·
+  **standalone block** with a required label.
+- Built the component, the block, stories and tests; added `faGear` / `faPen`; XE Navbar ☰ / ✕
+  now use `xe-icon-button`. Checked: lint, **157** unit tests, Storybook — 48×48 at every size,
+  icon 12 → 40px across xxs → 2xl, treatments and disabled states match the docs' States story,
+  navbar forwards `aria-expanded`, axe 0 violations. → #I-43, #I-44, #I-45
+
 ---
 
 ## Issue tracker
@@ -177,6 +188,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-20 | 09-28 | Couldn't read the site's publish log (`admin.hlx.page/log` → 403) | Adobe credentials for the assistant are off (separate from the git permission) | ℹ️ Optional: enable "Adobe credentials" in Settings → LLM Permissions |
 | I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ✅ Worked again on 10-02 (no change needed on our side); docs commit pushed to PR #8 |
 | I-39 | 10-08 | GitHub API **401 Bad credentials** and `git fetch` failed again | Same as I-33 — the GitHub credential in Settings was rejected | ⏳ Open — the user merged #12 themselves; this docs update waits on a local branch until access returns |
+| I-46 | 10-09 | First commit attempt failed: "error when closing loose object file: Input/output error"; the push then sent only the unchanged main commit under the new branch name | Temporary storage (network file system) glitch — disk had space, `git fsck` clean | ✅ Retried the commit, checked it contained all files, then pushed. Rule: check `git log` after every commit before pushing |
 
 ### Styling & components
 
@@ -212,6 +224,9 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-40 | 10-08 | Standalone XE Icon block goes against Ignite's Tier 3 rule ("no block definition") | Team decision: production code is moved by copying block folders; a self-contained block is easier to transfer | ℹ️ Documented exception in `DEVELOPMENT.md`. Decorative only (no label). The block still needs `scripts/icons.js`, `scripts/components/xe-icon.js` and `scripts/components/icons/` copied with it |
 | I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ⏳ Fallbacks estimated: brand-primary `#c8102e`, brand-accent `#00664f`, space-2xl `24px`. The Ignite Storybook color control shows `#4e9e39` (a green) — to confirm with the team whether that is the brand accent |
 | I-42 | 10-08 | XE Icon: an authored value the block didn't recognize (e.g. an unknown color) hid the icon | The reader treated any unrecognized value as the icon name | ✅ Only `fa…` names count as icons; unknown values are ignored (unit test) |
+| I-43 | 10-09 | Icon Button documents 7 sizes (xxs–2xl); the Icon docs only 5 (xs–xl) | The two Ignite pages disagree (the real `xe-icon` may support xxs / 2xl) | ℹ️ User decision: `xe-icon` stays at xs–xl; Icon Button sets the icon's width/height for xxs / 2xl (estimates 12 / 40px). Ask the team whether `xe-icon` supports them |
+| I-44 | 10-09 | Swapping the navbar ☰ for `xe-icon-button` would lose `aria-expanded` (WCAG 4.1.2) | Ignite's Icon Button only forwards `aria-label` | ✅ Navbar extension, not in Ignite spec: `aria-expanded` / `aria-haspopup` forwarded. `aria-controls` dropped (can't cross the shadow DOM) |
+| I-45 | 10-09 | Icon Button colors / shape not fully specified: text says "circular", examples are rounded squares; no color tokens except brand primary | Docs page | ⏳ Followed the examples (8px radius); colors estimated — Ignite's filled red looks darker than `#c8102e` |
 
 ### Content, Universal Editor & publishing
 

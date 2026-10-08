@@ -24,6 +24,7 @@ Authors only ever place **blocks**. Each block is rendered by design system web 
 | **XE Banner** | `xe-banner` + `xe-icon` + `xe-button` | A message band: icon, big heading, short message, one button |
 | **XE Feature Cards** | `xe-feature-cards` + `xe-card` + `xe-action-link` | A full-width band of 2–3 tall cards that draw users into narrative/brand content |
 | **XE Icon** | `xe-icon` | A single decorative icon. Screen readers skip it — never use it to carry meaning on its own |
+| **XE Icon Button** | `xe-icon-button` + `xe-icon` | A single clickable icon (e.g. a social media link). Always needs an Accessible Label |
 
 > **The site header is an XE Navbar.** Every page's header shows the XE Navbar from the
 > **`xe-navbar`** page. To change the header everywhere, edit that page and publish it — you don't
@@ -53,8 +54,8 @@ band heading is an H2, and its card titles become H3 (or H2 when there's no band
 ## 4. Add a block to a section
 
 1. Select the section in the Content Tree.
-2. Click **Add (+)** → under **Blocks** choose **XE Navbar**, **XE Banner**, **XE Feature Cards** or
-   **XE Icon**.
+2. Click **Add (+)** → under **Blocks** choose **XE Navbar**, **XE Banner**, **XE Feature Cards**,
+   **XE Icon** or **XE Icon Button**.
 3. The block appears on the canvas with starter content. Select it to edit its fields in
    **Properties**.
 
@@ -177,7 +178,26 @@ be shown (design system rule).
 
 ---
 
-## 9. Check the layout
+## 9. XE Icon Button — step by step
+
+| Field | What to enter |
+|---|---|
+| Accessible Label | **Required.** What the button does, in words — e.g. "Xcel Energy on Facebook" or "View profile". Screen readers read this instead of the icon |
+| Icon | Pick from the list |
+| Icon Size | Extra Extra Small → 2× Extra Large; **Medium (default)**. The clickable area is always 48×48px |
+| Treatment | **Default** (icon only) · Filled (red square) · Outlined (grey border) |
+| Link | Optional — a page path (`/profile`) or full URL (`https://facebook.com/xcelenergy`) |
+| Open In | Appears once Link is set: Same tab or **New tab** for other websites |
+
+**Layout tips**
+- For New tab links, "(opens in a new window)" is added to the label automatically if you didn't
+  write it.
+- Social media icons: Default treatment, Icon Size **Extra Large**, Open In **New tab**.
+- Without a Link the block is a button with no action — always set a Link on content pages.
+
+---
+
+## 10. Check the layout
 
 1. **Canvas:** click through each block and confirm the content is right.
 2. **Mobile:** use Universal Editor's device preview if available, or **Preview** the page and
@@ -187,7 +207,7 @@ be shown (design system rule).
    name and confirm your fields are there. (DevTools only shows the decorated result, not whether
    the data was saved.)
 
-## 10. Publish
+## 11. Publish
 
 1. In Universal Editor click **Publish** (Preview first if your process requires it).
 2. Check the page on:
@@ -212,5 +232,5 @@ be shown (design system rule).
 | An XE block isn't in the **Add** list | Its PR isn't merged into `main` yet |
 | A card or link doesn't appear | It's missing its required Title or Link |
 | A fourth card doesn't show | By design — Feature Cards shows 2–3 cards |
-| Fields look empty after saving | Check View Page Source (step 9); report the block and field to the dev team |
+| Fields look empty after saving | Check View Page Source (step 10); report the block and field to the dev team |
 | Colors/spacing look slightly off vs. the design system | Expected for now — exact design tokens are still to be received |

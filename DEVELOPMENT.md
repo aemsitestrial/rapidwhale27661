@@ -208,7 +208,7 @@ Experiences** (Adobe Experience Manager, Kubernetes).
 |---|---|---|
 | **Tier 1** | **XE Banner** (`xe-banner` block), **XE Feature Cards** (`xe-feature-cards`), **XE Navbar** (`xe-navbar`, also the site header) | `xe-footer`, `xe-hero`, `xe-highlight`, `xe-multi-card-gallery`, `xe-nav-drawer`, `xe-quick-actions`, `xe-tile-group`, `xe-utility-actions` |
 | **Tier 2** | `xe-card` (UE item **XE Feature Card**, parent XE Feature Cards) · `xe-nav-item` (UE item **XE Navbar Link**, parent XE Navbar) · `xe-banner-column` (component only — see notes) | `xe-footer-column`, `xe-nav-drawer-item`, `xe-tile` |
-| **Tier 3** | `xe-icon` (**also a standalone block** — see exception below), `xe-button`, `xe-action-link`, `xe-hyperlink` | `xe-icon-button`, `xe-search-menu` |
+| **Tier 3** | `xe-icon`, `xe-icon-button` (**both also standalone blocks** — see exception below), `xe-button`, `xe-action-link`, `xe-hyperlink` | `xe-search-menu` |
 
 > ⚠️ **Exception — XE Icon is a standalone block (team decision, 2026-10-08).** Ignite's rule is
 > that Tier 3 components get no block definition. We still ship `blocks/xe-icon/` as a
@@ -217,6 +217,9 @@ Experiences** (Adobe Experience Manager, Kubernetes).
 > to move. The compositions (XE Banner, XE Feature Cards) reuse the block's primitive API instead
 > of building `<xe-icon>` themselves. The icon stays **decorative only** — Ignite has no label
 > prop; the parent carries the meaning. No "Primitive section" container (decided against).
+> **XE Icon Button** (`blocks/xe-icon-button/`, 2026-10-09) follows the same exception and pattern;
+> unlike XE Icon it has a **required Accessible Label** field, because Ignite makes `aria-label`
+> required on every icon button.
 
 Alignment notes (review before changing — renaming UE ids affects content already authored):
 - Our Tier 2 UE item ids differ from the Ignite names: **`xe-feature-card`** (renders `xe-card`) and
@@ -282,6 +285,7 @@ is made once in the primitive and applies site-wide.
 | `<xe-nav-item active href target>` | Navbar link/button; slots: default, `leading-icon` | Verified (tokens still estimated) |
 | `<xe-action-link link-type href>` | Labeled link with a trailing direction icon (internal / external / download); color from `--card-text-color` | Partial — **fixes pending** (full docs received 2026-10-01) |
 | `<xe-hyperlink href variant trailing-icon link-type target>` | Native link for standalone links, link lists and body copy; optional trailing icon; `variant="variant"` = white for dark surfaces | Verified (2026-10-02; hover/visited states and colors not in the docs — estimates) |
+| `<xe-icon-button treatment size href target disabled aria-label>` | Single-icon `<button>` (or `<a>` with `href`), always a 48×48 touch target; slot: an `xe-icon`. Also the standalone **XE Icon Button** block (`blocks/xe-icon-button/`) | Verified (2026-10-09; colors estimated; two documented extensions) |
 
 > These are **Tier 3 internal components** — no block definition is ever needed for them. Authors
 > configure them indirectly via Tier 1/2 authoring fields or composition defaults.
@@ -323,7 +327,7 @@ two definitions of the same tag name can't coexist on one page.
 
 | Category | Components | In this project |
 |---|---|---|
-| **Action** | Action Link (`xe-action-link`), Button Group, Button (`xe-button`), Floating Action Button, Hyperlink, Icon Button, Menu Button, Segmented Button, Split Button | ✅ `xe-button`, `xe-action-link`, `xe-hyperlink` |
+| **Action** | Action Link (`xe-action-link`), Button Group, Button (`xe-button`), Floating Action Button, Hyperlink, Icon Button, Menu Button, Segmented Button, Split Button | ✅ `xe-button`, `xe-action-link`, `xe-hyperlink`, `xe-icon-button` |
 | **Content Display** | *(list to be added from the DS docs)* | — |
 | **Feedback** | *(list to be added from the DS docs)* | — |
 | **Input Control** | *(list to be added from the DS docs)* | — |
@@ -394,6 +398,44 @@ before building. When a component is built, mark it ✅ here and add it to the t
     `@ignite/web` access is confirmed. Some shapes differ (e.g. Ignite's faBolt is an outline).
     Path B: replace `xe-icon.js` and the definitions file with `@ignite/web` + Pro imports —
     `scripts/icons.js` stays the single registration point (build-log #I-36).
+
+- **Icon Button — `<xe-icon-button treatment size href target disabled aria-label>`**
+  *(Design System Primitives › Action › Icon Button · DS status: Ready)* — ✅ built 2026-10-09
+  (`scripts/components/xe-icon-button.js`, block `blocks/xe-icon-button/`) · **Docs status: Verified**
+  (colors estimated). A circular-intent action target for a single icon: `<a>` when `href` is set,
+  otherwise `<button>`. **The touch target is always 48×48px**, whatever the icon size.
+  - Props → attributes: `treatment` (`default` icon only · `filled` · `outlined`; default
+    `default`) · `size` (`xxs` · `xs` · `sm` · `md` · `lg` · `xl` · `2xl`; default `md` — sets
+    the slotted `xe-icon`'s size) · `href` (default `''`) · `target` (default `''`; only with
+    `href`) · `disabled` (boolean) · `aria-label` (**required**).
+  - Slot: default — an `<xe-icon>`.
+  - **Accessibility (docs):** `aria-label` is required and forwarded from the host to the inner
+    `<button>`/`<a>` (shared `applyLinkBehavior`). For `target="_blank"` the context goes **in the
+    label** ("Xcel Energy on Facebook (opens in a new window)") — the component adds no note of its
+    own (unlike Hyperlink). `disabled` = native `disabled` on the inner `<button>`.
+  - **Extensions beyond the Ignite spec** (documented, tested):
+    - **Navbar extension, not in Ignite spec:** `aria-expanded` and `aria-haspopup` are forwarded
+      to the inner control, so the navbar's ☰ keeps announcing collapsed/expanded (WCAG 4.1.2).
+      `aria-controls` isn't used — an id reference can't cross the shadow DOM boundary.
+    - **Sizes `xxs` / `2xl`:** `xe-icon` documents only `xs`–`xl`, so it stays at those five;
+      Icon Button sets the slotted icon to `xs` / `xl` and overrides its width/height
+      (estimates **12px** / **40px**) with `::slotted()` CSS (build-log #I-43).
+    - **Disabled link:** an `<a>` can't be natively disabled, so it loses its `href` and gets
+      `aria-disabled="true"`.
+  - Shape: the docs text says "circular", the examples show **rounded squares** (8px radius) for
+    Filled / Outlined — we follow the examples. Colors (estimates, no tokens documented): icon
+    `#5c534e` · filled background `--xe-color-brand-primary` (Ignite's red looks a little darker
+    than our `#c8102e` fallback) · outline `#6e6560` · disabled greys. No CSS custom properties are
+    documented, so they're private.
+  - DS stories: Default, Treatments, Sizes, States, As a link; we add Usage (the docs' examples).
+  - **Standalone XE Icon Button block** — fields: **Accessible Label** (text, required) · **Icon**
+    (select, every registered icon) · **Icon Size** (select, 7 sizes, default Medium) ·
+    **Treatment** (select) · **Link** (text, optional) · **Open In** (Same tab / New tab — shown
+    only when Link is set, UE `condition`). Without a label or a registered icon nothing renders;
+    for new-tab links the block appends "(opens in a new window)" if the label doesn't mention it.
+    Exports `buildPrimitive` / `decorate` / `decoratePrimitive` (props > authored > `DEFAULTS`) —
+    ready for the footer's social links.
+  - Used by **XE Navbar** for ☰ (open menu) and ✕ (close menu) — replaced its private 44px button.
 
 - **Action Link — `<xe-action-link link-type href target>`** *(DS status: Ready)* — ✅ built
   (`scripts/components/xe-action-link.js`) · **Docs status: Partial — fixes pending.** Built
@@ -557,7 +599,7 @@ Link). A brand change then happens in one place.
 |---|---|---|
 | 1 | **Button** — verify against its docs | Used by XE Banner and XE Navbar; built from the banner example only |
 | 2 | **Action Link** — apply PF-01 | Full docs already received |
-| 3 | **Icon Button** | Navbar actions (search, menu) |
+| 3 | **Icon Button** — ✅ built 2026-10-09 | Navbar menu / close (done); search; footer social links |
 | 4 | **Menu Button** | Navbar language selector; possibly nav dropdowns |
 | 5 | **Segmented Button** | Navbar `toolbar-selector` (e.g. Residential / Business) |
 | 6 | **Hyperlink** — ✅ built 2026-10-02 | Standalone links, link lists (footer legal row), links in body copy |
@@ -631,7 +673,9 @@ Rules:
 - Read authored values by **content** (e.g. a size name vs an icon name), not position, because
   Universal Editor skips empty fields. Ignore values you don't recognize, so an old or unknown
   value can't break the rest (e.g. an unknown color never hides the icon).
-- **Transfer to another project:** copy the block folder **and** its shared dependencies — for XE
+- **Transfer to another project:** copy the block folder **and** its shared dependencies. XE
+  Icon Button also needs `blocks/xe-icon/`, `scripts/components/xe-icon-button.js` and
+  `scripts/components/xe-link-helpers.js`. For XE
   Icon: `blocks/xe-icon/`, `scripts/icons.js`, `scripts/components/xe-icon.js`,
   `scripts/components/icons/` (+ the `section` filter entry and the `_component-definition` include).
 

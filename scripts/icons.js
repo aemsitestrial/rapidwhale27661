@@ -14,9 +14,10 @@
 import { registerIcons } from './components/xe-icon.js';
 import {
   faArrowDown, faArrowRight, faArrowUpRightFromSquare, faBars, faBolt, faChevronDown,
-  faChevronRight, faDownload, faFileInvoiceDollar, faFire, faHeart, faInstagram, faLeaf,
-  faLightbulb, faMagnifyingGlass, faPiggyBank, faPlus, faRocket, faSolarPanel, faSquareFacebook,
-  faSquareLinkedin, faSquareXTwitter, faStar, faUser, faWrench, faXmark, faXTwitter, faYoutube,
+  faChevronRight, faDownload, faFileInvoiceDollar, faFire, faGear, faHeart, faInstagram, faLeaf,
+  faLightbulb, faMagnifyingGlass, faPen, faPiggyBank, faPlus, faRocket, faSolarPanel,
+  faSquareFacebook, faSquareLinkedin, faSquareXTwitter, faStar, faUser, faWrench, faXmark,
+  faXTwitter, faYoutube,
 } from './components/icons/fa-free.js';
 
 registerIcons({
@@ -46,6 +47,8 @@ registerIcons({
   faPiggyBank,
   faSolarPanel,
   faWrench,
+  faGear, // Icon Button docs examples (settings)
+  faPen, // Icon Button docs examples (edit)
 
   // Footer social links (Font Awesome Free brands, per the Ignite Footer docs)
   faSquareFacebook,
