@@ -20,6 +20,16 @@ bug/issue we hit — check it before debugging, and log new ones there), and
   (props, slots, usage, CSS custom properties, accessibility, stories) before building; check
   **"Pending fixes for components already built"** (PF-xx) and apply the ones for any component you
   touch. When the user shares DS docs, read and compare first; change code only when asked.
+- **Ignite three-tier model:** follow `DEVELOPMENT.md` → "Ignite Design System Integration" —
+  Tier 1 page blocks (palette), Tier 2 container-children (scoped by filter), Tier 3 internal
+  components (no block; configured through Tier 1/2 fields). Our components are stand-ins
+  (**Path A**) until `@ignite/web` can be imported (**Path B**). Documented exceptions (e.g. the
+  standalone XE Icon block) are listed there — don't add new ones without the user's decision.
+- **Primitive blocks** (today: XE Icon) follow `DEVELOPMENT.md` → "Primitive rendering pattern":
+  `buildPrimitive(props)` + `decorate(block, props)` / `decoratePrimitive`; props > authored >
+  `DEFAULTS`; compositions reuse the primitive instead of rebuilding it; read authored values by
+  content. Author options that map to design tokens (sizes, colors) are **dropdowns**, never free
+  text or a color picker.
 - **Every new or changed block** has a `.stories.js` and `.test.js`; `npm test` and `npm run lint`
   must pass, and Storybook's a11y panel must show 0 violations.
 - **Model changes** (`_*.json`): run `npm run build:json` (the pre-commit hook also does this).
