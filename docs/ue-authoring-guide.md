@@ -166,9 +166,11 @@ be shown (design system rule).
 |---|---|
 | Icon | Pick from the list (every icon the site has). Names are never typed |
 | Size | Extra Small, Small, **Medium (default)**, Large or Extra Large |
+| Color | **Inherit (default)** — follows the section's text color · Brand Primary (dark red) · Brand Accent (dark green) |
 
 **Layout tips**
-- The icon takes the section's text color — on a dark section it turns white automatically.
+- With **Inherit**, the icon takes the section's text color — on a dark section it turns white
+  automatically. Use Brand Primary / Brand Accent on light sections only.
 - **Decoration only.** Screen readers skip icons, so the meaning must be in nearby text (a heading
   or paragraph). Don't use an icon instead of words.
 - Inside a banner or card, use that block's own **Icon** field instead of adding an XE Icon block.

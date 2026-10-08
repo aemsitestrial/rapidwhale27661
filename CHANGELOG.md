@@ -6,9 +6,25 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-08 — XE Icon: Color dropdown
+
+Branch `feature/xe-icon-color` — PR open for review, **not merged yet**.
+
+- **XE Icon block** gets a **Color** dropdown: **Inherit** (default — follows the section's text
+  color, as before) · **Brand Primary** (`--xe-color-brand-primary`) · **Brand Accent**
+  (`--xe-color-brand-accent`). From the Ignite Storybook "color" control; applied with
+  `style="color: …"` like the docs. Brand tokens only — no free color picker (not built into
+  Universal Editor, and off-brand colors break the design system).
+- Fix: the block now ignores authored values it doesn't recognize, so an unknown value can't
+  hide the icon.
+- Existing XE Icon blocks keep their look (no color saved = Inherit). XE Banner / XE Feature Cards
+  are unchanged.
+
 ## 2026-10-08 — Standalone XE Icon block · `xe-icon` matches the Ignite Storybook
 
-Branch `feature/xe-icon-block` — ready for review, **PR not opened yet**.
+[#13](https://github.com/aemsitestrial/rapidwhale27661/pull/13), merged into `main` on 2026-10-08
+at the user's request — live (checked: block files served, XE Icon in the section filter, navbar
+icons render, header 137px). AEM PageSpeed on #13: mobile **100**, desktop **100** (CLS 0).
 
 - **New XE Icon block** (`blocks/xe-icon/`) — authors can place it in any section. Two dropdowns
   only: **Icon** (every registered icon, by name) and **Size** (Extra Small → Extra Large, default

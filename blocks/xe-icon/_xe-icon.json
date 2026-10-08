@@ -11,7 +11,8 @@
               "name": "XE Icon",
               "model": "xe-icon",
               "icon": "faArrowRight",
-              "size": "md"
+              "size": "md",
+              "color": "inherit"
             }
           }
         }
@@ -73,6 +74,19 @@
             { "name": "Medium (default)", "value": "md" },
             { "name": "Large", "value": "lg" },
             { "name": "Extra Large", "value": "xl" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "color",
+          "label": "Color",
+          "description": "Inherit follows the section's text color (white on dark sections).",
+          "valueType": "string",
+          "value": "inherit",
+          "options": [
+            { "name": "Inherit (default)", "value": "inherit" },
+            { "name": "Brand Primary (dark red)", "value": "brand-primary" },
+            { "name": "Brand Accent (dark green)", "value": "brand-accent" }
           ]
         }
       ]

@@ -347,8 +347,14 @@ before building. When a component is built, mark it ✅ here and add it to the t
     e.g. `faArrowRight`) · `size` (string, default `md`: `xs` · `sm` · `md` · `lg` · `xl`).
     Nothing else — no `label`, no size-override custom property.
   - **Standalone XE Icon block** (`blocks/xe-icon/`, any section): model fields `icon` (select —
-    every registered icon as a named option; authors never type names) and `size` (select — Extra
-    Small / Small / Medium (default) / Large / Extra Large). Template: `faArrowRight`, `md`.
+    every registered icon as a named option; authors never type names), `size` (select — Extra
+    Small / Small / Medium (default) / Large / Extra Large) and `color` (select — **Inherit**
+    (default) / **Brand Primary** / **Brand Accent**; added 2026-10-08 from the Ignite Storybook
+    "color" control, applied as `style="color: …"` like the docs, **not** an `<xe-icon>`
+    attribute). Template: `faArrowRight`, `md`, `inherit`.
+    Color is a **dropdown of brand tokens, never a free color picker**: Universal Editor has no
+    built-in picker (it would need a custom UE extension), and free colors break the brand.
+    Add more options here when the design tokens docs list them.
   - **Primitive API** (team pattern — see "Primitive rendering pattern" below):
     `buildPrimitive({ icon, size })` returns an `<xe-icon>` (or null if the icon isn't registered) ·
     `decorate(block, props)` / `decoratePrimitive(rowOrCell, props)` reads authored values,
@@ -623,7 +629,8 @@ Rules:
   Size style option) so content already authored keeps working.
 - Decorate the row/cell **in place** — don't remove it before calling the primitive decorator.
 - Read authored values by **content** (e.g. a size name vs an icon name), not position, because
-  Universal Editor skips empty fields.
+  Universal Editor skips empty fields. Ignore values you don't recognize, so an old or unknown
+  value can't break the rest (e.g. an unknown color never hides the icon).
 - **Transfer to another project:** copy the block folder **and** its shared dependencies — for XE
   Icon: `blocks/xe-icon/`, `scripts/icons.js`, `scripts/components/xe-icon.js`,
   `scripts/components/icons/` (+ the `section` filter entry and the `_component-definition` include).

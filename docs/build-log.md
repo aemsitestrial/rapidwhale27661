@@ -146,6 +146,15 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   delegate to it. Checked: lint, 127 unit tests, 43 icon-using Storybook stories (no missing
   icons, axe 0 violations, link icons unchanged at 18 / 17.1px).
 
+- PR #13 opened, checks: build ✅ · PageSpeed mobile **100** / desktop **100** (CLS 0) — the
+  mobile 94 on #12 was run-to-run variation. Merged at the user's request; live site checked.
+- User saw the Ignite Storybook **color** control ("Icon color (CSS color value)", example
+  `#4e9e39`) and asked for a color field — dropdown or picker? Universal Editor has no built-in
+  color picker (needs a custom extension), so: **Color dropdown of brand tokens** (Inherit /
+  Brand Primary / Brand Accent). Built on `feature/xe-icon-color`. → #I-41
+- Found while testing: an unknown authored value was read as the icon name and hid the icon. ✅
+  Fixed — unrecognized values are ignored. → #I-42
+
 ---
 
 ## Issue tracker
@@ -196,7 +205,8 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-37 | 10-07 | Icon docs give no px values or token names for xs–xl; the DS Storybook shows a color control that isn't in the props table; the docs list both faXTwitter and faSquareXTwitter | Design tokens docs not received yet; Storybook-only control | ⏳ Sizes estimated (14 / 16 / 20 / 28 / 36px) behind placeholder tokens `--xe-sizing-icon-*`; color is CSS-only (inherits) — ✅ confirmed 10-08: Ignite has only `icon` and `size`; both X icons registered until the Footer docs confirm one |
 | I-38 | 10-07 | Link component tests lost their icons after the change | Icons now come from the site-level registration, not built into `xe-icon` | ✅ Tests import `scripts/icons.js`, like a page does |
 | I-40 | 10-08 | Standalone XE Icon block goes against Ignite's Tier 3 rule ("no block definition") | Team decision: production code is moved by copying block folders; a self-contained block is easier to transfer | ℹ️ Documented exception in `DEVELOPMENT.md`. Decorative only (no label). The block still needs `scripts/icons.js`, `scripts/components/xe-icon.js` and `scripts/components/icons/` copied with it |
-| I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ⏳ Fallbacks estimated: brand-primary `#c8102e`, brand-accent `#00664f`, space-2xl `24px` |
+| I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ⏳ Fallbacks estimated: brand-primary `#c8102e`, brand-accent `#00664f`, space-2xl `24px`. The Ignite Storybook color control shows `#4e9e39` (a green) — to confirm with the team whether that is the brand accent |
+| I-42 | 10-08 | XE Icon: an authored value the block didn't recognize (e.g. an unknown color) hid the icon | The reader treated any unrecognized value as the icon name | ✅ Only `fa…` names count as icons; unknown values are ignored (unit test) |
 
 ### Content, Universal Editor & publishing
 

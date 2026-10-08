@@ -5,12 +5,12 @@ import model from './_xe-icon.json';
 
 /*
  * Builds the markup Universal Editor delivers for an xe-icon block, before decoration.
- * One row per model field, in JCR alphabetical order: icon, size.
+ * One row per model field, in JCR alphabetical order: color, icon, size.
  */
-export function buildBlock({ icon = '', size = '' } = {}) {
+export function buildBlock({ icon = '', size = '', color = '' } = {}) {
   const block = document.createElement('div');
   block.className = 'xe-icon block';
-  [icon, size].forEach((value) => {
+  [color, icon, size].forEach((value) => {
     const row = document.createElement('div');
     const cell = document.createElement('div');
     cell.textContent = value;
@@ -20,14 +20,15 @@ export function buildBlock({ icon = '', size = '' } = {}) {
   return block;
 }
 
-const [iconField, sizeField] = model.models[0].fields;
+const [iconField, sizeField, colorField] = model.models[0].fields;
 
 // Render inside the section/wrapper structure EDS creates, so the block CSS applies as on a page
-function renderInPage({ color, ...fields }) {
+function renderInPage({ sectionBackground, ...fields }) {
   const block = buildBlock(fields);
   const section = document.createElement('div');
   section.className = 'section';
-  section.style.cssText = `padding:40px 24px;color:${color || '#333'};`;
+  const dark = sectionBackground === 'dark';
+  section.style.cssText = `padding:40px 24px;color:${dark ? '#fff' : '#333'};background:${dark ? '#1a1a1a' : '#fff'};`;
   const wrapper = document.createElement('div');
   wrapper.className = 'xe-icon-wrapper';
   wrapper.append(block);
@@ -54,11 +55,20 @@ export default {
       table: { defaultValue: { summary: 'md' } },
     },
     color: {
-      description: 'Story only — the section text color the icon inherits',
-      control: 'color',
+      description: 'Color (the authoring dropdown — brand tokens only; Inherit follows the section text)',
+      control: 'inline-radio',
+      options: colorField.options.map((option) => option.value),
+      table: { defaultValue: { summary: 'inherit' } },
+    },
+    sectionBackground: {
+      description: 'Story only — the section the block sits in',
+      control: 'inline-radio',
+      options: ['light', 'dark'],
     },
   },
-  args: { icon: iconField.value, size: sizeField.value },
+  args: {
+    icon: iconField.value, size: sizeField.value, color: colorField.value, sectionBackground: 'light',
+  },
 };
 
 // The block as inserted from the palette (template defaults)
@@ -69,11 +79,16 @@ export const ExtraLarge = {
 };
 
 export const BrandPrimaryColor = {
-  args: { icon: 'faBolt', size: 'lg', color: 'var(--xe-color-brand-primary, #c8102e)' },
+  args: { icon: 'faBolt', size: 'lg', color: 'brand-primary' },
 };
 
 export const BrandAccentColor = {
-  args: { icon: 'faLeaf', size: 'lg', color: 'var(--xe-color-brand-accent, #00664f)' },
+  args: { icon: 'faLeaf', size: 'lg', color: 'brand-accent' },
+};
+
+// Inherit on a dark section — the icon turns white with the text
+export const InheritOnDark = {
+  args: { icon: 'faLightbulb', size: 'lg', sectionBackground: 'dark' },
 };
 
 // Universal Editor skipped the size field — falls back to md
