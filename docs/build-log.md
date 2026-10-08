@@ -121,6 +121,14 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   more icon choices. → #I-38
 - Checked: lint, 114 unit tests, all 38 icon-using Storybook stories render (no empty icons),
   axe: no violations, every icon `aria-hidden`.
+- PR #12 checks: build ✅ · PageSpeed desktop 100 (CLS 0.001), mobile 94 (CLS 0; slower TBT and
+  Speed Index than #11 — one run, not yet known whether it is the icons file or run variance).
+
+### 2026-10-08 — PR #12 merged
+
+- The user reviewed and merged #12 on GitHub. Live site checked: new icon files are served from
+  `main`, the navbar menu icons render (20px), header still reserves 137px.
+- GitHub access for the assistant was rejected again ("Bad credentials") → #I-39
 
 ---
 
@@ -138,6 +146,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-12 | 09-28 | Work pushed after PR #1 never reached `main` | PR #1 was merged minutes after opening; later commits went to the merged branch | ✅ Opened PR #2 for them. Rule: check a PR is still open before adding commits |
 | I-20 | 09-28 | Couldn't read the site's publish log (`admin.hlx.page/log` → 403) | Adobe credentials for the assistant are off (separate from the git permission) | ℹ️ Optional: enable "Adobe credentials" in Settings → LLM Permissions |
 | I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ✅ Worked again on 10-02 (no change needed on our side); docs commit pushed to PR #8 |
+| I-39 | 10-08 | GitHub API **401 Bad credentials** and `git fetch` failed again | Same as I-33 — the GitHub credential in Settings was rejected | ⏳ Open — the user merged #12 themselves; this docs update waits on a local branch until access returns |
 
 ### Styling & components
 

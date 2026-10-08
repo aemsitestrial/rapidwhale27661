@@ -8,7 +8,8 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-07 — `xe-icon` to the Ignite docs (Path A) · Ignite integration architecture
 
-Branch `feature/xe-icon-ignite` — PR open for review, **not merged yet**.
+[#12](https://github.com/aemsitestrial/rapidwhale27661/pull/12), reviewed and merged into `main` by the user on 2026-10-08 —
+live on every page (checked: new icon files served, navbar icons render, header still 137px).
 
 - **Docs:** `DEVELOPMENT.md` → "Ignite Design System Integration" — three-tier model (Tier 1
   page blocks · Tier 2 container-children · Tier 3 internal components), our components by tier,
