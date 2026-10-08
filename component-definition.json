@@ -600,6 +600,23 @@
           }
         },
         {
+          "title": "XE Icon",
+          "id": "xe-icon",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "XE Icon",
+                  "model": "xe-icon",
+                  "icon": "faArrowRight",
+                  "size": "md"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Columns",
           "id": "columns",
           "plugins": {

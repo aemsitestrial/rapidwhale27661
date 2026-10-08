@@ -58,8 +58,8 @@ const styles = `
 
   /* Icon scales with the label, as in the DS docs preview */
   xe-icon {
-    --xe-icon-size: 1em;
-
+    width: 1em;
+    height: 1em;
     transition: transform 0.2s ease;
   }
   :host(:not([link-type])) a:hover xe-icon,

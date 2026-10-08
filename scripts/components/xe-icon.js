@@ -2,8 +2,9 @@
  * <xe-icon icon="faBolt" size="md"></xe-icon>
  *
  * Font Awesome icon wrapper with consistent sizing that inherits its color from the surrounding
- * text (Ignite: Design System Primitives › Media › Icon). Tier 3 internal component — no block
- * definition; the composition fixes the icon or derives it from an authoring select field.
+ * text (Ignite: Design System Primitives › Media › Icon). Ignite Tier 3 internal component; in this
+ * project it is also the standalone XE Icon block (blocks/xe-icon), whose buildPrimitive() /
+ * decoratePrimitive() the compositions reuse.
  *
  * Icons must be registered before use, typically once at the site level (scripts/icons.js):
  *   import { registerIcons } from './components/xe-icon.js';
@@ -16,7 +17,11 @@
  * Attributes (Ignite docs):
  *   icon — Font Awesome icon name, e.g. "faBolt"
  *   size — xs | sm | md (default) | lg | xl — mapped to the design token sizing scale
- * Color: inherits the current text color; override with a CSS `color` (style or parent element).
+ * These are the only two props (Ignite Storybook). Color: inherits the current text color; override
+ * with style="color: …" or a parent's color, e.g. var(--xe-color-brand-primary) or
+ * var(--xe-color-brand-accent) — the component itself sets no color.
+ * Containers that need a one-off size (e.g. icon follows the label in links) set width/height on
+ * the element; those outer styles win over :host.
  * Accessibility: always decorative (aria-hidden="true"). Label the parent button/link instead.
  *
  * Path A stand-in: Path B replaces this file and registerIcons() with @ignite/web
@@ -58,8 +63,8 @@ const styles = `
 
     display: inline-flex;
     flex-shrink: 0;
-    width: var(--xe-icon-size, var(--_size));
-    height: var(--xe-icon-size, var(--_size));
+    width: var(--_size);
+    height: var(--_size);
     color: inherit;
     line-height: 0;
     vertical-align: middle;

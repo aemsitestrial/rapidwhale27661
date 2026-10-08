@@ -74,8 +74,9 @@ describe('<xe-icon>', () => {
       Object.entries(DOCS_SPEC.sizeTokens).forEach(([size, [token, px]]) => {
         expect(styles, size).toContain(`var(${token}, ${px})`);
       });
-      // A size override on the element or a parent beats the scale
-      expect(styles).toContain('width: var(--xe-icon-size, var(--_size))');
+      expect(styles).toContain('width: var(--_size)');
+      // Only the Ignite props — no extra size override property
+      expect(styles).not.toContain('--xe-icon-size');
     });
 
     it('inherits its color from the parent', () => {

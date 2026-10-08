@@ -1,8 +1,7 @@
 import '../../scripts/components/xe-feature-cards.js';
 import '../../scripts/components/xe-card.js';
 import '../../scripts/components/xe-action-link.js';
-import '../../scripts/icons.js';
-import { isIconRegistered } from '../../scripts/components/xe-icon.js';
+import { decoratePrimitive as decorateIcon } from '../xe-icon/xe-icon.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /*
@@ -37,6 +36,7 @@ function readCard(cells) {
       card.href = link.getAttribute('href');
     } else if (option) {
       [, , card.options[option[1]]] = option;
+      if (option[1] === 'icon') card.iconCell = cell;
     } else if (text && isUrl(text) && !card.href) {
       card.href = text;
     } else if (text) {
@@ -63,12 +63,10 @@ function buildCard(data, titleTag) {
   card.setAttribute('interactive', 'true');
   card.setAttribute('actions-placement', 'inline');
 
-  const iconName = data.options.icon;
-  if (isIconRegistered(iconName)) {
-    const icon = document.createElement('xe-icon');
+  // The Category Icon cell is rendered by the xe-icon primitive; cards fix the size at xl
+  const icon = data.iconCell && decorateIcon(data.iconCell, { icon: data.options.icon, size: 'xl' });
+  if (icon) {
     icon.slot = 'icon';
-    icon.setAttribute('icon', iconName);
-    icon.setAttribute('size', 'xl');
     card.append(icon);
   }
 

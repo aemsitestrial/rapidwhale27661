@@ -27,6 +27,8 @@ function stage(...children) {
   const wrapper = document.createElement('div');
   wrapper.style.cssText = 'display:flex;flex-wrap:wrap;align-items:flex-end;gap:24px;padding:40px 24px;'
     + 'font-family:Arial,sans-serif;font-size:14px;color:#333;';
+  // Ignite's gap token (fallback is our estimate)
+  wrapper.style.gap = 'var(--xe-spacing-space-2xl, 24px)';
   wrapper.append(...children);
   return wrapper;
 }
@@ -72,9 +74,16 @@ export const Sizes = {
   render: () => stage(...SIZES.map((size) => labelled(icon({ name: 'faBolt', size }), size))),
 };
 
-// No color prop — the icon follows the text color of whatever it sits in
+// No color prop — the icon follows the text color of whatever it sits in. Ignite's color tokens;
+// the fallbacks are our estimates until the tokens docs arrive.
+const COLORS = [
+  ['var(--xe-color-brand-primary, #c8102e)', 'Brand primary'],
+  ['var(--xe-color-brand-accent, #00664f)', 'Brand accent'],
+  ['#333', 'Text (inherited)'],
+];
+
 export const ColorInheritance = {
-  render: () => stage(...[['#c8102e', 'Crimson'], ['#00664f', 'Green'], ['#333', 'Text']].map(
+  render: () => stage(...COLORS.map(
     ([color, text]) => {
       const line = document.createElement('span');
       line.style.cssText = `display:inline-flex;align-items:center;gap:8px;color:${color};font-size:18px;`;
