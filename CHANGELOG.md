@@ -6,9 +6,27 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-08 — Standalone XE Icon block · `xe-icon` matches the Ignite Storybook
+
+Branch `feature/xe-icon-block` — ready for review, **PR not opened yet**.
+
+- **New XE Icon block** (`blocks/xe-icon/`) — authors can place it in any section. Two dropdowns
+  only: **Icon** (every registered icon, by name) and **Size** (Extra Small → Extra Large, default
+  Medium). Decorative only — no label (Ignite has none; the parent carries the meaning).
+- **Primitive rendering pattern** (team doc): the block exports `buildPrimitive()` and
+  `decorate()` / `decoratePrimitive()`. XE Banner and XE Feature Cards now reuse it instead of
+  each building `<xe-icon>` themselves — no visible change to either block.
+- **`xe-icon` = the Ignite spec:** only `icon` and `size`; the extra `--xe-icon-size` property is
+  removed (link components size their icon directly — no visible change). Stories use Ignite's
+  tokens `--xe-color-brand-primary`, `--xe-color-brand-accent`, `--xe-spacing-space-2xl`.
+- Documented exception to the Ignite Tier 3 rule (standalone block, for block-folder transfer to
+  the production project). Build-log #I-40, #I-41.
+- Also records #12's merge (2026-10-08) — that docs commit couldn't be pushed on its own (#I-39).
+
 ## 2026-10-07 — `xe-icon` to the Ignite docs (Path A) · Ignite integration architecture
 
-Branch `feature/xe-icon-ignite` — PR open for review, **not merged yet**.
+[#12](https://github.com/aemsitestrial/rapidwhale27661/pull/12), reviewed and merged into `main` by the user on 2026-10-08 —
+live on every page (checked: new icon files served, navbar icons render, header still 137px).
 
 - **Docs:** `DEVELOPMENT.md` → "Ignite Design System Integration" — three-tier model (Tier 1
   page blocks · Tier 2 container-children · Tier 3 internal components), our components by tier,

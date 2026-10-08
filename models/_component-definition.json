@@ -89,6 +89,9 @@
           "...": "../blocks/xe-feature-cards/_*.json#/definitions"
         },
         {
+          "...": "../blocks/xe-icon/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/columns/_*.json#/definitions"
         },
         {

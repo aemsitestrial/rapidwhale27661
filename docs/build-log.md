@@ -121,6 +121,30 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   more icon choices. → #I-38
 - Checked: lint, 114 unit tests, all 38 icon-using Storybook stories render (no empty icons),
   axe: no violations, every icon `aria-hidden`.
+- PR #12 checks: build ✅ · PageSpeed desktop 100 (CLS 0.001), mobile 94 (CLS 0; slower TBT and
+  Speed Index than #11 — one run, not yet known whether it is the icons file or run variance).
+
+### 2026-10-08 — PR #12 merged
+
+- The user reviewed and merged #12 on GitHub. Live site checked: new icon files are served from
+  `main`, the navbar menu icons render (20px), header still reserves 137px.
+- GitHub access for the assistant was rejected again ("Bad credentials") → #I-39
+
+### 2026-10-08 — Standalone XE Icon block; `xe-icon` to the Ignite Storybook spec
+
+- Team doc received: **primitive rendering pattern** (`buildPrimitive(props)` +
+  `decorate(block, props)`, `decoratePrimitive` for compositions). Compared with our build: the
+  web component fits it as a block-level layer; XE Banner / XE Feature Cards each duplicated the
+  icon rendering.
+- Decision (user): **standalone XE Icon block** (Idea A) — easier to transfer by copying block
+  folders to xcel-pws-aem-site. No "Primitive section" container. A required Label field was
+  considered and dropped — Ignite has no label prop. → #I-40
+- Official **Ignite Storybook** for Icon: only `icon` and `size` props; color tokens
+  `--xe-color-brand-primary` / `--xe-color-brand-accent`, gap `--xe-spacing-space-2xl`. Removed
+  our extra `--xe-icon-size`. → #I-37 (partly resolved), #I-41
+- Built `blocks/xe-icon/` (model, decorator, CSS, stories, tests); XE Banner and XE Feature Cards
+  delegate to it. Checked: lint, 127 unit tests, 43 icon-using Storybook stories (no missing
+  icons, axe 0 violations, link icons unchanged at 18 / 17.1px).
 
 ---
 
@@ -138,6 +162,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-12 | 09-28 | Work pushed after PR #1 never reached `main` | PR #1 was merged minutes after opening; later commits went to the merged branch | ✅ Opened PR #2 for them. Rule: check a PR is still open before adding commits |
 | I-20 | 09-28 | Couldn't read the site's publish log (`admin.hlx.page/log` → 403) | Adobe credentials for the assistant are off (separate from the git permission) | ℹ️ Optional: enable "Adobe credentials" in Settings → LLM Permissions |
 | I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ✅ Worked again on 10-02 (no change needed on our side); docs commit pushed to PR #8 |
+| I-39 | 10-08 | GitHub API **401 Bad credentials** and `git fetch` failed again | Same as I-33 — the GitHub credential in Settings was rejected | ⏳ Open — the user merged #12 themselves; this docs update waits on a local branch until access returns |
 
 ### Styling & components
 
@@ -168,8 +193,10 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-34 | 10-02 | A focus test failed only in unit tests | happy-dom doesn't implement `delegatesFocus` | ✅ Unit test checks the link is focusable; real Tab / `:focus-visible` behavior checked in the browser |
 | I-35 | 10-02 | DS Hyperlink examples use `href="javascript:void(0)"` | Storybook placeholder in the DS docs | ℹ️ Our component refuses `javascript:` URLs (security); our stories use `#` |
 | I-36 | 10-07 | Icon acceptance criterion 1 needs Font Awesome **Pro** icons | Ignite imports `@fortawesome/pro-solid-svg-icons`; we have no Pro (or `@ignite/web`) npm access | ⏳ Partial — Font Awesome **Free** 7.3.1 stand-in in the same package shape; some shapes differ (Ignite's faBolt is an outline). Swap when access is confirmed (Path B) |
-| I-37 | 10-07 | Icon docs give no px values or token names for xs–xl; the DS Storybook shows a color control that isn't in the props table; the docs list both faXTwitter and faSquareXTwitter | Design tokens docs not received yet; Storybook-only control | ⏳ Sizes estimated (14 / 16 / 20 / 28 / 36px) behind placeholder tokens `--xe-sizing-icon-*`; color is CSS-only (inherits); both X icons registered until the Footer docs confirm one |
+| I-37 | 10-07 | Icon docs give no px values or token names for xs–xl; the DS Storybook shows a color control that isn't in the props table; the docs list both faXTwitter and faSquareXTwitter | Design tokens docs not received yet; Storybook-only control | ⏳ Sizes estimated (14 / 16 / 20 / 28 / 36px) behind placeholder tokens `--xe-sizing-icon-*`; color is CSS-only (inherits) — ✅ confirmed 10-08: Ignite has only `icon` and `size`; both X icons registered until the Footer docs confirm one |
 | I-38 | 10-07 | Link component tests lost their icons after the change | Icons now come from the site-level registration, not built into `xe-icon` | ✅ Tests import `scripts/icons.js`, like a page does |
+| I-40 | 10-08 | Standalone XE Icon block goes against Ignite's Tier 3 rule ("no block definition") | Team decision: production code is moved by copying block folders; a self-contained block is easier to transfer | ℹ️ Documented exception in `DEVELOPMENT.md`. Decorative only (no label). The block still needs `scripts/icons.js`, `scripts/components/xe-icon.js` and `scripts/components/icons/` copied with it |
+| I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ⏳ Fallbacks estimated: brand-primary `#c8102e`, brand-accent `#00664f`, space-2xl `24px` |
 
 ### Content, Universal Editor & publishing
 

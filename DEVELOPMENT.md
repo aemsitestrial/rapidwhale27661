@@ -208,7 +208,15 @@ Experiences** (Adobe Experience Manager, Kubernetes).
 |---|---|---|
 | **Tier 1** | **XE Banner** (`xe-banner` block), **XE Feature Cards** (`xe-feature-cards`), **XE Navbar** (`xe-navbar`, also the site header) | `xe-footer`, `xe-hero`, `xe-highlight`, `xe-multi-card-gallery`, `xe-nav-drawer`, `xe-quick-actions`, `xe-tile-group`, `xe-utility-actions` |
 | **Tier 2** | `xe-card` (UE item **XE Feature Card**, parent XE Feature Cards) · `xe-nav-item` (UE item **XE Navbar Link**, parent XE Navbar) · `xe-banner-column` (component only — see notes) | `xe-footer-column`, `xe-nav-drawer-item`, `xe-tile` |
-| **Tier 3** | `xe-icon`, `xe-button`, `xe-action-link`, `xe-hyperlink` | `xe-icon-button`, `xe-search-menu` |
+| **Tier 3** | `xe-icon` (**also a standalone block** — see exception below), `xe-button`, `xe-action-link`, `xe-hyperlink` | `xe-icon-button`, `xe-search-menu` |
+
+> ⚠️ **Exception — XE Icon is a standalone block (team decision, 2026-10-08).** Ignite's rule is
+> that Tier 3 components get no block definition. We still ship `blocks/xe-icon/` as a
+> standalone, author-placeable block (any section, no palette restriction) because production code
+> (xcel-pws-aem-site) is transferred by copying block folders, and a self-contained block is easier
+> to move. The compositions (XE Banner, XE Feature Cards) reuse the block's primitive API instead
+> of building `<xe-icon>` themselves. The icon stays **decorative only** — Ignite has no label
+> prop; the parent carries the meaning. No "Primitive section" container (decided against).
 
 Alignment notes (review before changing — renaming UE ids affects content already authored):
 - Our Tier 2 UE item ids differ from the Ignite names: **`xe-feature-card`** (renders `xe-card`) and
@@ -269,7 +277,7 @@ is made once in the primitive and applies site-wide.
 **Available primitives:**
 | Component | Purpose | Docs status |
 |---|---|---|
-| `<xe-icon icon="faBolt" size="xs\|sm\|md\|lg\|xl">` | Font Awesome icon, sized from the token scale, color inherited; always decorative. Icons registered at site level (`scripts/icons.js`) | Partial (2026-10-07 — Font Awesome **Free** stand-in for Pro; sizes estimated until the tokens docs) |
+| `<xe-icon icon="faBolt" size="xs\|sm\|md\|lg\|xl">` | Font Awesome icon, sized from the token scale, color inherited; always decorative. Icons registered at site level (`scripts/icons.js`). Also the standalone **XE Icon** block (`blocks/xe-icon/`) | Verified props (Ignite Storybook, 2026-10-08) · Partial assets: Font Awesome **Free** stand-in for Pro; size px values estimated |
 | `<xe-button variant treatment size href>` | Button/link; slots: default, `leading-icon`, `trailing-icon` | Partial (from the banner example only) |
 | `<xe-nav-item active href target>` | Navbar link/button; slots: default, `leading-icon` | Verified (tokens still estimated) |
 | `<xe-action-link link-type href>` | Labeled link with a trailing direction icon (internal / external / download); color from `--card-text-color` | Partial — **fixes pending** (full docs received 2026-10-01) |
@@ -277,7 +285,8 @@ is made once in the primitive and applies site-wide.
 
 > These are **Tier 3 internal components** — no block definition is ever needed for them. Authors
 > configure them indirectly via Tier 1/2 authoring fields or composition defaults.
-> (Exception: `xe-nav-item` is **Tier 2** in Ignite's model — a container-child of XE Navbar.)
+> (Exceptions: `xe-nav-item` is **Tier 2** in Ignite's model — a container-child of XE Navbar;
+> `xe-icon` is also a standalone block by team decision — see "Where our work sits today".)
 
 **Available composite components:**
 | Component | Built from | Purpose | Docs status |
@@ -330,19 +339,31 @@ before building. When a component is built, mark it ✅ here and add it to the t
 **Documented specs received so far** (build from these when the component is needed):
 
 - **Icon — `<xe-icon icon size>`** *(Design System Primitives › Media › Icon)* — ✅ built
-  2026-10-07 (`scripts/components/xe-icon.js`) · **Docs status: Partial** — Path A stand-in.
+  2026-10-07 (`scripts/components/xe-icon.js`), standalone block 2026-10-08 (`blocks/xe-icon/`) ·
+  **Docs status:** props **Verified** against the Ignite Storybook (2026-10-08) · icons and size
+  values **Partial** (Path A stand-in).
   Font Awesome icon wrapper with consistent sizing that inherits its color from the parent text.
-  Tier 3 — no block definition; the composition fixes the icon or offers it as an authoring select.
-  - Props → attributes: `icon` (Font Awesome name, e.g. `faBolt`) · `size` (`xs` | `sm` |
-    `md` default | `lg` | `xl`).
+  - **Props (Ignite Storybook — only these two):** `icon` (string, no default — Font Awesome name,
+    e.g. `faArrowRight`) · `size` (string, default `md`: `xs` · `sm` · `md` · `lg` · `xl`).
+    Nothing else — no `label`, no size-override custom property.
+  - **Standalone XE Icon block** (`blocks/xe-icon/`, any section): model fields `icon` (select —
+    every registered icon as a named option; authors never type names) and `size` (select — Extra
+    Small / Small / Medium (default) / Large / Extra Large). Template: `faArrowRight`, `md`.
+  - **Primitive API** (team pattern — see "Primitive rendering pattern" below):
+    `buildPrimitive({ icon, size })` returns an `<xe-icon>` (or null if the icon isn't registered) ·
+    `decorate(block, props)` / `decoratePrimitive(rowOrCell, props)` reads authored values,
+    applies `props` > authored > `DEFAULTS`, renders in place and returns the icon. XE Banner
+    delegates its Icon cell (size from its Icon Size style) and builds its button arrow with
+    `buildPrimitive`; XE Feature Cards delegates its Category Icon cell (size fixed at `xl`).
   - **Registration before use** — icons are registered once at the site level, never inside a
     component: `scripts/icons.js` calls `registerIcons({ faBolt, … })` (Ignite:
     `@ignite/web/utils/icon-resolver.js`). Every block that renders icons imports
     `scripts/icons.js`; so do Storybook's preview and the tests. To add an icon: add it to
     `scripts/components/icons/fa-free.js` (Font Awesome package shape `{ prefix, iconName, icon:
     [width, height, aliases, unicode, svgPathData] }`) and list it in `scripts/icons.js`.
-    Blocks check `isIconRegistered(name)` before adding an icon. An unregistered icon renders empty
-    and fills in when it's registered.
+    `buildPrimitive` checks `isIconRegistered(name)`. An unregistered `<xe-icon>` renders empty
+    and fills in when it's registered. A unit test keeps the XE Icon / XE Banner / XE Feature Cards
+    dropdowns in sync with the registry.
   - Registered (Ignite's "All Registered Icons"): faPlus, faDownload, faBolt, faArrowRight,
     faExternalLink (alias of faArrowUpRightFromSquare), faChevronRight, faChevronDown, faHeart,
     faUser, faLightbulb, faStar, faRocket, faFire · plus ours: faArrowDown,
@@ -351,11 +372,14 @@ before building. When a component is built, mark it ✅ here and add it to the t
     faSquareXTwitter, faInstagram, faSquareLinkedin, faYoutube.
   - **Sizes from design tokens** with px fallbacks: `--xe-sizing-icon-xs` 14px · `-sm` 16px ·
     `-md` 20px · `-lg` 28px · `-xl` 36px. ⚠️ Token names are placeholders and the px values
-    estimates until the design tokens docs arrive (build-log #I-37). One-off override:
-    `--xe-icon-size` on the icon or a parent (our link components use `1em` so the icon follows
-    the label).
-  - **Color:** inherits the text color (`currentcolor`); override with CSS `color` on the icon or
-    its parent. No color attribute (the DS Storybook color control is a story control only).
+    estimates until the design tokens docs arrive (build-log #I-37). A container that needs a
+    one-off size sets `width`/`height` on the element (outer styles beat `:host`) — our link
+    components use `1em` / `0.95em` so the icon follows the label.
+  - **Color:** inherits the text color (`currentcolor`) — the component sets no color. Override
+    with `style="color: …"` or a parent's color. Ignite tokens used in the docs:
+    `--xe-color-brand-primary` (dark red) · `--xe-color-brand-accent` (dark green) · gap spacing
+    `--xe-spacing-space-2xl`. Our stories use them with fallbacks `#c8102e` / `#00664f` / `24px`
+    (fallback values are estimates — build-log #I-41).
   - **Accessibility:** always `aria-hidden="true"` and not focusable. There's no `label`
     attribute — **label the parent, not the icon** (e.g. `aria-label` on the icon button/link).
   - DS stories: Default, Sizes, Color Inheritance, All Registered Icons. We add Social Brands.
@@ -579,6 +603,30 @@ its story/tests, any block that uses it, the spec entry above, and `docs/build-l
 | PF-05 | All primitives | Move to the shared pattern (Step 4) and add spec-based tests (Step 5). `xe-hyperlink` is the first to follow both (`xe-link-helpers.js`, `DOCS_SPEC` in its test) — use it as the template. | In progress |
 | PF-06 | XE Navbar header | Reserve the header height up front, fixed navbar row heights, smaller logo rendition — stops the ~66px page jump (build-log I-24, I-28). Until this is done the shift shows up in every AEM PageSpeed run and can make the check fail (it did on #7 and on #9's first run). | ✅ Done 2026-10-05 (PR #11) — layout shift 0 at 360–1920px; keep `--xe-header-height` in sync with the navbar's content |
 | PF-07 | XE Banner block | Reads fields by position — confirm with an empty field in Universal Editor; switch to content detection if a field shifts (build-log I-26). | Needs a UE test |
+
+### Primitive rendering pattern (team doc, 2026-10-08)
+
+Primitives that are also blocks (today: **XE Icon**) expose two entry points:
+
+- **`buildPrimitive(props)`** — builds and returns the primitive element from plain settings
+  (pure, importable).
+- **`decorate(block, props)`** — reads authored values from the block, merges optional props,
+  replaces the block content. Exported again as **`decoratePrimitive`** for compositions.
+
+Rules:
+- Define `DEFAULTS` once, ordered to match the model field order.
+- `props` override authored values; authored values override `DEFAULTS`.
+- A composition never duplicates the primitive's rendering — it imports and reuses it
+  (`decoratePrimitive(rowOrCell, props)` for authored values, `buildPrimitive(props)` for fixed ones).
+- Prefixed fields (e.g. `icon_size`) in a composition model let authors configure the primitive
+  from inside the composition. Existing compositions keep their current field names (`icon`, Icon
+  Size style option) so content already authored keeps working.
+- Decorate the row/cell **in place** — don't remove it before calling the primitive decorator.
+- Read authored values by **content** (e.g. a size name vs an icon name), not position, because
+  Universal Editor skips empty fields.
+- **Transfer to another project:** copy the block folder **and** its shared dependencies — for XE
+  Icon: `blocks/xe-icon/`, `scripts/icons.js`, `scripts/components/xe-icon.js`,
+  `scripts/components/icons/` (+ the `section` filter entry and the `_component-definition` include).
 
 ### Block adapter pattern
 ```js

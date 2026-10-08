@@ -1,0 +1,4 @@
+/* Standalone icon: no extra line height around the SVG; color follows the section's text color */
+.xe-icon.block {
+  line-height: 0;
+}

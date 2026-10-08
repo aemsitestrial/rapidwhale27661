@@ -7163,6 +7163,166 @@
     ]
   },
   {
+    "id": "xe-icon",
+    "fields": [
+      {
+        "component": "select",
+        "name": "icon",
+        "label": "Icon",
+        "valueType": "string",
+        "value": "faArrowRight",
+        "required": true,
+        "options": [
+          {
+            "name": "Arrow Down",
+            "value": "faArrowDown"
+          },
+          {
+            "name": "Arrow Right",
+            "value": "faArrowRight"
+          },
+          {
+            "name": "Arrow Up-Right From Square",
+            "value": "faArrowUpRightFromSquare"
+          },
+          {
+            "name": "Bill / Invoice",
+            "value": "faFileInvoiceDollar"
+          },
+          {
+            "name": "Chevron Down",
+            "value": "faChevronDown"
+          },
+          {
+            "name": "Chevron Right",
+            "value": "faChevronRight"
+          },
+          {
+            "name": "Close (X Mark)",
+            "value": "faXmark"
+          },
+          {
+            "name": "Download",
+            "value": "faDownload"
+          },
+          {
+            "name": "External Link",
+            "value": "faExternalLink"
+          },
+          {
+            "name": "Facebook",
+            "value": "faSquareFacebook"
+          },
+          {
+            "name": "Flame",
+            "value": "faFire"
+          },
+          {
+            "name": "Heart",
+            "value": "faHeart"
+          },
+          {
+            "name": "Instagram",
+            "value": "faInstagram"
+          },
+          {
+            "name": "Leaf",
+            "value": "faLeaf"
+          },
+          {
+            "name": "Light Bulb",
+            "value": "faLightbulb"
+          },
+          {
+            "name": "Lightning Bolt",
+            "value": "faBolt"
+          },
+          {
+            "name": "LinkedIn",
+            "value": "faSquareLinkedin"
+          },
+          {
+            "name": "Menu (Bars)",
+            "value": "faBars"
+          },
+          {
+            "name": "Person",
+            "value": "faUser"
+          },
+          {
+            "name": "Piggy Bank",
+            "value": "faPiggyBank"
+          },
+          {
+            "name": "Plus",
+            "value": "faPlus"
+          },
+          {
+            "name": "Rocket",
+            "value": "faRocket"
+          },
+          {
+            "name": "Search (Magnifying Glass)",
+            "value": "faMagnifyingGlass"
+          },
+          {
+            "name": "Solar Panel",
+            "value": "faSolarPanel"
+          },
+          {
+            "name": "Star",
+            "value": "faStar"
+          },
+          {
+            "name": "Wrench",
+            "value": "faWrench"
+          },
+          {
+            "name": "X (Twitter)",
+            "value": "faXTwitter"
+          },
+          {
+            "name": "X (Twitter), square",
+            "value": "faSquareXTwitter"
+          },
+          {
+            "name": "YouTube",
+            "value": "faYoutube"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "size",
+        "label": "Size",
+        "valueType": "string",
+        "value": "md",
+        "options": [
+          {
+            "name": "Extra Small",
+            "value": "xs"
+          },
+          {
+            "name": "Small",
+            "value": "sm"
+          },
+          {
+            "name": "Medium (default)",
+            "value": "md"
+          },
+          {
+            "name": "Large",
+            "value": "lg"
+          },
+          {
+            "name": "Extra Large",
+            "value": "xl"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "xe-navbar",
     "fields": [
       {

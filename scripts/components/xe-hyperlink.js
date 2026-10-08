@@ -57,8 +57,8 @@ const styles = `
 
   /* Trailing icon follows the text size and sits on the text baseline */
   xe-icon {
-    --xe-icon-size: 0.95em;
-
+    width: 0.95em;
+    height: 0.95em;
     margin-inline-start: 0.3em;
     vertical-align: -0.1em;
   }

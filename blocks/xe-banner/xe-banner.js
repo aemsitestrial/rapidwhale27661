@@ -1,7 +1,7 @@
 import '../../scripts/components/xe-banner.js';
 import '../../scripts/components/xe-button.js';
-import '../../scripts/icons.js';
-import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.js';
+import { ICON_SIZES } from '../../scripts/components/xe-icon.js';
+import { buildPrimitive as buildIcon, decoratePrimitive as decorateIcon } from '../xe-icon/xe-icon.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /*
@@ -40,13 +40,13 @@ export default function decorate(block) {
   column.setAttribute('heading-level', text(levelCell) || '2');
   banner.append(column);
 
-  const iconName = text(iconCell);
-  if (isIconRegistered(iconName)) {
-    const icon = document.createElement('xe-icon');
+  // The icon row is rendered by the xe-icon primitive; the banner only picks the size
+  const iconSize = getOption(block, 'icon-size');
+  const icon = iconCell && decorateIcon(iconCell, {
+    size: ICON_SIZES.includes(iconSize) ? iconSize : DEFAULTS['icon-size'],
+  });
+  if (icon) {
     icon.slot = 'icon';
-    icon.setAttribute('icon', iconName);
-    const iconSize = getOption(block, 'icon-size');
-    icon.setAttribute('size', ICON_SIZES.includes(iconSize) ? iconSize : DEFAULTS['icon-size']);
     column.append(icon);
   }
 
@@ -79,10 +79,8 @@ export default function decorate(block) {
     button.setAttribute('href', href);
     button.append(label);
 
-    const arrow = document.createElement('xe-icon');
+    const arrow = buildIcon({ icon: 'faArrowRight', size: 'sm' });
     arrow.slot = 'trailing-icon';
-    arrow.setAttribute('size', 'sm');
-    arrow.setAttribute('icon', 'faArrowRight');
     button.append(arrow);
     column.append(button);
   }
