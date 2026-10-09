@@ -6,6 +6,22 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-09 — Shared `getBlockProps` for primitive blocks
+
+Branch `refactor/get-block-props` — PR open for review, **not merged yet**.
+
+- New `scripts/utils/primitive.js`: `getBlockProps(el, defaults, overrides, options)` (+ `defined`).
+  Reads the grouped cell or one-row-per-field markup **by content** — link → href, `fa…` → icon,
+  an allowed value → its dropdown, other text → the free-text field; unknown values ignored —
+  and returns the complete props (defaults < authored < overrides). 12 unit tests.
+- **XE Icon** and **XE Icon Button** use it; their own `readAuthored` / `defined` are gone. Same
+  behavior — all 159 existing tests pass unchanged. No model change.
+- Copy checklist: **`scripts/icons.js` is now listed explicitly as required** (with
+  `scripts/components/icons/`) — missing it caused the Font Awesome error in the other project —
+  and `scripts/utils/primitive.js` is added for every primitive block.
+- ⚠️ For the other project: copying XE Icon / XE Icon Button now also needs
+  `scripts/utils/primitive.js`.
+
 ## 2026-10-09 — Docs: model field prefix rule for primitives
 
 [#22](https://github.com/aemsitestrial/rapidwhale27661/pull/22), merged into `main` on 2026-10-09 at the user's request.

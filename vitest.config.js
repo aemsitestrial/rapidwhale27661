@@ -9,10 +9,10 @@ export default defineConfig({
   },
   test: {
     environment: 'happy-dom',
-    include: ['blocks/**/*.test.js', 'scripts/components/**/*.test.js'],
+    include: ['blocks/**/*.test.js', 'scripts/components/**/*.test.js', 'scripts/utils/**/*.test.js'],
     coverage: {
       provider: 'v8',
-      include: ['blocks/**/*.js', 'scripts/components/**/*.js'],
+      include: ['blocks/**/*.js', 'scripts/components/**/*.js', 'scripts/utils/**/*.js'],
       exclude: ['**/*.stories.js', '**/*.test.js'],
     },
   },

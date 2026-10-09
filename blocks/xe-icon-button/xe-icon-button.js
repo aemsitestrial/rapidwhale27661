@@ -3,6 +3,7 @@ import {
 } from '../../scripts/components/xe-icon-button.js';
 import { safeHref } from '../../scripts/components/xe-link-helpers.js';
 import { buildPrimitive as buildIcon } from '../xe-icon/xe-icon.js';
+import { getBlockProps } from '../../scripts/utils/primitive.js';
 
 /*
  * xe-icon-button — standalone block for <xe-icon-button> (Ignite: Design System Primitives ›
@@ -15,16 +16,18 @@ import { buildPrimitive as buildIcon } from '../xe-icon/xe-icon.js';
  * Fields: ib_ariaLabel (required), ib_icon, ib_size, ib_treatment, ib_href, ib_target (shown only
  * with a link) — the "ib" element group, so Universal Editor delivers them as ONE cell with one
  * element per field (a <p>; a link as <p><a>), skipping empty fields (aem.live "Element
- * grouping"). Values are matched by content, not position: a link or URL → href · fa… → icon ·
- * a size / treatment / target option → that field · any other text → the label. Unknown values
- * are ignored. One-row-per-field markup (pre-grouping) is read the same way.
+ * grouping"). Values are read by the shared getBlockProps (scripts/utils/primitive.js) — by
+ * content, never by position: a link or URL → href · fa… → icon · a size / treatment / target
+ * option → that field · any other text → the label. Unknown values are ignored. One-row-per-field
+ * markup (pre-grouping) is read the same way.
  *
  * Accessibility: aria-label is required (Ignite) — without a label or a registered icon nothing is
  * rendered. For new-tab links Ignite puts the context in the label; the block adds
  * "(opens in a new window)" when the author left it out.
  *
- * To use in another project, copy this folder and blocks/xe-icon/, plus scripts/icons.js,
- * scripts/components/xe-icon-button.js, xe-icon.js, xe-link-helpers.js and icons/.
+ * To use in another project, copy this folder and blocks/xe-icon/, plus scripts/utils/primitive.js,
+ * scripts/icons.js (registers the icons — required), scripts/components/xe-icon-button.js,
+ * xe-icon.js, xe-link-helpers.js and icons/.
  */
 
 // Ordered to match the model fields (ib_ariaLabel … ib_target)
@@ -37,9 +40,14 @@ export const DEFAULTS = {
   target: '_self',
 };
 
-const TARGETS = ['_self', '_blank'];
 export const NEW_WINDOW_NOTE = '(opens in a new window)';
-const isUrl = (text) => /^(\/|#|https?:\/\/|mailto:|tel:)/.test(text);
+
+// Allowed values of each dropdown field — how getBlockProps recognizes them
+const OPTIONS = {
+  size: ICON_BUTTON_SIZES,
+  treatment: ICON_BUTTON_TREATMENTS,
+  target: ['_self', '_blank'],
+};
 
 export function buildPrimitive(props = {}) {
   const {
@@ -67,45 +75,12 @@ export function buildPrimitive(props = {}) {
   return button;
 }
 
-// A block (rows of cells), a composition row (cells) or a single cell → one node per value.
-// A grouped cell holds one element per field, so each child element is a value.
-function valueNodes(el) {
-  const cells = el.children.length
-    ? [...el.children].map((child) => (child.children.length ? child.lastElementChild : child))
-    : [el];
-  return cells.flatMap((cell) => {
-    const parts = [...cell.children].filter((child) => child.localName === 'p');
-    return parts.length > 1 ? parts : [cell];
-  });
-}
-
-function readAuthored(el) {
-  const authored = {};
-  const set = (key, value) => { if (!(key in authored)) authored[key] = value; };
-  valueNodes(el).forEach((node) => {
-    const link = node.querySelector?.('a');
-    const value = node.textContent.trim();
-    if (link) set('href', link.getAttribute('href'));
-    else if (/^fa[A-Z]/.test(value)) set('icon', value);
-    else if (ICON_BUTTON_SIZES.includes(value)) set('size', value);
-    else if (ICON_BUTTON_TREATMENTS.includes(value)) set('treatment', value);
-    else if (TARGETS.includes(value)) set('target', value);
-    else if (isUrl(value)) set('href', value);
-    else if (value) set('ariaLabel', value);
-  });
-  return authored;
-}
-
-const defined = (props) => Object.fromEntries(
-  Object.entries(props).filter(([, value]) => value !== undefined && value !== null && value !== ''),
-);
-
 /**
  * Renders the icon button in place of the element's content and returns it (or null when the
  * label or a registered icon is missing).
  */
 export default function decorate(block, props = {}) {
-  const button = buildPrimitive({ ...DEFAULTS, ...readAuthored(block), ...defined(props) });
+  const button = buildPrimitive(getBlockProps(block, DEFAULTS, props, OPTIONS));
   block.replaceChildren(...(button ? [button] : []));
   return button;
 }
