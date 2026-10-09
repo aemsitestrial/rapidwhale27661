@@ -245,6 +245,13 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   for local checks next time.
 - PR #21 checks: build ✅ · PageSpeed 100 / 100. Merged at the user's request.
 
+### 2026-10-09 — Prefix rule written down
+
+- The user confirmed the model pattern for every primitive block (the `ic_` XE Icon JSON as the
+  example) and the workflow: build and test here, then copy the files to another project without
+  AI help. Added the "Model field prefix rule" + copy checklist to `DEVELOPMENT.md` and a pointer in
+  `AGENTS.md`. PR #22 (docs only) — build ✅, merged at the user's request.
+
 ---
 
 ## Issue tracker

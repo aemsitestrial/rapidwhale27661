@@ -675,7 +675,7 @@ its story/tests, any block that uses it, the spec entry above, and `docs/build-l
 
 ### Primitive rendering pattern (team doc, 2026-10-08)
 
-Primitives that are also blocks (today: **XE Icon**) expose two entry points:
+Primitives that are also blocks (today: **XE Icon**, **XE Icon Button**) expose two entry points:
 
 - **`buildPrimitive(props)`** — builds and returns the primitive element from plain settings
   (pure, importable).
@@ -699,6 +699,51 @@ Rules:
   `scripts/components/xe-link-helpers.js`. For XE
   Icon: `blocks/xe-icon/`, `scripts/icons.js`, `scripts/components/xe-icon.js`,
   `scripts/components/icons/` (+ the `section` filter entry and the `_component-definition` include).
+
+#### Model field prefix rule (agreed 2026-10-09)
+
+Every primitive block's model puts **all its fields in one element group** by giving them the same
+short prefix: `<prefix>_<field>`. Universal Editor then delivers the block as **one cell with one
+element per field** (a `<p>`; a link as `<p><a>`; aem.live "Element grouping"), and the primitive
+can be reused inside compositions without field-name clashes.
+
+| Block | Prefix | Fields |
+|---|---|---|
+| XE Icon (`blocks/xe-icon/`) | **`ic_`** | `ic_icon`, `ic_size` |
+| XE Icon Button (`blocks/xe-icon-button/`) | **`ib_`** | `ib_ariaLabel`, `ib_icon`, `ib_size`, `ib_treatment`, `ib_href`, `ib_target` |
+| *next primitive* | *pick a new 2-letter prefix, add it here* | |
+
+Rules:
+1. **One prefix per block, on every field** — and on the template defaults
+   (`"template": { …, "ic_icon": "faArrowRight", "ic_size": "md" }`). Pick a short, unused prefix
+   (usually 2 letters from the block name) and **add it to the table above** before building.
+2. **`DEFAULTS` keys are the props without the prefix** (`icon`, `size`), in the same order as
+   the model fields. Conditions use the prefixed name (`{ "!!": [{ "var": "ib_href" }] }`).
+3. **Design-token options are dropdowns** (`select`): icons (every registered icon, by name),
+   sizes, treatments. No free text, no color picker.
+4. **Interactive primitives** (buttons, links) have a **required** accessible-label field
+   (`<prefix>_ariaLabel`); decorative ones (XE Icon) don't.
+5. **No field name may end in `Title`, `Type`, `MimeType`, `Alt` or `Text`** — Universal Editor's
+   field collapse would merge it into another field. Each block's test checks this.
+6. **The decorator reads the grouped cell by content** — one value per element; match each value by
+   what it is (an `fa…` name, a size, a treatment, a link…), never by position, and ignore unknown
+   values. It should also read one-row-per-field markup.
+7. **Renaming fields of a block that's already in use** changes the saved property names: the
+   decorator must keep reading the old markup, and authors must re-pick the values in Universal
+   Editor before republishing (build-log I-53). New blocks start with the prefix from day one.
+8. **Stories and tests build the grouped markup** (one row, one cell, an element per field) so they
+   match what Universal Editor delivers.
+
+**Copy checklist (for moving a finished primitive to another project).** These blocks are built and
+tested here and then copied by hand to another project, so every primitive PR ends with this list:
+- the block folder(s) — including any block it reuses (XE Icon Button → also `blocks/xe-icon/`);
+- the shared scripts it imports — its component(s) in `scripts/components/`, `xe-link-helpers.js`
+  for links, `scripts/icons.js` + `scripts/components/icons/` for icons;
+- the include in `models/_component-definition.json` and the block id in `models/_section.json`;
+- `npm run build:json`, then reload Universal Editor;
+- any content to re-author (e.g. after a field rename);
+- on a project that loads `@ignite/web` (Path B): don't copy our `scripts/components/xe-*.js` —
+  change the component import line at the top of the block file instead.
 
 ### Block adapter pattern
 ```js
