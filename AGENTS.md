@@ -32,6 +32,10 @@ bug/issue we hit — check it before debugging, and log new ones there), and
   content. Author options that map to design tokens (sizes, colors) are **dropdowns**, never free
   text or a color picker. Interactive primitives (buttons, links) need a **required** accessible
   label field.
+- **Primitive model fields use one prefix per block** (`ic_` XE Icon, `ib_` XE Icon Button) —
+  see `DEVELOPMENT.md` → "Model field prefix rule". Register a new prefix in its table first, and
+  finish every primitive PR with its **copy checklist** (the user copies blocks to another project
+  that has no AI help).
 - **Commits:** check `git log` after every commit before pushing (see build-log #I-46).
 - **Every new or changed block** has a `.stories.js` and `.test.js`; `npm test` and `npm run lint`
   must pass, and Storybook's a11y panel must show 0 violations.

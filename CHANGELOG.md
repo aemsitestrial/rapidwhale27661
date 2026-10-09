@@ -6,6 +6,16 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-09 — Docs: model field prefix rule for primitives
+
+Branch `docs/primitive-prefix-rule` — PR open for review, **not merged yet**. Docs only.
+
+- `DEVELOPMENT.md` → "Model field prefix rule": one prefix per primitive block on every field
+  (registry: `ic_` XE Icon, `ib_` XE Icon Button), 8 rules (template, `DEFAULTS`, dropdowns,
+  required label, field-collapse names, grouped-cell reading, renames, stories/tests), and the
+  **copy checklist** for moving a finished primitive to another project.
+- `AGENTS.md`: pointer to the rule.
+
 ## 2026-10-09 — XE Icon Button block rebuilt with `ib_` grouped fields
 
 [#21](https://github.com/aemsitestrial/rapidwhale27661/pull/21), merged into `main` on 2026-10-09 at
