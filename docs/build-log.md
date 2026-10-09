@@ -179,6 +179,9 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   loads at ~790ms with the header — after first paint (548ms), lazy phase, no LCP impact; no core
   loading files changed. Authored markup couldn't be checked against real Universal Editor output:
   the XE Banner / XE Icon added in the editor aren't published to preview yet. → #I-48
+- Docs commit re-ran the checks: desktop PageSpeed **100** (TBT 0, Speed Index 0.4s) — the first
+  run's 90 was variance. Mobile didn't run: Google's PageSpeed API returned "Quota exceeded …
+  per minute" (shared quota of the AEM PageSpeed check). → #I-47 ✅, #I-49
 - User reviewed #16 and asked to update the docs before merging; merged 2026-10-09.
 
 ---
@@ -237,8 +240,9 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-43 | 10-09 | Icon Button documents 7 sizes (xxs–2xl); the Icon docs only 5 (xs–xl) | The two Ignite pages disagree (the real `xe-icon` may support xxs / 2xl) | ℹ️ User decision: `xe-icon` stays at xs–xl; Icon Button sets the icon's width/height for xxs / 2xl (estimates 12 / 40px). Ask the team whether `xe-icon` supports them |
 | I-44 | 10-09 | Swapping the navbar ☰ for `xe-icon-button` would lose `aria-expanded` (WCAG 4.1.2) | Ignite's Icon Button only forwards `aria-label` | ✅ Navbar extension, not in Ignite spec: `aria-expanded` / `aria-haspopup` forwarded. `aria-controls` dropped (can't cross the shadow DOM) |
 | I-45 | 10-09 | Icon Button colors / shape not fully specified: text says "circular", examples are rounded squares; no color tokens except brand primary | Docs page | ⏳ Followed the examples (8px radius); colors estimated — Ignite's filled red looks darker than `#c8102e` |
-| I-47 | 10-09 | PR #16 PageSpeed lower than usual (mobile 94, desktop 90 — desktop TBT 193ms) | Unclear: one Lighthouse run; the new code is ~7 KB loaded with the header after first paint | ⏳ Watch the next PR's score; if desktop stays < 95, profile the header load |
+| I-47 | 10-09 | PR #16 PageSpeed lower than usual (mobile 94, desktop 90 — desktop TBT 193ms) | Unclear: one Lighthouse run; the new code is ~7 KB loaded with the header after first paint | ✅ Re-run: desktop 100, TBT 0 — run-to-run variance, not the new code |
 | I-48 | 10-09 | Can't verify XE Icon / XE Icon Button decorators against real authored markup | The blocks added in Universal Editor aren't published to preview yet | ⏳ After the next publish, check View Page Source for the block rows (authoring guide step 10) |
+| I-49 | 10-09 | AEM PageSpeed check "failure" with mobile score n/a | Google PageSpeed API quota exceeded (per minute / per day) — not a code issue | ℹ️ Re-run later or push the next commit; don't treat a quota failure as a regression |
 
 ### Content, Universal Editor & publishing
 

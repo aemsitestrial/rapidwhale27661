@@ -9,8 +9,8 @@ are tracked in **`docs/build-log.md`**.
 ## 2026-10-09 — `xe-icon-button` primitive + XE Icon Button block
 
 [#16](https://github.com/aemsitestrial/rapidwhale27661/pull/16), reviewed by the user and merged into
-`main` on 2026-10-09. Checks: build ✅ · AEM PageSpeed mobile **94** / desktop **90**, CLS 0 (lower
-than #13/#14's 100 — see build log; a side-by-side load showed no clear extra main-thread work).
+`main` on 2026-10-09. Checks: build ✅ · AEM PageSpeed first run mobile **94** / desktop **90**; re-run
+desktop **100** (TBT 0) — the dip was run variance. CLS 0 throughout.
 Pre-merge quality check: icon-button code loads in the lazy phase with the header, after first
 paint (no LCP impact); `scripts.js` / `delayed.js` unchanged.
 
