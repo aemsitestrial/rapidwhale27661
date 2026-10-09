@@ -8,7 +8,8 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-09 — Shared `getBlockProps` for primitive blocks
 
-Branch `refactor/get-block-props` — PR open for review, **not merged yet**.
+[#23](https://github.com/aemsitestrial/rapidwhale27661/pull/23), merged into `main` on 2026-10-09 at the user's request.
+Checks: build ✅ · AEM PageSpeed mobile **100** / desktop **100** (CLS 0) · 0 files deleted.
 
 - New `scripts/utils/primitive.js`: `getBlockProps(el, defaults, overrides, options)` (+ `defined`).
   Reads the grouped cell or one-row-per-field markup **by content** — link → href, `fa…` → icon,

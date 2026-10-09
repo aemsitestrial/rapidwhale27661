@@ -263,6 +263,9 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - Built `scripts/utils/primitive.js` and moved XE Icon / XE Icon Button onto it. Checked: lint,
   171 tests (159 existing unchanged + 12 new), `build:json` (no model change), Storybook — 24
   XE Icon / XE Icon Button / XE Banner / XE Feature Cards stories render, axe 0.
+- Quality check on the branch preview: published home page / `/ignite` icons, banner icons and header
+  render with no errors, CLS 0; an `ib_` XE Icon Button loaded through the real block loader. PR #23
+  checks: build ✅ · PageSpeed 100 / 100. Merged at the user's request.
 
 ---
 
