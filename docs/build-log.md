@@ -183,6 +183,23 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   run's 90 was variance. Mobile didn't run: Google's PageSpeed API returned "Quota exceeded …
   per minute" (shared quota of the AEM PageSpeed check). → #I-47 ✅, #I-49
 - User reviewed #16 and asked to update the docs before merging; merged 2026-10-09.
+- **Post-merge check on the live site found a regression:** on phones the header measured 203.5px
+  but only 199.5px was reserved — the 48px menu button (was 44px) makes the stacked bar 4px taller,
+  and the bar now stacks up to 480px (switch measured exactly: stacked ≤ 480px, normal ≥ 481px).
+  Fix on `fix/header-height-icon-button`: reserve 203.5px at ≤ 480px. → #I-50
+  Verified on the local dev server: header = reserved height and CLS 0 at 360 / 412 / 480 / 481 /
+  1350px. At 768px a separate, pre-existing 0.003 shift of a hero paragraph (~230ms, before the
+  header loads; also on pre-#16 code) — not header-related.
+- The user published the home page with 2 XE Banners and 3 XE Icons → checked the decorators
+  against **real Universal Editor output**: every block renders as authored (banner icons 28px, white
+  on Dark; XE Icon xl / lg / md = 36 / 28 / 20px in Brand Primary red, Brand Accent green and
+  Inherit; all `aria-hidden`). → #I-48 ✅
+- Finding: the XE Icon rows arrive in **model order** (icon, size, color), not alphabetical as
+  DEVELOPMENT.md's "JCR Field Ordering" rule says — reading by content handled it. Rule updated.
+  → #I-51
+- Content note for the author: the second XE Banner's Button Link is "teterer" (not a page or
+  URL), so its button goes to a broken address — fix in Universal Editor.
+- PR #17 checks: build ✅ · PageSpeed mobile 100 / desktop 100. Merged at the user's request.
 
 ---
 
@@ -241,8 +258,10 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-44 | 10-09 | Swapping the navbar ☰ for `xe-icon-button` would lose `aria-expanded` (WCAG 4.1.2) | Ignite's Icon Button only forwards `aria-label` | ✅ Navbar extension, not in Ignite spec: `aria-expanded` / `aria-haspopup` forwarded. `aria-controls` dropped (can't cross the shadow DOM) |
 | I-45 | 10-09 | Icon Button colors / shape not fully specified: text says "circular", examples are rounded squares; no color tokens except brand primary | Docs page | ⏳ Followed the examples (8px radius); colors estimated — Ignite's filled red looks darker than `#c8102e` |
 | I-47 | 10-09 | PR #16 PageSpeed lower than usual (mobile 94, desktop 90 — desktop TBT 193ms) | Unclear: one Lighthouse run; the new code is ~7 KB loaded with the header after first paint | ✅ Re-run: desktop 100, TBT 0 — run-to-run variance, not the new code |
-| I-48 | 10-09 | Can't verify XE Icon / XE Icon Button decorators against real authored markup | The blocks added in Universal Editor aren't published to preview yet | ⏳ After the next publish, check View Page Source for the block rows (authoring guide step 10) |
+| I-48 | 10-09 | Can't verify XE Icon / XE Icon Button decorators against real authored markup | The blocks added in Universal Editor aren't published to preview yet | ✅ Checked 10-09 after the user published the home page — all XE Banner / XE Icon blocks decorate as authored |
 | I-49 | 10-09 | AEM PageSpeed check "failure" with mobile score n/a | Google PageSpeed API quota exceeded (per minute / per day) — not a code issue | ℹ️ Re-run later or push the next commit; don't treat a quota failure as a regression |
+| I-50 | 10-09 | After #16, phone header 203.5px but 199.5px reserved (4px shift); 480px stacked but reserved 137px | Menu toggle grew 44 → 48px (Ignite touch target); the stacked bar has no fixed height, and the wider bar stacks up to 480px | ✅ `--xe-header-height: 203.5px` at `width <= 480px` (fix PR). Lesson: re-measure the header at 360–500px whenever the bar's buttons change |
+| I-51 | 10-09 | Real XE Icon rows arrived as icon, size, color (model order) — not alphabetical as our JCR rule said | The "JCR saves alphabetically" assumption doesn't hold for this block's delivered markup | ✅ Content-based reading handled it; DEVELOPMENT.md rule now says: read by content, keep model order = alphabetical for position-based blocks |
 
 ### Content, Universal Editor & publishing
 
