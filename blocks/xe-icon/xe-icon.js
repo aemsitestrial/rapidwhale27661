@@ -1,5 +1,6 @@
 import '../../scripts/icons.js';
 import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.js';
+import getBlockProps, { defined } from '../../scripts/utils/primitive.js';
 
 /*
  * xe-icon — standalone block for <xe-icon> (Ignite: Design System Primitives › Media › Icon),
@@ -12,8 +13,8 @@ import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.j
  *
  * Fields: icon, size (the two Ignite props) and color (the Ignite Storybook "color" control —
  * applied as style="color: …", like the docs; not an <xe-icon> attribute). Authored values are
- * matched by content (a size, a color option or an icon name), not by row position, so JCR's
- * alphabetical row order and fields Universal Editor skips don't matter.
+ * read via getBlockProps (scripts/utils/primitive.js): icon is content-detected (fa prefix);
+ * size and color are positional (fields always arrive in editor / model-definition order).
  * Color options are brand tokens only (no free color picker — keeps icons on brand). The
  * fallbacks are estimates until the design tokens docs arrive.
  *
@@ -50,33 +51,12 @@ export function buildPrimitive(props = {}) {
   return el;
 }
 
-// A block (rows of cells), a composition row (cells) or a single cell
-function readAuthored(el) {
-  const cells = el.children.length
-    ? [...el.children].map((child) => (child.children.length ? child.lastElementChild : child))
-    : [el];
-  const authored = {};
-  cells.map((cell) => cell.textContent.trim()).filter(Boolean).forEach((value) => {
-    let key;
-    if (ICON_SIZES.includes(value)) key = 'size';
-    else if (isColor(value)) key = 'color';
-    else if (/^fa[A-Z]/.test(value)) key = 'icon';
-    // Anything else (an old or unknown value) is ignored, so it can't hide the icon
-    if (key && !(key in authored)) authored[key] = value;
-  });
-  return authored;
-}
-
-const defined = (props) => Object.fromEntries(
-  Object.entries(props).filter(([, value]) => value !== undefined && value !== null && value !== ''),
-);
-
 /**
  * Renders the icon in place of the element's content and returns it (or null when the icon
  * isn't registered, e.g. "none").
  */
 export default function decorate(block, props = {}) {
-  const icon = buildPrimitive({ ...DEFAULTS, ...readAuthored(block), ...defined(props) });
+  const icon = buildPrimitive({ ...DEFAULTS, ...getBlockProps(block, DEFAULTS), ...defined(props) });
   block.replaceChildren(...(icon ? [icon] : []));
   return icon;
 }

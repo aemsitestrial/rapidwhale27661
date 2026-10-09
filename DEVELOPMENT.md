@@ -815,7 +815,7 @@ picture.querySelector('img').alt = altText;
 
 ## Xcel Site Design Spec (extracted from xcelenergy.com screenshots)
 
-These patterns apply to the **`xcel-*` blocks** (and `teaser`). EMA: apply these before writing any
+These patterns apply to the **`xcel-*` blocks** (and `teaser`). Apply these before writing any
 CSS for those blocks.
 
 > **`xe-*` web-component blocks follow the Xcel design system docs instead.** Where the design

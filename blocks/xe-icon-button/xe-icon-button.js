@@ -3,6 +3,7 @@ import {
 } from '../../scripts/components/xe-icon-button.js';
 import { safeHref } from '../../scripts/components/xe-link-helpers.js';
 import { buildPrimitive as buildIcon } from '../xe-icon/xe-icon.js';
+import getBlockProps, { defined } from '../../scripts/utils/primitive.js';
 
 /*
  * xe-icon-button — standalone block for <xe-icon-button> (Ignite: Design System Primitives ›
@@ -13,9 +14,8 @@ import { buildPrimitive as buildIcon } from '../xe-icon/xe-icon.js';
  * Precedence: props > authored values > DEFAULTS. The icon itself comes from the XE Icon primitive.
  *
  * Fields: ariaLabel (required), icon, size, treatment, href, target (shown only with a link).
- * Authored values are matched by content, not row position (JCR delivers rows alphabetically and
- * skips empty fields): a link or URL → href · fa… → icon · a size / treatment / target option →
- * that field · any other text → the label. Unknown values are ignored.
+ * Authored values are read via getBlockProps (scripts/utils/primitive.js): link → href,
+ * fa… → icon, remaining text cells positional → ariaLabel / size / treatment / target.
  *
  * Accessibility: aria-label is required (Ignite) — without a label or a registered icon nothing is
  * rendered. For new-tab links Ignite puts the context in the label; the block adds
@@ -35,9 +35,7 @@ export const DEFAULTS = {
   target: '_self',
 };
 
-const TARGETS = ['_self', '_blank'];
 export const NEW_WINDOW_NOTE = '(opens in a new window)';
-const isUrl = (text) => /^(\/|#|https?:\/\/|mailto:|tel:)/.test(text);
 
 export function buildPrimitive(props = {}) {
   const {
@@ -65,37 +63,12 @@ export function buildPrimitive(props = {}) {
   return button;
 }
 
-// A block (rows of cells), a composition row (cells) or a single cell
-function readAuthored(el) {
-  const cells = el.children.length
-    ? [...el.children].map((child) => (child.children.length ? child.lastElementChild : child))
-    : [el];
-  const authored = {};
-  const set = (key, value) => { if (!(key in authored)) authored[key] = value; };
-  cells.forEach((cell) => {
-    const link = cell.querySelector?.('a');
-    const value = cell.textContent.trim();
-    if (link) set('href', link.getAttribute('href'));
-    else if (/^fa[A-Z]/.test(value)) set('icon', value);
-    else if (ICON_BUTTON_SIZES.includes(value)) set('size', value);
-    else if (ICON_BUTTON_TREATMENTS.includes(value)) set('treatment', value);
-    else if (TARGETS.includes(value)) set('target', value);
-    else if (isUrl(value)) set('href', value);
-    else if (value) set('ariaLabel', value);
-  });
-  return authored;
-}
-
-const defined = (props) => Object.fromEntries(
-  Object.entries(props).filter(([, value]) => value !== undefined && value !== null && value !== ''),
-);
-
 /**
  * Renders the icon button in place of the element's content and returns it (or null when the
  * label or a registered icon is missing).
  */
 export default function decorate(block, props = {}) {
-  const button = buildPrimitive({ ...DEFAULTS, ...readAuthored(block), ...defined(props) });
+  const button = buildPrimitive({ ...DEFAULTS, ...getBlockProps(block, DEFAULTS), ...defined(props) });
   block.replaceChildren(...(button ? [button] : []));
   return button;
 }
