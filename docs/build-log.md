@@ -170,6 +170,16 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   now use `xe-icon-button`. Checked: lint, **157** unit tests, Storybook — 48×48 at every size,
   icon 12 → 40px across xxs → 2xl, treatments and disabled states match the docs' States story,
   navbar forwards `aria-expanded`, axe 0 violations. → #I-43, #I-44, #I-45
+- PR #16 checks: build ✅ · PageSpeed mobile 94 / desktop 90 (desktop TBT 193ms, Speed Index 2.0s;
+  CLS 0). Couldn't re-run Google PageSpeed (public API daily quota reached). Side-by-side loads of
+  `main` vs the branch: header 137px on both, no long tasks on one branch load, ~30ms on another —
+  most likely run variance (docs-only #15 also dipped to 92). → #I-47
+- Pre-merge quality check (`eds-ue-quality-and-publishing`): lint clean (only local scratch files
+  outside the repo's tracked code fail), local dev server serves the branch, `xe-icon-button.js`
+  loads at ~790ms with the header — after first paint (548ms), lazy phase, no LCP impact; no core
+  loading files changed. Authored markup couldn't be checked against real Universal Editor output:
+  the XE Banner / XE Icon added in the editor aren't published to preview yet. → #I-48
+- User reviewed #16 and asked to update the docs before merging; merged 2026-10-09.
 
 ---
 
@@ -227,6 +237,8 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-43 | 10-09 | Icon Button documents 7 sizes (xxs–2xl); the Icon docs only 5 (xs–xl) | The two Ignite pages disagree (the real `xe-icon` may support xxs / 2xl) | ℹ️ User decision: `xe-icon` stays at xs–xl; Icon Button sets the icon's width/height for xxs / 2xl (estimates 12 / 40px). Ask the team whether `xe-icon` supports them |
 | I-44 | 10-09 | Swapping the navbar ☰ for `xe-icon-button` would lose `aria-expanded` (WCAG 4.1.2) | Ignite's Icon Button only forwards `aria-label` | ✅ Navbar extension, not in Ignite spec: `aria-expanded` / `aria-haspopup` forwarded. `aria-controls` dropped (can't cross the shadow DOM) |
 | I-45 | 10-09 | Icon Button colors / shape not fully specified: text says "circular", examples are rounded squares; no color tokens except brand primary | Docs page | ⏳ Followed the examples (8px radius); colors estimated — Ignite's filled red looks darker than `#c8102e` |
+| I-47 | 10-09 | PR #16 PageSpeed lower than usual (mobile 94, desktop 90 — desktop TBT 193ms) | Unclear: one Lighthouse run; the new code is ~7 KB loaded with the header after first paint | ⏳ Watch the next PR's score; if desktop stays < 95, profile the header load |
+| I-48 | 10-09 | Can't verify XE Icon / XE Icon Button decorators against real authored markup | The blocks added in Universal Editor aren't published to preview yet | ⏳ After the next publish, check View Page Source for the block rows (authoring guide step 10) |
 
 ### Content, Universal Editor & publishing
 
