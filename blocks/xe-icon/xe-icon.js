@@ -1,5 +1,6 @@
 import '../../scripts/icons.js';
 import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.js';
+import { getBlockProps } from '../../scripts/utils/primitive.js';
 
 /*
  * xe-icon — standalone block for <xe-icon> (Ignite: Design System Primitives › Media › Icon),
@@ -11,16 +12,17 @@ import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.j
  * Precedence: props > authored values > DEFAULTS.
  *
  * Fields: ic_icon, ic_size — the two Ignite props, in the "ic" element group, so Universal Editor
- * delivers them as ONE cell with a <p> per field (aem.live "Element grouping"). Blocks published
- * before the rename (one row per field: icon, size, and the removed color) are read too. Values
- * are matched by content (an icon name or a size), not position; anything else — e.g. an old
- * color value — is ignored. The icon inherits the surrounding text color (Ignite).
+ * delivers them as ONE cell with a <p> per field (aem.live "Element grouping"). Authored values
+ * are read by the shared getBlockProps (scripts/utils/primitive.js) — by content (an fa… name →
+ * icon, a size option → size), never by position; anything else — e.g. an old color value — is
+ * ignored. Blocks published before the rename (one row per field) are read too.
+ * The icon inherits the surrounding text color (Ignite).
  *
  * Accessibility: the icon is always decorative (aria-hidden) — Ignite has no label prop; the
  * parent carries the meaning. Use the standalone block only for decoration.
  *
- * To use in another project, copy this folder plus scripts/icons.js and
- * scripts/components/xe-icon.js + scripts/components/icons/.
+ * To use in another project, copy this folder plus scripts/utils/primitive.js, scripts/icons.js
+ * (registers the icons — required), scripts/components/xe-icon.js and scripts/components/icons/.
  */
 
 // Ordered to match the model fields (ic_icon, ic_size)
@@ -28,6 +30,9 @@ export const DEFAULTS = {
   icon: '',
   size: 'md',
 };
+
+// Allowed values of each dropdown field — how getBlockProps recognizes them
+const OPTIONS = { size: ICON_SIZES };
 
 export function buildPrimitive(props = {}) {
   const { icon, size } = { ...DEFAULTS, ...props };
@@ -38,43 +43,12 @@ export function buildPrimitive(props = {}) {
   return el;
 }
 
-// A block (rows of cells), a composition row (cells) or a single cell → its text values.
-// A grouped cell (<p> per field) yields one value per <p>.
-function readValues(el) {
-  const cells = el.children.length
-    ? [...el.children].map((child) => (child.children.length ? child.lastElementChild : child))
-    : [el];
-  return cells
-    .flatMap((cell) => {
-      const parts = cell.querySelectorAll?.(':scope > p');
-      return parts?.length > 1 ? [...parts] : [cell];
-    })
-    .map((node) => node.textContent.trim())
-    .filter(Boolean);
-}
-
-function readAuthored(el) {
-  const authored = {};
-  readValues(el).forEach((value) => {
-    let key;
-    if (ICON_SIZES.includes(value)) key = 'size';
-    else if (/^fa[A-Z]/.test(value)) key = 'icon';
-    // Anything else (an old or unknown value) is ignored, so it can't hide the icon
-    if (key && !(key in authored)) authored[key] = value;
-  });
-  return authored;
-}
-
-const defined = (props) => Object.fromEntries(
-  Object.entries(props).filter(([, value]) => value !== undefined && value !== null && value !== ''),
-);
-
 /**
  * Renders the icon in place of the element's content and returns it (or null when the icon
  * isn't registered, e.g. "none").
  */
 export default function decorate(block, props = {}) {
-  const icon = buildPrimitive({ ...DEFAULTS, ...readAuthored(block), ...defined(props) });
+  const icon = buildPrimitive(getBlockProps(block, DEFAULTS, props, OPTIONS));
   block.replaceChildren(...(icon ? [icon] : []));
   return icon;
 }

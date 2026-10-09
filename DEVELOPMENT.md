@@ -694,11 +694,31 @@ Rules:
 - Read authored values by **content** (e.g. a size name vs an icon name), not position, because
   Universal Editor skips empty fields. Ignore values you don't recognize, so an old or unknown
   value can't break the rest (e.g. an unknown color never hides the icon).
-- **Transfer to another project:** copy the block folder **and** its shared dependencies. XE
-  Icon Button also needs `blocks/xe-icon/`, `scripts/components/xe-icon-button.js` and
-  `scripts/components/xe-link-helpers.js`. For XE
-  Icon: `blocks/xe-icon/`, `scripts/icons.js`, `scripts/components/xe-icon.js`,
-  `scripts/components/icons/` (+ the `section` filter entry and the `_component-definition` include).
+- **Read authored values with the shared `getBlockProps`** (`scripts/utils/primitive.js`, 2026-10-09)
+  — no block keeps its own reader. `getBlockProps(block, DEFAULTS, props, OPTIONS)` returns the
+  complete props (`DEFAULTS` < authored < `props`, empty props dropped); `OPTIONS` lists each
+  dropdown field's allowed values so it can match them by content:
+
+  ```js
+  import { getBlockProps } from '../../scripts/utils/primitive.js';
+
+  export const DEFAULTS = { icon: '', size: 'md' }; // model order, keys without the prefix
+  const OPTIONS = { size: ICON_SIZES };             // allowed values of each dropdown field
+
+  export default function decorate(block, props = {}) {
+    const el = buildPrimitive(getBlockProps(block, DEFAULTS, props, OPTIONS));
+    block.replaceChildren(...(el ? [el] : []));     // not `...(el ?? [])` — an element isn't iterable
+    return el;                                      // compositions (XE Banner, XE Feature Cards) use it
+  }
+  export { decorate as decoratePrimitive };
+  ```
+
+  Matching: a link / URL → the `href` (or `url` / `link` / `src`) key · an `fa…` name → `icon` ·
+  an allowed value → its dropdown field · other text → the free-text key (e.g. `ariaLabel`) ·
+  anything else is ignored. Keep **at most one free-text field** per primitive, so nothing depends on
+  order.
+- **Transfer to another project:** follow the **copy checklist** at the end of "Model field prefix
+  rule" below.
 
 #### Model field prefix rule (agreed 2026-10-09)
 
@@ -727,7 +747,8 @@ Rules:
    field collapse would merge it into another field. Each block's test checks this.
 6. **The decorator reads the grouped cell by content** — one value per element; match each value by
    what it is (an `fa…` name, a size, a treatment, a link…), never by position, and ignore unknown
-   values. It should also read one-row-per-field markup.
+   values. It should also read one-row-per-field markup. Use the shared `getBlockProps` for this
+   (see "Read authored values with the shared getBlockProps" above).
 7. **Renaming fields of a block that's already in use** changes the saved property names: the
    decorator must keep reading the old markup, and authors must re-pick the values in Universal
    Editor before republishing (build-log I-53). New blocks start with the prefix from day one.
@@ -737,8 +758,14 @@ Rules:
 **Copy checklist (for moving a finished primitive to another project).** These blocks are built and
 tested here and then copied by hand to another project, so every primitive PR ends with this list:
 - the block folder(s) — including any block it reuses (XE Icon Button → also `blocks/xe-icon/`);
-- the shared scripts it imports — its component(s) in `scripts/components/`, `xe-link-helpers.js`
-  for links, `scripts/icons.js` + `scripts/components/icons/` for icons;
+- **`scripts/utils/primitive.js`** — **required by every primitive block** (`getBlockProps`);
+- **`scripts/icons.js`** — **required by every block that shows an icon** (XE Icon, XE Icon Button,
+  XE Banner, XE Feature Cards, XE Navbar). It registers the icons; without it every icon fails — a
+  Font Awesome error and empty icons (what happened in the other project, build-log I-54). Copy
+  it **together with `scripts/components/icons/`** (the icon shapes it imports), and copy it again
+  whenever an icon is added;
+- the component(s) in `scripts/components/` (e.g. `xe-icon.js`, `xe-icon-button.js`) and
+  `xe-link-helpers.js` for anything with a link;
 - the include in `models/_component-definition.json` and the block id in `models/_section.json`;
 - `npm run build:json`, then reload Universal Editor;
 - any content to re-author (e.g. after a field rename);
