@@ -6,6 +6,16 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-09 — Shared `getBlockProps` utility (PR #18)
+
+[#18](https://github.com/aemsitestrial/rapidwhale27661/pull/18) — open for review, **not merged yet**.
+
+- New `scripts/utils/primitive.js`: `getBlockProps(el, DEFAULTS, FIELD_OPTIONS)` + `defined()`, shared by
+  XE Icon and XE Icon Button (block code aligned with the team project). Links, icons and select
+  fields are matched by content; only free text is positional. No change for authors.
+- Fixed before merge: the first version failed its build (3 tests, 5 lint errors). Build-log #I-52.
+- Docs: standard block template in DEVELOPMENT.md; AGENTS.md rule; I-39 closed.
+
 ## 2026-10-09 — Header height on phones re-measured after #16
 
 [#17](https://github.com/aemsitestrial/rapidwhale27661/pull/17), merged into `main` on 2026-10-09 at

@@ -13,8 +13,8 @@ import getBlockProps, { defined } from '../../scripts/utils/primitive.js';
  *
  * Fields: icon, size (the two Ignite props) and color (the Ignite Storybook "color" control —
  * applied as style="color: …", like the docs; not an <xe-icon> attribute). Authored values are
- * read via getBlockProps (scripts/utils/primitive.js): icon is content-detected (fa prefix);
- * size and color are positional (fields always arrive in editor / model-definition order).
+ * read via getBlockProps (scripts/utils/primitive.js), by content: icon (fa prefix) and the size
+ * / color options (FIELD_OPTIONS) — a skipped field or an unknown value is ignored.
  * Color options are brand tokens only (no free color picker — keeps icons on brand). The
  * fallbacks are estimates until the design tokens docs arrive.
  *
@@ -41,6 +41,12 @@ export const ICON_COLORS = {
 
 const isColor = (value) => Object.prototype.hasOwnProperty.call(ICON_COLORS, value);
 
+// Allowed values of the select fields — matched by content, never by position
+const FIELD_OPTIONS = {
+  size: ICON_SIZES,
+  color: Object.keys(ICON_COLORS),
+};
+
 export function buildPrimitive(props = {}) {
   const { icon, size, color } = { ...DEFAULTS, ...props };
   if (!isIconRegistered(icon)) return null;
@@ -56,7 +62,8 @@ export function buildPrimitive(props = {}) {
  * isn't registered, e.g. "none").
  */
 export default function decorate(block, props = {}) {
-  const icon = buildPrimitive({ ...DEFAULTS, ...getBlockProps(block, DEFAULTS), ...defined(props) });
+  const authored = getBlockProps(block, DEFAULTS, FIELD_OPTIONS);
+  const icon = buildPrimitive({ ...DEFAULTS, ...authored, ...defined(props) });
   block.replaceChildren(...(icon ? [icon] : []));
   return icon;
 }

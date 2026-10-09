@@ -662,7 +662,7 @@ its story/tests, any block that uses it, the spec entry above, and `docs/build-l
 
 ### Primitive rendering pattern (team doc, 2026-10-08)
 
-Primitives that are also blocks (today: **XE Icon**) expose two entry points:
+Primitives that are also blocks (today: **XE Icon**, **XE Icon Button**) expose two entry points:
 
 - **`buildPrimitive(props)`** — builds and returns the primitive element from plain settings
   (pure, importable).
@@ -681,6 +681,44 @@ Rules:
 - Read authored values by **content** (e.g. a size name vs an icon name), not position, because
   Universal Editor skips empty fields. Ignore values you don't recognize, so an old or unknown
   value can't break the rest (e.g. an unknown color never hides the icon).
+- **Standard block file** (aligned with the team project astuteoctopus33760, 2026-10-09) — every
+  primitive block reads its fields with the shared **`scripts/utils/primitive.js`**:
+
+  ```js
+  import '../../scripts/components/xe-xxx.js'; // registers the custom element
+  import getBlockProps, { defined } from '../../scripts/utils/primitive.js';
+
+  // Key order matches the model field order
+  export const DEFAULTS = { label: '', size: 'md', href: '' };
+  // Allowed values of each select field — matched by content, never by position
+  const FIELD_OPTIONS = { size: ['sm', 'md', 'lg'] };
+
+  export function buildPrimitive(props = {}) { /* … */ }
+
+  export default function decorate(block, props = {}) {
+    const authored = getBlockProps(block, DEFAULTS, FIELD_OPTIONS);
+    const el = buildPrimitive({ ...DEFAULTS, ...authored, ...defined(props) });
+    block.replaceChildren(...(el ? [el] : []));
+    return el;
+  }
+
+  export { decorate as decoratePrimitive };
+  ```
+
+  `getBlockProps(el, defaults, options)` works on a block, a composition row or a single cell
+  and returns only the fields it found:
+  1. a field named **`href` / `url` / `link` / `src`** ← the cell with an `<a>` or a URL;
+  2. a field named **`icon`** ← the cell with an `fa…` name;
+  3. every field listed in **`options`** (select fields) ← the cell whose value is one of its
+     allowed values — never by position, so skipped fields and unknown / old values are ignored;
+  4. the remaining **free-text** fields (e.g. a label) ← the leftover cells, in order.
+  `defined(props)` drops `undefined` / `null` / `''` so composition props don't erase defaults.
+  The optional `options` argument is our addition (build-log I-52); without it the utility
+  behaves like the team version (positional for everything but links and icons).
+- **Transfer to the Ignite project (Path B):** only the component import line changes, e.g.
+  `import '../../scripts/ignite/bundle/primitives/action/icon-button/xe-icon-button.js';`
+  — `getBlockProps`, `buildPrimitive` and `decorate` stay identical (the team project's
+  `primitive.js` needs the optional `options` argument too).
 - **Transfer to another project:** copy the block folder **and** its shared dependencies. XE
   Icon Button also needs `blocks/xe-icon/`, `scripts/components/xe-icon-button.js` and
   `scripts/components/xe-link-helpers.js`. For XE

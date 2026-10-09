@@ -201,6 +201,19 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   URL), so its button goes to a broken address — fix in Universal Editor.
 - PR #17 checks: build ✅ · PageSpeed mobile 100 / desktop 100. Merged at the user's request.
 
+### 2026-10-09 — PR #18 review: shared `getBlockProps` utility
+
+- PR #18 (`refactor/primitive-utility`, opened from the team-project alignment work) moved the
+  XE Icon / XE Icon Button readers into `scripts/utils/primitive.js`. Review before merging: the
+  build check failed — **3 tests failed and 5 lint errors**. Its `getBlockProps` read every field
+  except links and icons **by position**, so a skipped field or reordered rows put values in the
+  wrong field (brand color → size; target ↔ treatment). → #I-52
+- Fixed on the same branch (user picked option A): optional third argument `options` — select
+  fields are matched by their allowed values, only free text is positional; lint fixed (default
+  import kept so block code matches the team project); 9 unit tests for the utility
+  (`scripts/utils/primitive.test.js`, now included in Vitest). 166 tests pass.
+- Housekeeping: I-39 closed (GitHub access has worked since; PRs #15–#17 pushed).
+
 ---
 
 ## Issue tracker
@@ -217,7 +230,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-12 | 09-28 | Work pushed after PR #1 never reached `main` | PR #1 was merged minutes after opening; later commits went to the merged branch | ✅ Opened PR #2 for them. Rule: check a PR is still open before adding commits |
 | I-20 | 09-28 | Couldn't read the site's publish log (`admin.hlx.page/log` → 403) | Adobe credentials for the assistant are off (separate from the git permission) | ℹ️ Optional: enable "Adobe credentials" in Settings → LLM Permissions |
 | I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ✅ Worked again on 10-02 (no change needed on our side); docs commit pushed to PR #8 |
-| I-39 | 10-08 | GitHub API **401 Bad credentials** and `git fetch` failed again | Same as I-33 — the GitHub credential in Settings was rejected | ⏳ Open — the user merged #12 themselves; this docs update waits on a local branch until access returns |
+| I-39 | 10-08 | GitHub API **401 Bad credentials** and `git fetch` failed again | Same as I-33 — the GitHub credential in Settings was rejected | ✅ Access worked again later on 10-09 (PRs #15–#17 pushed and merged); nothing to change on our side |
 | I-46 | 10-09 | First commit attempt failed: "error when closing loose object file: Input/output error"; the push then sent only the unchanged main commit under the new branch name | Temporary storage (network file system) glitch — disk had space, `git fsck` clean | ✅ Retried the commit, checked it contained all files, then pushed. Rule: check `git log` after every commit before pushing |
 
 ### Styling & components
@@ -262,6 +275,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-49 | 10-09 | AEM PageSpeed check "failure" with mobile score n/a | Google PageSpeed API quota exceeded (per minute / per day) — not a code issue | ℹ️ Re-run later or push the next commit; don't treat a quota failure as a regression |
 | I-50 | 10-09 | After #16, phone header 203.5px but 199.5px reserved (4px shift); 480px stacked but reserved 137px | Menu toggle grew 44 → 48px (Ignite touch target); the stacked bar has no fixed height, and the wider bar stacks up to 480px | ✅ `--xe-header-height: 203.5px` at `width <= 480px` (fix PR). Lesson: re-measure the header at 360–500px whenever the bar's buttons change |
 | I-51 | 10-09 | Real XE Icon rows arrived as icon, size, color (model order) — not alphabetical as our JCR rule said | The "JCR saves alphabetically" assumption doesn't hold for this block's delivered markup | ✅ Content-based reading handled it; DEVELOPMENT.md rule now says: read by content, keep model order = alphabetical for position-based blocks |
+| I-52 | 10-09 | PR #18 failed its build: 3 tests, 5 lint errors | Shared `getBlockProps` read select fields by position; default import of a function also exported by name | ✅ Select fields matched by allowed values (`options` argument); lint fixed; utility tests added |
 
 ### Content, Universal Editor & publishing
 

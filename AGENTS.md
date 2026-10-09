@@ -29,7 +29,8 @@ bug/issue we hit — check it before debugging, and log new ones there), and
 - **Primitive blocks** (today: XE Icon, XE Icon Button) follow `DEVELOPMENT.md` → "Primitive rendering pattern":
   `buildPrimitive(props)` + `decorate(block, props)` / `decoratePrimitive`; props > authored >
   `DEFAULTS`; compositions reuse the primitive instead of rebuilding it; read authored values by
-  content. Author options that map to design tokens (sizes, colors) are **dropdowns**, never free
+  content with `getBlockProps(block, DEFAULTS, FIELD_OPTIONS)` from `scripts/utils/primitive.js`
+  (list every select field's allowed values in `FIELD_OPTIONS`). Author options that map to design tokens (sizes, colors) are **dropdowns**, never free
   text or a color picker. Interactive primitives (buttons, links) need a **required** accessible
   label field.
 - **Commits:** check `git log` after every commit before pushing (see build-log #I-46).

@@ -1,67 +1,84 @@
 /*
  * Shared utilities for block primitives, following the team's primitive rendering pattern.
  *
- *   getBlockProps(el, defaults) — reads authored field values from a block element, a
+ *   getBlockProps(el, defaults, options) — reads authored field values from a block element, a
  *     composition row, or a single cell. Returns only the fields that were found (no defaults),
  *     so the caller can safely spread: { ...DEFAULTS, ...getBlockProps(el, DEFAULTS), ...props }
  *
  *   defined(obj) — strips undefined / null / '' values so they don't accidentally override
  *     DEFAULTS when spread. Use on external props passed in by composition blocks.
+ *
+ * Universal Editor skips empty fields, so a row's position isn't reliable on its own
+ * (build-log I-42, I-51). Values are therefore matched by content wherever possible, and only
+ * free-text fields fall back to position.
  */
 
 // Keys whose values are content-detected (not positional) based on the key name
 const LINK_KEYS = new Set(['href', 'url', 'link', 'src']);
 const ICON_KEYS = new Set(['icon']);
+const URL_PATTERN = /^(\/|#|https?:\/\/|mailto:|tel:)/;
+const ICON_PATTERN = /^fa[A-Z]/;
 
 /**
  * Reads authored field values from a block element, a composition row, or a single cell.
  *
  * Detection order:
- *   1. Links / URLs  → assigned to the first key named href / url / link / src in defaults.
- *   2. Icon names    → assigned to the first key named icon in defaults (fa prefix detection).
- *   3. Everything else → positional: each remaining cell maps to the next non-link / non-icon
- *      key in defaults order.
+ *   1. Links / URLs  → the first key named href / url / link / src in defaults.
+ *   2. Icon names    → the first key named icon in defaults (fa prefix).
+ *   3. Option fields → each key listed in `options` takes the first cell whose value is one of
+ *      its allowed values (e.g. size: ['xs', 'sm', …]). Never filled by position, so a skipped
+ *      field or an unknown / old value can't land in the wrong field.
+ *   4. Everything else (free text) → positional: the remaining cells, in order, map to the
+ *      remaining keys in defaults order.
  *
  * @param {Element} el       - the block, a composition row, or a single cell element
  * @param {Object}  defaults - the block's DEFAULTS object; key names drive field detection
+ * @param {Object<string, string[]>} [options] - allowed values per select field
  * @returns {Object} partial props (found fields only, not full defaults)
  */
-export function getBlockProps(el, defaults) {
+export default function getBlockProps(el, defaults, options = {}) {
   const cells = el.children.length
     ? [...el.children].map((child) => (child.children.length ? child.lastElementChild : child))
     : [el];
+  const values = cells.map((cell) => cell.textContent.trim());
 
   const keys = Object.keys(defaults);
   const result = {};
   const claimed = new Set();
+  const claim = (key, test, read = (i) => values[i]) => {
+    const idx = cells.findIndex((cell, i) => !claimed.has(i) && test(cell, values[i]));
+    if (idx === -1) return;
+    result[key] = read(idx);
+    claimed.add(idx);
+  };
 
-  // Pass 1 — content-detect links for href / url / link / src keys
-  const linkKey = keys.find((k) => LINK_KEYS.has(k) && !(k in result));
+  // 1 — links
+  const linkKey = keys.find((k) => LINK_KEYS.has(k));
   if (linkKey) {
-    const idx = cells.findIndex((c, i) => !claimed.has(i)
-      && (c.querySelector?.('a') || /^(\/|#|https?:\/\/|mailto:|tel:)/.test(c.textContent.trim())));
-    if (idx !== -1) {
-      const anchor = cells[idx].querySelector('a');
-      result[linkKey] = anchor ? anchor.getAttribute('href') : cells[idx].textContent.trim();
-      claimed.add(idx);
-    }
+    claim(
+      linkKey,
+      (cell, value) => cell.querySelector?.('a') || URL_PATTERN.test(value),
+      (i) => cells[i].querySelector?.('a')?.getAttribute('href') || values[i],
+    );
   }
 
-  // Pass 2 — content-detect icon names (fa prefix) for keys named "icon"
-  const iconKey = keys.find((k) => ICON_KEYS.has(k) && !(k in result));
-  if (iconKey) {
-    const idx = cells.findIndex((c, i) => !claimed.has(i) && /^fa[A-Z]/.test(c.textContent.trim()));
-    if (idx !== -1) {
-      result[iconKey] = cells[idx].textContent.trim();
-      claimed.add(idx);
-    }
-  }
+  // 2 — icon names
+  const iconKey = keys.find((k) => ICON_KEYS.has(k));
+  if (iconKey) claim(iconKey, (cell, value) => ICON_PATTERN.test(value));
 
-  // Pass 3 — positional assignment for all remaining non-link / non-icon keys
-  const positionalKeys = keys.filter((k) => !LINK_KEYS.has(k) && !ICON_KEYS.has(k) && !(k in result));
-  const remaining = cells.filter((_, i) => !claimed.has(i) && cells[i].textContent.trim());
-  positionalKeys.forEach((key, i) => {
-    if (i < remaining.length) result[key] = remaining[i].textContent.trim();
+  // 3 — select fields with known values
+  const optionKeys = keys.filter((k) => Array.isArray(options[k]) && !(k in result));
+  optionKeys.forEach((key) => claim(key, (cell, value) => options[key].includes(value)));
+
+  // 4 — free text, by position (skipping anything that looks like another field's value)
+  const isOtherFieldValue = (value) => URL_PATTERN.test(value) || ICON_PATTERN.test(value)
+    || optionKeys.some((k) => options[k].includes(value));
+  const textKeys = keys.filter((k) => !LINK_KEYS.has(k) && !ICON_KEYS.has(k)
+    && !optionKeys.includes(k) && !(k in result));
+  const remaining = values
+    .filter((value, i) => !claimed.has(i) && value && !isOtherFieldValue(value));
+  textKeys.forEach((key, i) => {
+    if (i < remaining.length) result[key] = remaining[i];
   });
 
   return result;
@@ -75,5 +92,3 @@ export function defined(obj) {
     Object.entries(obj).filter(([, v]) => v !== undefined && v !== null && v !== ''),
   );
 }
-
-export default getBlockProps;

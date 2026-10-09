@@ -14,8 +14,9 @@ import getBlockProps, { defined } from '../../scripts/utils/primitive.js';
  * Precedence: props > authored values > DEFAULTS. The icon itself comes from the XE Icon primitive.
  *
  * Fields: ariaLabel (required), icon, size, treatment, href, target (shown only with a link).
- * Authored values are read via getBlockProps (scripts/utils/primitive.js): link → href,
- * fa… → icon, remaining text cells positional → ariaLabel / size / treatment / target.
+ * Authored values are read via getBlockProps (scripts/utils/primitive.js), by content: link →
+ * href, fa… → icon, a size / treatment / target option → that field (FIELD_OPTIONS); the
+ * remaining text → ariaLabel. Skipped fields and unknown values can't shift the others.
  *
  * Accessibility: aria-label is required (Ignite) — without a label or a registered icon nothing is
  * rendered. For new-tab links Ignite puts the context in the label; the block adds
@@ -36,6 +37,13 @@ export const DEFAULTS = {
 };
 
 export const NEW_WINDOW_NOTE = '(opens in a new window)';
+
+// Allowed values of the select fields — matched by content, never by position
+const FIELD_OPTIONS = {
+  size: ICON_BUTTON_SIZES,
+  treatment: ICON_BUTTON_TREATMENTS,
+  target: ['_self', '_blank'],
+};
 
 export function buildPrimitive(props = {}) {
   const {
@@ -68,7 +76,8 @@ export function buildPrimitive(props = {}) {
  * label or a registered icon is missing).
  */
 export default function decorate(block, props = {}) {
-  const button = buildPrimitive({ ...DEFAULTS, ...getBlockProps(block, DEFAULTS), ...defined(props) });
+  const authored = getBlockProps(block, DEFAULTS, FIELD_OPTIONS);
+  const button = buildPrimitive({ ...DEFAULTS, ...authored, ...defined(props) });
   block.replaceChildren(...(button ? [button] : []));
   return button;
 }
