@@ -12,10 +12,12 @@ import { buildPrimitive as buildIcon } from '../xe-icon/xe-icon.js';
  *   decoratePrimitive(row, props) — the same function, for compositions (e.g. the footer)
  * Precedence: props > authored values > DEFAULTS. The icon itself comes from the XE Icon primitive.
  *
- * Fields: ariaLabel (required), icon, size, treatment, href, target (shown only with a link).
- * Authored values are matched by content, not row position (JCR delivers rows alphabetically and
- * skips empty fields): a link or URL → href · fa… → icon · a size / treatment / target option →
- * that field · any other text → the label. Unknown values are ignored.
+ * Fields: ib_ariaLabel (required), ib_icon, ib_size, ib_treatment, ib_href, ib_target (shown only
+ * with a link) — the "ib" element group, so Universal Editor delivers them as ONE cell with one
+ * element per field (a <p>; a link as <p><a>), skipping empty fields (aem.live "Element
+ * grouping"). Values are matched by content, not position: a link or URL → href · fa… → icon ·
+ * a size / treatment / target option → that field · any other text → the label. Unknown values
+ * are ignored. One-row-per-field markup (pre-grouping) is read the same way.
  *
  * Accessibility: aria-label is required (Ignite) — without a label or a registered icon nothing is
  * rendered. For new-tab links Ignite puts the context in the label; the block adds
@@ -25,7 +27,7 @@ import { buildPrimitive as buildIcon } from '../xe-icon/xe-icon.js';
  * scripts/components/xe-icon-button.js, xe-icon.js, xe-link-helpers.js and icons/.
  */
 
-// Ordered to match the model fields
+// Ordered to match the model fields (ib_ariaLabel … ib_target)
 export const DEFAULTS = {
   ariaLabel: '',
   icon: '',
@@ -65,16 +67,24 @@ export function buildPrimitive(props = {}) {
   return button;
 }
 
-// A block (rows of cells), a composition row (cells) or a single cell
-function readAuthored(el) {
+// A block (rows of cells), a composition row (cells) or a single cell → one node per value.
+// A grouped cell holds one element per field, so each child element is a value.
+function valueNodes(el) {
   const cells = el.children.length
     ? [...el.children].map((child) => (child.children.length ? child.lastElementChild : child))
     : [el];
+  return cells.flatMap((cell) => {
+    const parts = [...cell.children].filter((child) => child.localName === 'p');
+    return parts.length > 1 ? parts : [cell];
+  });
+}
+
+function readAuthored(el) {
   const authored = {};
   const set = (key, value) => { if (!(key in authored)) authored[key] = value; };
-  cells.forEach((cell) => {
-    const link = cell.querySelector?.('a');
-    const value = cell.textContent.trim();
+  valueNodes(el).forEach((node) => {
+    const link = node.querySelector?.('a');
+    const value = node.textContent.trim();
     if (link) set('href', link.getAttribute('href'));
     else if (/^fa[A-Z]/.test(value)) set('icon', value);
     else if (ICON_BUTTON_SIZES.includes(value)) set('size', value);

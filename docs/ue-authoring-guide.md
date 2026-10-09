@@ -194,6 +194,8 @@ be shown (design system rule).
 - For New tab links, "(opens in a new window)" is added to the label automatically if you didn't
   write it.
 - Social media icons: Default treatment, Icon Size **Extra Large**, Open In **New tab**.
+- (Developers: these fields are saved as `ib_ariaLabel`, `ib_icon`, `ib_size`, `ib_treatment`,
+  `ib_href`, `ib_target` since 2026-10-09. No page used the block before the change.)
 - Without a Link the block is a button with no action — always set a Link on content pages.
 
 ---

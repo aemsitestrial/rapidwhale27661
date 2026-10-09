@@ -6,6 +6,24 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-09 — XE Icon Button block rebuilt with `ib_` grouped fields
+
+[#21](https://github.com/aemsitestrial/rapidwhale27661/pull/21), merged into `main` on 2026-10-09 at
+the user's request. Checks: build ✅ · AEM PageSpeed mobile **100** / desktop **100** (CLS 0) · 0
+files deleted.
+
+- **Model:** fields renamed to `ib_ariaLabel` (required), `ib_icon`, `ib_size`, `ib_treatment`,
+  `ib_href`, `ib_target` — the `ib` element group, matching XE Icon's `ic_` pattern. Labels,
+  dropdown options, defaults and the "Open In only with a Link" condition are unchanged.
+- **Decorator:** primitive pattern kept (`buildPrimitive` / `decorate` / `decoratePrimitive`,
+  `DEFAULTS`); now reads the grouped cell (an element per field, link as `<p><a>`) by content, and
+  still reads one-row-per-field markup. Reuses the XE Icon primitive for the glyph.
+- **Stories / tests** rebuilt on the grouped markup (+3 tests: grouped cell, reordered values,
+  field-collapse guard).
+- **Component unchanged:** `scripts/components/xe-icon-button.js` verified against the Icon Button
+  docs spec (14 tests). XE Navbar (uses the component) unaffected.
+- No content impact — no page uses the XE Icon Button block yet.
+
 ## 2026-10-09 — XE Icon: Color removed, fields renamed to `ic_icon` / `ic_size`
 
 [#20](https://github.com/aemsitestrial/rapidwhale27661/pull/20), merged into `main` on 2026-10-09 at
