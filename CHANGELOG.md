@@ -8,7 +8,10 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-09 — Header height on phones re-measured after #16
 
-Branch `fix/header-height-icon-button` — PR open for review, **not merged yet**.
+[#17](https://github.com/aemsitestrial/rapidwhale27661/pull/17), merged into `main` on 2026-10-09 at
+the user's request. Checks: build ✅ · AEM PageSpeed mobile **100** / desktop **100** (CLS 0). On the
+branch preview: header = reserved height and CLS 0 at 360 / 390 / 412 / 480 / 481 / 1350px, with
+the user's newly published XE Banners and XE Icons on the home page.
 
 - Found right after merging #16: the 48px menu button made the stacked phone header 4px taller
   (199.5 → **203.5px**) and stacked up to **480px** — but the reserved height was still 199.5px

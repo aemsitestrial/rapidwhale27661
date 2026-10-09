@@ -150,6 +150,12 @@ Example: linkText (T) < linkUrl (U) → rows[0]=linkText, rows[1]=linkUrl ✓
 
 Alternative: use content-type detection in JS (detect a link by `/` or `http` prefix) instead of relying on position — more resilient but more complex.
 
+> ⚠️ **Observed 2026-10-09 on real published content (build-log I-51):** the XE Icon block's rows
+> arrived in **model order** (`icon`, `size`, `color`), **not** alphabetical (`color` would come
+> first). So don't rely on either order: new blocks **read authored values by content** (the
+> primitive rendering pattern does), and blocks that read by position (e.g. XE Banner) keep model
+> order = alphabetical order so both cases give the same result.
+
 ---
 
 ## Block Model Rules
