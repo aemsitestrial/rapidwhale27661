@@ -250,7 +250,7 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - The user confirmed the model pattern for every primitive block (the `ic_` XE Icon JSON as the
   example) and the workflow: build and test here, then copy the files to another project without
   AI help. Added the "Model field prefix rule" + copy checklist to `DEVELOPMENT.md` and a pointer in
-  `AGENTS.md`.
+  `AGENTS.md`. PR #22 (docs only) — build ✅, merged at the user's request.
 
 ---
 

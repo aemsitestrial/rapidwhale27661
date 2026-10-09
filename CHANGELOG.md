@@ -8,7 +8,8 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-09 — Docs: model field prefix rule for primitives
 
-Branch `docs/primitive-prefix-rule` — PR open for review, **not merged yet**. Docs only.
+[#22](https://github.com/aemsitestrial/rapidwhale27661/pull/22), merged into `main` on 2026-10-09 at the user's request.
+Docs only. Checks: build ✅ · AEM PageSpeed 97.
 
 - `DEVELOPMENT.md` → "Model field prefix rule": one prefix per primitive block on every field
   (registry: `ic_` XE Icon, `ib_` XE Icon Button), 8 rules (template, `DEFAULTS`, dropdowns,
