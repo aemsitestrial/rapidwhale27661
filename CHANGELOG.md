@@ -8,7 +8,9 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-09 — XE Icon Button block rebuilt with `ib_` grouped fields
 
-Branch `feature/xe-icon-button-ib` (from `main` after #20) — PR open for review, **not merged yet**.
+[#21](https://github.com/aemsitestrial/rapidwhale27661/pull/21), merged into `main` on 2026-10-09 at
+the user's request. Checks: build ✅ · AEM PageSpeed mobile **100** / desktop **100** (CLS 0) · 0
+files deleted.
 
 - **Model:** fields renamed to `ib_ariaLabel` (required), `ib_icon`, `ib_size`, `ib_treatment`,
   `ib_href`, `ib_target` — the `ib` element group, matching XE Icon's `ic_` pattern. Labels,

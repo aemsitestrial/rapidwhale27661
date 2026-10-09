@@ -238,6 +238,12 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - Checked: `build:json` (ib_ariaLabel … ib_target), lint, 159 unit tests, Storybook — 21 XE Icon
   Button / XE Icon / XE Navbar / Icon Button stories, axe 0; every block story 48×48 with the right
   label, link and target.
+- Quality check (`eds-ue-quality-and-publishing`) on the branch preview: no core loading files
+  changed; the block's code loads only on pages that use it (lazy, no LCP impact); a grouped
+  `ib_` block loaded through the real block loader rendered correctly. The local AEM CLI server
+  won't start from a git worktree ("git submodules are not supported") — use the main checkout
+  for local checks next time.
+- PR #21 checks: build ✅ · PageSpeed 100 / 100. Merged at the user's request.
 
 ---
 
