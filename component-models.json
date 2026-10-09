@@ -7404,7 +7404,7 @@
     "fields": [
       {
         "component": "select",
-        "name": "icon",
+        "name": "ic_icon",
         "label": "Icon",
         "valueType": "string",
         "value": "faArrowRight",
@@ -7538,7 +7538,7 @@
       },
       {
         "component": "select",
-        "name": "size",
+        "name": "ic_size",
         "label": "Size",
         "valueType": "string",
         "value": "md",
@@ -7562,28 +7562,6 @@
           {
             "name": "Extra Large",
             "value": "xl"
-          }
-        ]
-      },
-      {
-        "component": "select",
-        "name": "color",
-        "label": "Color",
-        "description": "Inherit follows the section's text color (white on dark sections).",
-        "valueType": "string",
-        "value": "inherit",
-        "options": [
-          {
-            "name": "Inherit (default)",
-            "value": "inherit"
-          },
-          {
-            "name": "Brand Primary (dark red)",
-            "value": "brand-primary"
-          },
-          {
-            "name": "Brand Accent (dark green)",
-            "value": "brand-accent"
           }
         ]
       }

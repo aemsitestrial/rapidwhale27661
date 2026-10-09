@@ -201,6 +201,30 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   URL), so its button goes to a broken address — fix in Universal Editor.
 - PR #17 checks: build ✅ · PageSpeed mobile 100 / desktop 100. Merged at the user's request.
 
+### 2026-10-09 — PR #18 accidental deletions; XE Icon Color removed + `ic_` fields
+
+- PR #18 (`refactor/primitive-utility`) review: its first version failed the build (3 tests, 5 lint
+  errors — select fields read by position). A fix was pushed, then three later commits
+  ("xe-icon …", 17:36–18:01 +08:00) **force-replaced it and deleted the XE Banner, XE Feature
+  Cards, XE Icon (JS / CSS / stories / tests) and XE Icon Button blocks** plus `primitive.js`
+  (+5 / −2,190 lines; the build only passed because the tests were deleted too). The user
+  confirmed it was accidental. → #I-52
+- Symptom the user saw: `/ignite` on the PR #18 preview showed the XE Icon as plain text — the
+  branch had no `xe-icon.js`. (A code re-sync was tried first; it needs the real branch name,
+  `?branch=refactor%2Fprimitive-utility`, and only confirmed the files were gone.)
+- Fix (user's option 2): fresh branch `feature/xe-icon-ic-fields` from `main` with only the
+  intended changes — the tool label removed from DEVELOPMENT.md, and `_xe-icon.json` without Color
+  and with `ic_icon` / `ic_size` — plus what those need to work: the decorator reads the grouped
+  cell (aem.live element grouping: `<group>_<field>` → one cell, a `<p>` per field) and old
+  published blocks; Color code removed; stories / tests updated. → #I-53, #I-41 ✅
+- Checked: `build:json` (model: ic_icon, ic_size), lint, 156 unit tests, Storybook — 24 block
+  stories render, axe 0.
+- I-39 closed (GitHub access has worked since).
+- PR #20 checks: build ✅ · PageSpeed mobile 99 / desktop 100 · on its test link `/ignite` and the
+  home page XE Icons render (old markup). Merged at the user's request; #18 / #19 marked
+  "do not merge" (to be closed). Next: rebuild the XE Icon Button block with `ib_` grouped fields
+  on a new branch from `main`.
+
 ---
 
 ## Issue tracker
@@ -217,7 +241,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-12 | 09-28 | Work pushed after PR #1 never reached `main` | PR #1 was merged minutes after opening; later commits went to the merged branch | ✅ Opened PR #2 for them. Rule: check a PR is still open before adding commits |
 | I-20 | 09-28 | Couldn't read the site's publish log (`admin.hlx.page/log` → 403) | Adobe credentials for the assistant are off (separate from the git permission) | ℹ️ Optional: enable "Adobe credentials" in Settings → LLM Permissions |
 | I-33 | 10-01 | `git fetch` failed ("could not read Username"); GitHub API returned **401 Bad credentials** | The GitHub credential in Settings was rejected — likely expired or changed between sessions | ✅ Worked again on 10-02 (no change needed on our side); docs commit pushed to PR #8 |
-| I-39 | 10-08 | GitHub API **401 Bad credentials** and `git fetch` failed again | Same as I-33 — the GitHub credential in Settings was rejected | ⏳ Open — the user merged #12 themselves; this docs update waits on a local branch until access returns |
+| I-39 | 10-08 | GitHub API **401 Bad credentials** and `git fetch` failed again | Same as I-33 — the GitHub credential in Settings was rejected | ✅ Access worked again later on 10-09 (PRs #15–#17 pushed and merged); nothing to change on our side |
 | I-46 | 10-09 | First commit attempt failed: "error when closing loose object file: Input/output error"; the push then sent only the unchanged main commit under the new branch name | Temporary storage (network file system) glitch — disk had space, `git fsck` clean | ✅ Retried the commit, checked it contained all files, then pushed. Rule: check `git log` after every commit before pushing |
 
 ### Styling & components
@@ -252,7 +276,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-37 | 10-07 | Icon docs give no px values or token names for xs–xl; the DS Storybook shows a color control that isn't in the props table; the docs list both faXTwitter and faSquareXTwitter | Design tokens docs not received yet; Storybook-only control | ⏳ Sizes estimated (14 / 16 / 20 / 28 / 36px) behind placeholder tokens `--xe-sizing-icon-*`; color is CSS-only (inherits) — ✅ confirmed 10-08: Ignite has only `icon` and `size`; both X icons registered until the Footer docs confirm one |
 | I-38 | 10-07 | Link component tests lost their icons after the change | Icons now come from the site-level registration, not built into `xe-icon` | ✅ Tests import `scripts/icons.js`, like a page does |
 | I-40 | 10-08 | Standalone XE Icon block goes against Ignite's Tier 3 rule ("no block definition") | Team decision: production code is moved by copying block folders; a self-contained block is easier to transfer | ℹ️ Documented exception in `DEVELOPMENT.md`. Decorative only (no label). The block still needs `scripts/icons.js`, `scripts/components/xe-icon.js` and `scripts/components/icons/` copied with it |
-| I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ⏳ Fallbacks estimated: brand-primary `#c8102e`, brand-accent `#00664f`, space-2xl `24px`. The Ignite Storybook color control shows `#4e9e39` (a green) — to confirm with the team whether that is the brand accent |
+| I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ✅ Closed 10-09 — the ticket confirmed the XE Icon Color field isn't needed; field removed. The token names remain only in the component's Color Inheritance story (fallbacks still estimates) |
 | I-42 | 10-08 | XE Icon: an authored value the block didn't recognize (e.g. an unknown color) hid the icon | The reader treated any unrecognized value as the icon name | ✅ Only `fa…` names count as icons; unknown values are ignored (unit test) |
 | I-43 | 10-09 | Icon Button documents 7 sizes (xxs–2xl); the Icon docs only 5 (xs–xl) | The two Ignite pages disagree (the real `xe-icon` may support xxs / 2xl) | ℹ️ User decision: `xe-icon` stays at xs–xl; Icon Button sets the icon's width/height for xxs / 2xl (estimates 12 / 40px). Ask the team whether `xe-icon` supports them |
 | I-44 | 10-09 | Swapping the navbar ☰ for `xe-icon-button` would lose `aria-expanded` (WCAG 4.1.2) | Ignite's Icon Button only forwards `aria-label` | ✅ Navbar extension, not in Ignite spec: `aria-expanded` / `aria-haspopup` forwarded. `aria-controls` dropped (can't cross the shadow DOM) |
@@ -262,6 +286,8 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-49 | 10-09 | AEM PageSpeed check "failure" with mobile score n/a | Google PageSpeed API quota exceeded (per minute / per day) — not a code issue | ℹ️ Re-run later or push the next commit; don't treat a quota failure as a regression |
 | I-50 | 10-09 | After #16, phone header 203.5px but 199.5px reserved (4px shift); 480px stacked but reserved 137px | Menu toggle grew 44 → 48px (Ignite touch target); the stacked bar has no fixed height, and the wider bar stacks up to 480px | ✅ `--xe-header-height: 203.5px` at `width <= 480px` (fix PR). Lesson: re-measure the header at 360–500px whenever the bar's buttons change |
 | I-51 | 10-09 | Real XE Icon rows arrived as icon, size, color (model order) — not alphabetical as our JCR rule said | The "JCR saves alphabetically" assumption doesn't hold for this block's delivered markup | ✅ Content-based reading handled it; DEVELOPMENT.md rule now says: read by content, keep model order = alphabetical for position-based blocks |
+| I-52 | 10-09 | PR #18 branch deleted the XE Banner, XE Feature Cards, XE Icon and XE Icon Button blocks (+5 / −2,190); a pushed fix was force-replaced | Accidental commits ("xe-icon …") while fixing build errors — tests deleted with the code, so the build still passed | ✅ Not merged. Replaced by a fresh branch from `main` with only the intended changes. Lesson: check a PR's diff size and deletions before merging; never force-push shared branches |
+| I-53 | 10-09 | Renaming XE Icon fields to `ic_icon` / `ic_size` would make every XE Icon render nothing | Element grouping renders `ic_*` fields as one cell (a `<p>` each); the decorator read one value per row. The saved property names change too | ✅ Decorator reads grouped cells and old markup. ⏳ Authors re-select Icon + Size on the 4 existing XE Icon blocks before republishing |
 
 ### Content, Universal Editor & publishing
 
