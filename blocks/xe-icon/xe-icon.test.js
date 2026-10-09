@@ -1,9 +1,7 @@
 import {
   describe, it, expect, beforeEach,
 } from 'vitest';
-import decorate, {
-  buildPrimitive, decoratePrimitive, DEFAULTS, ICON_COLORS,
-} from './xe-icon.js';
+import decorate, { buildPrimitive, decoratePrimitive, DEFAULTS } from './xe-icon.js';
 import { buildBlock } from './xe-icon.stories.js';
 import { registeredIconNames } from '../../scripts/components/xe-icon.js';
 /* eslint-disable import/extensions -- the block models are JSON */
@@ -12,16 +10,10 @@ import bannerModel from '../xe-banner/_xe-banner.json';
 import cardsModel from '../xe-feature-cards/_xe-feature-cards.json';
 /* eslint-enable import/extensions */
 
-// Ignite Storybook (Design System Primitives › Media › Icon): the two props, plus the story's
-// "color" control (CSS color, applied with style) — offered to authors as brand tokens only
+// Ignite Storybook (Design System Primitives › Media › Icon): the only two props
 const IGNITE_PROPS = {
   icon: { default: undefined },
   size: { default: 'md', values: ['xs', 'sm', 'md', 'lg', 'xl'] },
-  color: { default: 'inherit' },
-};
-const BRAND_COLORS = {
-  'brand-primary': '--xe-color-brand-primary',
-  'brand-accent': '--xe-color-brand-accent',
 };
 
 const [{ fields }] = model.models;
@@ -40,7 +32,7 @@ beforeEach(() => {
 
 describe('xe-icon block', () => {
   describe('model matches the Ignite spec', () => {
-    it('has exactly the Ignite props + color as fields — no label', () => {
+    it('has exactly the Ignite props as fields — no label, no color', () => {
       expect(fields.map((f) => f.name)).toEqual(Object.keys(IGNITE_PROPS));
       expect(Object.keys(DEFAULTS)).toEqual(Object.keys(IGNITE_PROPS));
     });
@@ -67,17 +59,6 @@ describe('xe-icon block', () => {
         .forEach((v) => expect(registered, v).toContain(v));
       options(cardsModel, 'icon').map((v) => v.replace(/^icon-/, '')).filter((v) => v !== 'none')
         .forEach((v) => expect(registered, v).toContain(v));
-    });
-
-    it('offers color as a dropdown of brand tokens only, default inherit — no free picker', () => {
-      expect(field('color').component).toBe('select');
-      expect(field('color').value).toBe('inherit');
-      const values = field('color').options.map((o) => o.value);
-      expect(values).toEqual(['inherit', ...Object.keys(BRAND_COLORS)]);
-      expect(Object.keys(ICON_COLORS)).toEqual(values);
-      Object.entries(BRAND_COLORS).forEach(([value, token]) => {
-        expect(ICON_COLORS[value]).toMatch(new RegExp(`^var\\(${token}, #[0-9a-f]{6}\\)$`));
-      });
     });
   });
 
@@ -113,18 +94,18 @@ describe('xe-icon block', () => {
       expect(block.querySelector('xe-icon').getAttribute('size')).toBe('xl');
     });
 
-    it('applies the chosen brand color with style, like the Ignite story', () => {
-      const icon = render({ icon: 'faBolt', color: 'brand-accent' }).querySelector('xe-icon');
-      expect(icon.style.color).toContain('--xe-color-brand-accent');
-      expect(icon.hasAttribute('color')).toBe(false);
-    });
-
-    it('sets no color for inherit, a skipped field or an unknown value', () => {
-      ['inherit', '', 'purple'].forEach((color) => {
-        const icon = render({ icon: 'faBolt', color }).querySelector('xe-icon');
-        expect(icon.style.color, color).toBe('');
+    it('ignores the old Color row on blocks authored before it was removed', () => {
+      // Real published markup (2026-10-09): icon, size, then the old color value
+      ['brand-primary', 'brand-accent', 'inherit'].forEach((oldColor) => {
+        const block = document.createElement('div');
+        block.className = 'xe-icon block';
+        block.innerHTML = `<div><div>faHeart</div></div><div><div>xl</div></div><div><div>${oldColor}</div></div>`;
+        const icon = decorate(block);
+        expect(icon.getAttribute('icon'), oldColor).toBe('faHeart');
+        expect(icon.getAttribute('size'), oldColor).toBe('xl');
+        expect(icon.style.color, oldColor).toBe('');
       });
-      expect(buildPrimitive({ icon: 'faBolt', color: 'toString' }).style.color).toBe('');
+      expect(buildPrimitive({ icon: 'faBolt', color: 'brand-primary' }).style.color).toBe('');
     });
 
     it('renders nothing for an unknown or missing icon', () => {

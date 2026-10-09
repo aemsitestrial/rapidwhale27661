@@ -30,8 +30,8 @@ bug/issue we hit — check it before debugging, and log new ones there), and
   `buildPrimitive(props)` + `decorate(block, props)` / `decoratePrimitive`; props > authored >
   `DEFAULTS`; compositions reuse the primitive instead of rebuilding it; read authored values by
   content with `getBlockProps(block, DEFAULTS, FIELD_OPTIONS)` from `scripts/utils/primitive.js`
-  (list every select field's allowed values in `FIELD_OPTIONS`). Author options that map to design tokens (sizes, colors) are **dropdowns**, never free
-  text or a color picker. Interactive primitives (buttons, links) need a **required** accessible
+  (list every select field's allowed values in `FIELD_OPTIONS`). Author options that map to
+  design tokens (sizes, colors) are **dropdowns**, never free text or a color picker. Interactive primitives (buttons, links) need a **required** accessible
   label field.
 - **Commits:** check `git log` after every commit before pushing (see build-log #I-46).
 - **Every new or changed block** has a `.stories.js` and `.test.js`; `npm test` and `npm run lint`

@@ -214,6 +214,15 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   (`scripts/utils/primitive.test.js`, now included in Vitest). 166 tests pass.
 - Housekeeping: I-39 closed (GitHub access has worked since; PRs #15–#17 pushed).
 
+### 2026-10-09 — XE Icon Color field removed
+
+- Ticket update: the XE Icon **Color** field isn't needed. Removed on
+  `feature/xe-icon-remove-color`, stacked on the fixed PR #18 (both touch `xe-icon.js`) to avoid
+  conflicts. The 3 published XE Icons still carry their old color values; the block ignores them
+  (unit test with the real markup) and the icons inherit the text color. → #I-41 ✅
+- Checked: lint, 164 unit tests (3 color tests removed, 1 added for the old saved values),
+  `build:json` (model: icon, size).
+
 ---
 
 ## Issue tracker
@@ -265,7 +274,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-37 | 10-07 | Icon docs give no px values or token names for xs–xl; the DS Storybook shows a color control that isn't in the props table; the docs list both faXTwitter and faSquareXTwitter | Design tokens docs not received yet; Storybook-only control | ⏳ Sizes estimated (14 / 16 / 20 / 28 / 36px) behind placeholder tokens `--xe-sizing-icon-*`; color is CSS-only (inherits) — ✅ confirmed 10-08: Ignite has only `icon` and `size`; both X icons registered until the Footer docs confirm one |
 | I-38 | 10-07 | Link component tests lost their icons after the change | Icons now come from the site-level registration, not built into `xe-icon` | ✅ Tests import `scripts/icons.js`, like a page does |
 | I-40 | 10-08 | Standalone XE Icon block goes against Ignite's Tier 3 rule ("no block definition") | Team decision: production code is moved by copying block folders; a self-contained block is easier to transfer | ℹ️ Documented exception in `DEVELOPMENT.md`. Decorative only (no label). The block still needs `scripts/icons.js`, `scripts/components/xe-icon.js` and `scripts/components/icons/` copied with it |
-| I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ⏳ Fallbacks estimated: brand-primary `#c8102e`, brand-accent `#00664f`, space-2xl `24px`. The Ignite Storybook color control shows `#4e9e39` (a green) — to confirm with the team whether that is the brand accent |
+| I-41 | 10-08 | Ignite docs show the color/spacing token names but not their values | Design tokens docs not received yet | ✅ Closed 10-09 — the ticket confirmed the XE Icon Color field isn't needed; field removed. The token names remain only in the component's Color Inheritance story (fallbacks still estimates) |
 | I-42 | 10-08 | XE Icon: an authored value the block didn't recognize (e.g. an unknown color) hid the icon | The reader treated any unrecognized value as the icon name | ✅ Only `fa…` names count as icons; unknown values are ignored (unit test) |
 | I-43 | 10-09 | Icon Button documents 7 sizes (xxs–2xl); the Icon docs only 5 (xs–xl) | The two Ignite pages disagree (the real `xe-icon` may support xxs / 2xl) | ℹ️ User decision: `xe-icon` stays at xs–xl; Icon Button sets the icon's width/height for xxs / 2xl (estimates 12 / 40px). Ask the team whether `xe-icon` supports them |
 | I-44 | 10-09 | Swapping the navbar ☰ for `xe-icon-button` would lose `aria-expanded` (WCAG 4.1.2) | Ignite's Icon Button only forwards `aria-label` | ✅ Navbar extension, not in Ignite spec: `aria-expanded` / `aria-haspopup` forwarded. `aria-controls` dropped (can't cross the shadow DOM) |

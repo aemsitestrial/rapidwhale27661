@@ -359,14 +359,12 @@ before building. When a component is built, mark it ✅ here and add it to the t
     e.g. `faArrowRight`) · `size` (string, default `md`: `xs` · `sm` · `md` · `lg` · `xl`).
     Nothing else — no `label`, no size-override custom property.
   - **Standalone XE Icon block** (`blocks/xe-icon/`, any section): model fields `icon` (select —
-    every registered icon as a named option; authors never type names), `size` (select — Extra
-    Small / Small / Medium (default) / Large / Extra Large) and `color` (select — **Inherit**
-    (default) / **Brand Primary** / **Brand Accent**; added 2026-10-08 from the Ignite Storybook
-    "color" control, applied as `style="color: …"` like the docs, **not** an `<xe-icon>`
-    attribute). Template: `faArrowRight`, `md`, `inherit`.
-    Color is a **dropdown of brand tokens, never a free color picker**: Universal Editor has no
-    built-in picker (it would need a custom UE extension), and free colors break the brand.
-    Add more options here when the design tokens docs list them.
+    every registered icon as a named option; authors never type names) and `size` (select —
+    Extra Small / Small / Medium (default) / Large / Extra Large) — exactly the two Ignite props.
+    Template: `faArrowRight`, `md`. The icon takes the section's text color.
+    (A **Color** dropdown — Inherit / Brand Primary / Brand Accent — was added in #14 and
+    **removed 2026-10-09**: the ticket confirmed it isn't needed. Blocks authored with it still
+    carry the old value; the block ignores it and the icon inherits the text color.)
   - **Primitive API** (team pattern — see "Primitive rendering pattern" below):
     `buildPrimitive({ icon, size })` returns an `<xe-icon>` (or null if the icon isn't registered) ·
     `decorate(block, props)` / `decoratePrimitive(rowOrCell, props)` reads authored values,
@@ -396,8 +394,8 @@ before building. When a component is built, mark it ✅ here and add it to the t
   - **Color:** inherits the text color (`currentcolor`) — the component sets no color. Override
     with `style="color: …"` or a parent's color. Ignite tokens used in the docs:
     `--xe-color-brand-primary` (dark red) · `--xe-color-brand-accent` (dark green) · gap spacing
-    `--xe-spacing-space-2xl`. Our stories use them with fallbacks `#c8102e` / `#00664f` / `24px`
-    (fallback values are estimates — build-log #I-41).
+    `--xe-spacing-space-2xl`. Only the component's Color Inheritance story uses them (fallbacks
+    `#c8102e` / `#00664f` / `24px`, estimates); no author-facing color option (build-log #I-41).
   - **Accessibility:** always `aria-hidden="true"` and not focusable. There's no `label`
     attribute — **label the parent, not the icon** (e.g. `aria-label` on the icon button/link).
   - DS stories: Default, Sizes, Color Inheritance, All Registered Icons. We add Social Brands.

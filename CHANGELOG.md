@@ -6,6 +6,18 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-09 — XE Icon: Color field removed
+
+Branch `feature/xe-icon-remove-color` (stacked on #18) — PR open for review, **not merged yet**.
+
+- The ticket confirmed the XE Icon **Color** dropdown (added in #14) isn't needed — removed from
+  the model, the decorator (`ICON_COLORS`, `isColor`, `DEFAULTS.color`, the color option in
+  `FIELD_OPTIONS`), the stories and the tests. XE Icon now has exactly the two Ignite props.
+- ⚠️ Visible change: the 3 published XE Icons on the home page set to Brand Primary / Brand Accent
+  will show in the section's text color. Their old saved value is ignored (unit test with the real
+  published markup); no content change needed.
+- XE Banner, XE Feature Cards and XE Icon Button are unaffected.
+
 ## 2026-10-09 — Shared `getBlockProps` utility (PR #18)
 
 [#18](https://github.com/aemsitestrial/rapidwhale27661/pull/18) — open for review, **not merged yet**.
@@ -66,6 +78,8 @@ paint (no LCP impact); `scripts.js` / `delayed.js` unchanged.
   hide the icon.
 - Existing XE Icon blocks keep their look (no color saved = Inherit). XE Banner / XE Feature Cards
   are unchanged.
+- ⚠️ **Removed again on 2026-10-09** (ticket: Color not needed) — see "XE Icon: Color field
+  removed" above.
 
 ## 2026-10-08 — Standalone XE Icon block · `xe-icon` matches the Ignite Storybook
 
