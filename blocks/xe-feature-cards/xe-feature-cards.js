@@ -1,7 +1,7 @@
 import '../../scripts/components/xe-feature-cards.js';
 import '../../scripts/components/xe-card.js';
 import '../../scripts/components/xe-action-link.js';
-import { decoratePrimitive as decorateIcon } from '../xe-icon/xe-icon.js';
+
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /*
@@ -64,11 +64,7 @@ function buildCard(data, titleTag) {
   card.setAttribute('actions-placement', 'inline');
 
   // The Category Icon cell is rendered by the xe-icon primitive; cards fix the size at xl
-  const icon = data.iconCell && decorateIcon(data.iconCell, { icon: data.options.icon, size: 'xl' });
-  if (icon) {
-    icon.slot = 'icon';
-    card.append(icon);
-  }
+
 
   const title = document.createElement(titleTag);
   title.slot = 'title';

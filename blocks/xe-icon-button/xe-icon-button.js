@@ -2,7 +2,6 @@ import {
   ICON_BUTTON_SIZES, ICON_BUTTON_TREATMENTS,
 } from '../../scripts/components/xe-icon-button.js';
 import { safeHref } from '../../scripts/components/xe-link-helpers.js';
-import { buildPrimitive as buildIcon } from '../xe-icon/xe-icon.js';
 import getBlockProps, { defined } from '../../scripts/utils/primitive.js';
 
 /*
@@ -42,8 +41,7 @@ export function buildPrimitive(props = {}) {
     ariaLabel, icon, size, treatment, href, target,
   } = { ...DEFAULTS, ...props };
   const label = String(ariaLabel || '').trim();
-  const glyph = buildIcon({ icon });
-  if (!label || !glyph) return null;
+  if (!label ) return null;
 
   const button = document.createElement('xe-icon-button');
   button.setAttribute(
