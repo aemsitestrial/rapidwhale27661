@@ -1,18 +1,20 @@
 {
   "definitions": [
     {
-      "title": "XE Icon",
-      "id": "xe-icon",
+      "title": "XE Icon Button",
+      "id": "xe-icon-button",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
-              "name": "XE Icon",
-              "model": "xe-icon",
-              "icon": "faArrowRight",
+              "name": "XE Icon Button",
+              "model": "xe-icon-button",
+              "ariaLabel": "Settings",
+              "icon": "faGear",
               "size": "md",
-              "color": "inherit"
+              "treatment": "default",
+              "target": "_self"
             }
           }
         }
@@ -21,14 +23,22 @@
   ],
   "models": [
     {
-      "id": "xe-icon",
+      "id": "xe-icon-button",
       "fields": [
+        {
+          "component": "text",
+          "name": "ariaLabel",
+          "label": "Accessible Label (aria-label)",
+          "description": "Required. What the button does, read by screen readers, e.g. \"Xcel Energy on Facebook\". For new-tab links \"(opens in a new window)\" is added if missing.",
+          "valueType": "string",
+          "required": true
+        },
         {
           "component": "select",
           "name": "icon",
           "label": "Icon",
           "valueType": "string",
-          "value": "faArrowRight",
+          "value": "faGear",
           "required": true,
           "options": [
             { "name": "Arrow Down", "value": "faArrowDown" },
@@ -67,28 +77,49 @@
         {
           "component": "select",
           "name": "size",
-          "label": "Size",
+          "label": "Icon Size",
+          "description": "The touch target is always 48×48px.",
           "valueType": "string",
           "value": "md",
           "options": [
+            { "name": "Extra Extra Small", "value": "xxs" },
             { "name": "Extra Small", "value": "xs" },
             { "name": "Small", "value": "sm" },
             { "name": "Medium (default)", "value": "md" },
             { "name": "Large", "value": "lg" },
-            { "name": "Extra Large", "value": "xl" }
+            { "name": "Extra Large", "value": "xl" },
+            { "name": "2× Extra Large", "value": "2xl" }
           ]
         },
         {
           "component": "select",
-          "name": "color",
-          "label": "Color",
-          "description": "Inherit follows the section's text color (white on dark sections).",
+          "name": "treatment",
+          "label": "Treatment",
           "valueType": "string",
-          "value": "inherit",
+          "value": "default",
           "options": [
-            { "name": "Inherit (default)", "value": "inherit" },
-            { "name": "Brand Primary (dark red)", "value": "brand-primary" },
-            { "name": "Brand Accent (dark green)", "value": "brand-accent" }
+            { "name": "Default (icon only)", "value": "default" },
+            { "name": "Filled", "value": "filled" },
+            { "name": "Outlined", "value": "outlined" }
+          ]
+        },
+        {
+          "component": "text",
+          "name": "href",
+          "label": "Link (optional)",
+          "description": "Page path or URL, e.g. /profile or https://facebook.com/xcelenergy. Leave empty for a button.",
+          "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "target",
+          "label": "Open In",
+          "valueType": "string",
+          "value": "_self",
+          "condition": { "!!": [{ "var": "href" }] },
+          "options": [
+            { "name": "Same tab", "value": "_self" },
+            { "name": "New tab", "value": "_blank" }
           ]
         }
       ]

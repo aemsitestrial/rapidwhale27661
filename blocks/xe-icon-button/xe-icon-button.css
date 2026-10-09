@@ -1,0 +1,4 @@
+/* Standalone icon button: no extra line height around the 48×48 target */
+.xe-icon-button.block {
+  line-height: 0;
+}

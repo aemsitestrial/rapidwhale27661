@@ -92,6 +92,9 @@
           "...": "../blocks/xe-icon/_*.json#/definitions"
         },
         {
+          "...": "../blocks/xe-icon-button/_*.json#/definitions"
+        },
+        {
           "...": "../blocks/columns/_*.json#/definitions"
         },
         {

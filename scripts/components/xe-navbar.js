@@ -37,6 +37,7 @@
  */
 
 import './xe-icon.js';
+import './xe-icon-button.js';
 
 const styles = `
   :host {
@@ -141,26 +142,6 @@ const styles = `
   ::slotted([data-drawer-only]) { display: none !important; }
   :host([collapsed]) ::slotted([data-collapse-to-drawer]) { display: none !important; }
 
-  .icon-button {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 8px;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-  }
-  .icon-button:hover { background-color: rgb(139 90 60 / 8%); }
-  .icon-button:focus-visible {
-    outline: 2px solid currentcolor;
-    outline-offset: 2px;
-  }
 
   .scrim {
     position: fixed;
@@ -203,14 +184,14 @@ const styles = `
   .drawer-actions:empty { display: none; }
 `;
 
+// Menu / close buttons are <xe-icon-button>s (Ignite Icon Button, 48×48 touch target)
 function iconButton(className, icon, label) {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = `icon-button ${className}`;
+  const button = document.createElement('xe-icon-button');
+  button.className = className;
+  button.setAttribute('size', 'md');
   button.setAttribute('aria-label', label);
   const xeIcon = document.createElement('xe-icon');
   xeIcon.setAttribute('icon', icon);
-  xeIcon.setAttribute('size', 'md');
   button.append(xeIcon);
   return button;
 }
@@ -266,8 +247,10 @@ export default class XeNavbar extends HTMLElement {
     drawerCount += 1;
     const drawerId = `xe-navbar-drawer-${drawerCount}`;
     this.menuButton = iconButton('menu-toggle', 'faBars', 'Open menu');
+    // Navbar extension, not in Ignite spec: xe-icon-button forwards these to its inner <button>.
+    // (aria-controls can't point across the shadow DOM boundary, so it isn't used.)
     this.menuButton.setAttribute('aria-expanded', 'false');
-    this.menuButton.setAttribute('aria-controls', drawerId);
+    this.menuButton.setAttribute('aria-haspopup', 'dialog');
     this.menuButton.hidden = true;
     bar.append(
       region('logo', 'logo'),

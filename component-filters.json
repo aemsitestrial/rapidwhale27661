@@ -51,7 +51,8 @@
       "xe-banner",
       "xe-navbar",
       "xe-feature-cards",
-      "xe-icon"
+      "xe-icon",
+      "xe-icon-button"
     ]
   },
   {
