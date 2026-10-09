@@ -156,6 +156,13 @@ Alternative: use content-type detection in JS (detect a link by `/` or `http` pr
 > primitive rendering pattern does), and blocks that read by position (e.g. XE Banner) keep model
 > order = alphabetical order so both cases give the same result.
 
+> **Element grouping (aem.live "Content modeling"):** fields named `<group>_<field>` (e.g.
+> `ic_icon`, `ic_size`) are rendered together as **one cell** with one element (`<p>`, heading,
+> link…) per field, in model order. A decorator that expects one value per row must read the
+> grouped cell's children. Renaming fields into a group changes the saved property names: blocks
+> authored with the old names keep their old markup until republished, then show **empty** —
+> re-select their values in Universal Editor before publishing (build-log I-53).
+
 ---
 
 ## Block Model Rules
@@ -359,14 +366,15 @@ before building. When a component is built, mark it ✅ here and add it to the t
     e.g. `faArrowRight`) · `size` (string, default `md`: `xs` · `sm` · `md` · `lg` · `xl`).
     Nothing else — no `label`, no size-override custom property.
   - **Standalone XE Icon block** (`blocks/xe-icon/`, any section): model fields `icon` (select —
-    every registered icon as a named option; authors never type names), `size` (select — Extra
-    Small / Small / Medium (default) / Large / Extra Large) and `color` (select — **Inherit**
-    (default) / **Brand Primary** / **Brand Accent**; added 2026-10-08 from the Ignite Storybook
-    "color" control, applied as `style="color: …"` like the docs, **not** an `<xe-icon>`
-    attribute). Template: `faArrowRight`, `md`, `inherit`.
-    Color is a **dropdown of brand tokens, never a free color picker**: Universal Editor has no
-    built-in picker (it would need a custom UE extension), and free colors break the brand.
-    Add more options here when the design tokens docs list them.
+    every registered icon as a named option; authors never type names) and `size` (select —
+    Extra Small / Small / Medium (default) / Large / Extra Large) — exactly the two Ignite props.
+    **Model field names: `ic_icon`, `ic_size`** (2026-10-09) — the `ic` element group, so
+    Universal Editor delivers them as **one cell with a `<p>` per field**; the decorator reads each
+    `<p>` and still reads blocks published before the rename (one row per field). Template:
+    `faArrowRight`, `md`. The icon takes the section's text color.
+    (A **Color** dropdown — Inherit / Brand Primary / Brand Accent — was added in #14 and
+    **removed 2026-10-09**: the ticket confirmed it isn't needed. Old saved color values are
+    ignored.)
   - **Primitive API** (team pattern — see "Primitive rendering pattern" below):
     `buildPrimitive({ icon, size })` returns an `<xe-icon>` (or null if the icon isn't registered) ·
     `decorate(block, props)` / `decoratePrimitive(rowOrCell, props)` reads authored values,
@@ -815,7 +823,7 @@ picture.querySelector('img').alt = altText;
 
 ## Xcel Site Design Spec (extracted from xcelenergy.com screenshots)
 
-These patterns apply to the **`xcel-*` blocks** (and `teaser`). EMA: apply these before writing any
+These patterns apply to the **`xcel-*` blocks** (and `teaser`). Apply these before writing any
 CSS for those blocks.
 
 > **`xe-*` web-component blocks follow the Xcel design system docs instead.** Where the design

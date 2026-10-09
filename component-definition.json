@@ -609,9 +609,8 @@
                 "template": {
                   "name": "XE Icon",
                   "model": "xe-icon",
-                  "icon": "faArrowRight",
-                  "size": "md",
-                  "color": "inherit"
+                  "ic_icon": "faArrowRight",
+                  "ic_size": "md"
                 }
               }
             }

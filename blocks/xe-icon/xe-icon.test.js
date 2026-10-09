@@ -1,9 +1,7 @@
 import {
   describe, it, expect, beforeEach,
 } from 'vitest';
-import decorate, {
-  buildPrimitive, decoratePrimitive, DEFAULTS, ICON_COLORS,
-} from './xe-icon.js';
+import decorate, { buildPrimitive, decoratePrimitive, DEFAULTS } from './xe-icon.js';
 import { buildBlock } from './xe-icon.stories.js';
 import { registeredIconNames } from '../../scripts/components/xe-icon.js';
 /* eslint-disable import/extensions -- the block models are JSON */
@@ -12,17 +10,21 @@ import bannerModel from '../xe-banner/_xe-banner.json';
 import cardsModel from '../xe-feature-cards/_xe-feature-cards.json';
 /* eslint-enable import/extensions */
 
-// Ignite Storybook (Design System Primitives › Media › Icon): the two props, plus the story's
-// "color" control (CSS color, applied with style) — offered to authors as brand tokens only
+// Ignite Storybook (Design System Primitives › Media › Icon): the only two props
 const IGNITE_PROPS = {
   icon: { default: undefined },
   size: { default: 'md', values: ['xs', 'sm', 'md', 'lg', 'xl'] },
-  color: { default: 'inherit' },
 };
-const BRAND_COLORS = {
-  'brand-primary': '--xe-color-brand-primary',
-  'brand-accent': '--xe-color-brand-accent',
-};
+// Model field names: the two props in the "ic" element group (one grouped cell)
+const MODEL_FIELDS = { icon: 'ic_icon', size: 'ic_size' };
+
+// Builds a block in the old, pre-rename format: one row per field (icon, size, color)
+function legacyBlock(...values) {
+  const block = document.createElement('div');
+  block.className = 'xe-icon block';
+  block.innerHTML = values.map((v) => `<div><div>${v}</div></div>`).join('');
+  return block;
+}
 
 const [{ fields }] = model.models;
 const field = (name) => fields.find((f) => f.name === name);
@@ -40,22 +42,25 @@ beforeEach(() => {
 
 describe('xe-icon block', () => {
   describe('model matches the Ignite spec', () => {
-    it('has exactly the Ignite props + color as fields — no label', () => {
-      expect(fields.map((f) => f.name)).toEqual(Object.keys(IGNITE_PROPS));
+    it('has exactly the Ignite props as fields, in the "ic" group — no label, no color', () => {
+      expect(fields.map((f) => f.name))
+        .toEqual(Object.keys(IGNITE_PROPS).map((k) => MODEL_FIELDS[k]));
       expect(Object.keys(DEFAULTS)).toEqual(Object.keys(IGNITE_PROPS));
+      const { template } = model.definitions[0].plugins.xwalk.page;
+      expect(Object.keys(template)).toEqual(['name', 'model', 'ic_icon', 'ic_size']);
     });
 
     it('offers every registered icon as a named dropdown option — no free text', () => {
-      expect(field('icon').component).toBe('select');
-      const values = field('icon').options.map((o) => o.value);
+      expect(field('ic_icon').component).toBe('select');
+      const values = field('ic_icon').options.map((o) => o.value);
       expect([...values].sort()).toEqual([...registeredIconNames()].sort());
-      field('icon').options.forEach((o) => expect(o.name, o.value).not.toMatch(/^fa[A-Z]/));
+      field('ic_icon').options.forEach((o) => expect(o.name, o.value).not.toMatch(/^fa[A-Z]/));
     });
 
     it('offers exactly the five sizes, default md', () => {
-      expect(field('size').component).toBe('select');
-      expect(field('size').options.map((o) => o.value)).toEqual(IGNITE_PROPS.size.values);
-      expect(field('size').value).toBe(IGNITE_PROPS.size.default);
+      expect(field('ic_size').component).toBe('select');
+      expect(field('ic_size').options.map((o) => o.value)).toEqual(IGNITE_PROPS.size.values);
+      expect(field('ic_size').value).toBe(IGNITE_PROPS.size.default);
       expect(DEFAULTS.size).toBe(IGNITE_PROPS.size.default);
     });
 
@@ -67,17 +72,6 @@ describe('xe-icon block', () => {
         .forEach((v) => expect(registered, v).toContain(v));
       options(cardsModel, 'icon').map((v) => v.replace(/^icon-/, '')).filter((v) => v !== 'none')
         .forEach((v) => expect(registered, v).toContain(v));
-    });
-
-    it('offers color as a dropdown of brand tokens only, default inherit — no free picker', () => {
-      expect(field('color').component).toBe('select');
-      expect(field('color').value).toBe('inherit');
-      const values = field('color').options.map((o) => o.value);
-      expect(values).toEqual(['inherit', ...Object.keys(BRAND_COLORS)]);
-      expect(Object.keys(ICON_COLORS)).toEqual(values);
-      Object.entries(BRAND_COLORS).forEach(([value, token]) => {
-        expect(ICON_COLORS[value]).toMatch(new RegExp(`^var\\(${token}, #[0-9a-f]{6}\\)$`));
-      });
     });
   });
 
@@ -93,7 +87,7 @@ describe('xe-icon block', () => {
 
     it('renders the palette template as authored', () => {
       const { template } = model.definitions[0].plugins.xwalk.page;
-      const icon = render({ icon: template.icon, size: template.size }).querySelector('xe-icon');
+      const icon = render({ icon: template.ic_icon, size: template.ic_size }).querySelector('xe-icon');
       expect(icon.getAttribute('icon')).toBe('faArrowRight');
       expect(icon.getAttribute('size')).toBe('md');
     });
@@ -104,27 +98,32 @@ describe('xe-icon block', () => {
         .toBe('md');
     });
 
-    it('reads values by content, so a skipped icon row does not shift the size', () => {
-      const block = document.createElement('div');
-      block.className = 'xe-icon block';
-      block.innerHTML = '<div><div>xl</div></div><div><div>faHeart</div></div>';
-      decorate(block);
-      expect(block.querySelector('xe-icon').getAttribute('icon')).toBe('faHeart');
-      expect(block.querySelector('xe-icon').getAttribute('size')).toBe('xl');
+    it('reads the grouped cell (a <p> per field), as Universal Editor delivers ic_icon / ic_size', () => {
+      const block = buildBlock({ icon: 'faHeart', size: 'xl' });
+      expect(block.children).toHaveLength(1);
+      expect(block.querySelectorAll('p')).toHaveLength(2);
+      const icon = decorate(block);
+      expect(icon.getAttribute('icon')).toBe('faHeart');
+      expect(icon.getAttribute('size')).toBe('xl');
     });
 
-    it('applies the chosen brand color with style, like the Ignite story', () => {
-      const icon = render({ icon: 'faBolt', color: 'brand-accent' }).querySelector('xe-icon');
-      expect(icon.style.color).toContain('--xe-color-brand-accent');
-      expect(icon.hasAttribute('color')).toBe(false);
+    it('reads values by content, so reordered or skipped values do not shift', () => {
+      const block = buildBlock({ icon: 'faHeart', size: 'xl' });
+      const cell = block.firstElementChild.firstElementChild;
+      cell.prepend(cell.lastElementChild); // size first
+      expect(decorate(block).getAttribute('size')).toBe('xl');
+      expect(decorate(legacyBlock('xl', 'faHeart')).getAttribute('icon')).toBe('faHeart');
     });
 
-    it('sets no color for inherit, a skipped field or an unknown value', () => {
-      ['inherit', '', 'purple'].forEach((color) => {
-        const icon = render({ icon: 'faBolt', color }).querySelector('xe-icon');
-        expect(icon.style.color, color).toBe('');
+    it('still reads blocks published before the rename, ignoring the removed color', () => {
+      // Real published markup (2026-10-09): one row each for icon, size, color
+      ['brand-primary', 'brand-accent', 'inherit'].forEach((oldColor) => {
+        const icon = decorate(legacyBlock('faHeart', 'xl', oldColor));
+        expect(icon.getAttribute('icon'), oldColor).toBe('faHeart');
+        expect(icon.getAttribute('size'), oldColor).toBe('xl');
+        expect(icon.style.color, oldColor).toBe('');
       });
-      expect(buildPrimitive({ icon: 'faBolt', color: 'toString' }).style.color).toBe('');
+      expect(buildPrimitive({ icon: 'faBolt', color: 'brand-primary' }).style.color).toBe('');
     });
 
     it('renders nothing for an unknown or missing icon', () => {

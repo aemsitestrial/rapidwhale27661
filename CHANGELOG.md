@@ -6,6 +6,21 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-09 — XE Icon: Color removed, fields renamed to `ic_icon` / `ic_size`
+
+Branch `feature/xe-icon-ic-fields` (fresh from `main`) — PR open for review, **not merged yet**.
+Replaces PR #18, whose branch had accidentally deleted the XE Banner, XE Feature Cards, XE Icon
+and XE Icon Button blocks (build-log #I-52).
+
+- **Model:** Color field removed (ticket: not needed); `icon` / `size` renamed to **`ic_icon` /
+  `ic_size`** (element group `ic`).
+- **Decorator:** Color support removed; reads the grouped cell (a `<p>` per field) **and** blocks
+  published before the rename — a JSON-only rename would have made every XE Icon render nothing.
+- Also: the tool label removed from DEVELOPMENT.md's design spec section (from #18).
+- ⚠️ **Authors:** re-select Icon + Size on the existing XE Icon blocks (home page ×3, `/ignite` ×1)
+  before republishing those pages. Until then the published pages keep working (old markup).
+- ⚠️ The home page's red / green icons show in the text color once this is live (Color removed).
+
 ## 2026-10-09 — Header height on phones re-measured after #16
 
 [#17](https://github.com/aemsitestrial/rapidwhale27661/pull/17), merged into `main` on 2026-10-09 at
@@ -56,6 +71,8 @@ paint (no LCP impact); `scripts.js` / `delayed.js` unchanged.
   hide the icon.
 - Existing XE Icon blocks keep their look (no color saved = Inherit). XE Banner / XE Feature Cards
   are unchanged.
+- ⚠️ **Removed again on 2026-10-09** (ticket: Color not needed) — see "XE Icon: Color removed,
+  fields renamed" above.
 
 ## 2026-10-08 — Standalone XE Icon block · `xe-icon` matches the Ignite Storybook
 
