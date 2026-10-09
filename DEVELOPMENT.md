@@ -54,8 +54,10 @@ dedicated pages, and every page on the site loads the same fragment unless told 
   empty and logs a console warning instead of crashing the page.
 - **No layout shift (fixed 2026-10-05, build-log I-24):** the header loads after the page appears,
   so its space is reserved up front in `styles/styles.css` as **`--xe-header-height`** — `137px`
-  (toolbar 64px + bar 72px + 1px border; fixed row heights in `xe-navbar.js`) and `199.5px` below
-  480px, where the current always-visible buttons wrap onto a second row. While the navbar lays
+  (toolbar 64px + bar 72px + 1px border; fixed row heights in `xe-navbar.js`) and `203.5px` at
+  480px and below, where the current always-visible buttons wrap onto a second row ("stacked").
+  (Was `199.5px` below 480px until the menu toggle became a 48px `xe-icon-button` in #16 —
+  build-log I-50: anything that changes the bar's buttons changes these values.) While the navbar lays
   itself out (two frames), the header keeps that height and the navbar stays invisible; then
   `header.js` adds `.header-xe-navbar` and the header follows the navbar's real height.
   ⚠️ **These values depend on the navbar's content on the `/xe-navbar` page.** If authors add or
