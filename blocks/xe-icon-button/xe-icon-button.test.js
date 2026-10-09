@@ -12,6 +12,11 @@ import model from './_xe-icon-button.json';
 const [{ fields }] = model.models;
 const field = (name) => fields.find((f) => f.name === name);
 const values = (name) => field(name).options.map((o) => o.value);
+const { template } = model.definitions[0].plugins.xwalk.page;
+// Props (DEFAULTS keys) → model field names in the "ib" element group
+const FIELD = (key) => `ib_${key}`;
+const fromTemplate = () => Object.fromEntries(Object.keys(DEFAULTS)
+  .filter((key) => FIELD(key) in template).map((key) => [key, template[FIELD(key)]]));
 
 function render(options) {
   const block = buildBlock(options);
@@ -28,38 +33,42 @@ beforeEach(() => {
 
 describe('xe-icon-button block', () => {
   describe('model', () => {
-    it('has the agreed fields, in order, matching DEFAULTS', () => {
-      const names = ['ariaLabel', 'icon', 'size', 'treatment', 'href', 'target'];
-      expect(fields.map((f) => f.name)).toEqual(names);
-      expect(Object.keys(DEFAULTS)).toEqual(names);
+    it('has the agreed fields in the "ib" group, in order, matching DEFAULTS', () => {
+      const props = ['ariaLabel', 'icon', 'size', 'treatment', 'href', 'target'];
+      expect(fields.map((f) => f.name)).toEqual(props.map(FIELD));
+      expect(Object.keys(DEFAULTS)).toEqual(props);
+      expect(Object.keys(template)).toEqual(['name', 'model', ...['ariaLabel', 'icon', 'size', 'treatment', 'target'].map(FIELD)]);
+    });
+
+    it('has no field whose name Universal Editor would collapse into another (Title / Type / Text / Alt)', () => {
+      fields.forEach((f) => expect(f.name, f.name).not.toMatch(/(Title|Type|MimeType|Alt|Text)$/));
     });
 
     it('requires the accessible label (Ignite: aria-label is required)', () => {
-      expect(field('ariaLabel').component).toBe('text');
-      expect(field('ariaLabel').required).toBe(true);
+      expect(field('ib_ariaLabel').component).toBe('text');
+      expect(field('ib_ariaLabel').required).toBe(true);
     });
 
     it('offers every registered icon and the documented sizes / treatments as dropdowns', () => {
-      expect(field('icon').component).toBe('select');
-      expect([...values('icon')].sort()).toEqual([...registeredIconNames()].sort());
-      expect(values('size')).toEqual(['xxs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']);
-      expect(field('size').value).toBe('md');
-      expect(values('treatment')).toEqual(['default', 'filled', 'outlined']);
-      expect(field('treatment').value).toBe('default');
+      expect(field('ib_icon').component).toBe('select');
+      expect([...values('ib_icon')].sort()).toEqual([...registeredIconNames()].sort());
+      expect(values('ib_size')).toEqual(['xxs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']);
+      expect(field('ib_size').value).toBe('md');
+      expect(values('ib_treatment')).toEqual(['default', 'filled', 'outlined']);
+      expect(field('ib_treatment').value).toBe('default');
     });
 
     it('shows "Open In" (same / new tab) only when a link is set', () => {
-      expect(field('href').component).toBe('text');
-      expect(field('href').required).toBeFalsy();
-      expect(values('target')).toEqual(['_self', '_blank']);
-      expect(field('target').condition).toEqual({ '!!': [{ var: 'href' }] });
+      expect(field('ib_href').component).toBe('text');
+      expect(field('ib_href').required).toBeFalsy();
+      expect(values('ib_target')).toEqual(['_self', '_blank']);
+      expect(field('ib_target').condition).toEqual({ '!!': [{ var: 'ib_href' }] });
     });
   });
 
   describe('decorate() — standalone', () => {
     it('renders the palette template as a labelled <button>', () => {
-      const { template } = model.definitions[0].plugins.xwalk.page;
-      const block = render(template);
+      const block = render(fromTemplate());
       expect(block.children).toHaveLength(1);
       const button = block.querySelector(':scope > xe-icon-button');
       expect(button.getAttribute('aria-label')).toBe('Settings');
@@ -103,6 +112,31 @@ describe('xe-icon-button block', () => {
     it('renders nothing without the required label or a registered icon', () => {
       expect(render({ icon: 'faGear' }).children).toHaveLength(0);
       expect(render({ ariaLabel: 'Settings', icon: 'faUnknown' }).children).toHaveLength(0);
+    });
+
+    it('reads the grouped cell Universal Editor delivers (one cell, an element per field)', () => {
+      const block = buildBlock({
+        ariaLabel: 'View profile', icon: 'faUser', size: 'lg', treatment: 'outlined', href: '/profile', target: '_blank',
+      });
+      expect(block.children).toHaveLength(1);
+      expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(6);
+      const button = decorate(block);
+      expect(button.getAttribute('aria-label')).toBe(`View profile ${NEW_WINDOW_NOTE}`);
+      expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faUser');
+      expect(button.getAttribute('size')).toBe('lg');
+      expect(button.getAttribute('treatment')).toBe('outlined');
+      expect(button.getAttribute('href')).toBe('/profile');
+      expect(button.getAttribute('target')).toBe('_blank');
+    });
+
+    it('reads a grouped cell by content, so reordered or skipped values do not shift', () => {
+      const block = buildBlock({ ariaLabel: 'Edit', icon: 'faPen', size: 'sm' });
+      const cell = block.firstElementChild.firstElementChild;
+      cell.prepend(cell.lastElementChild); // size first
+      const button = decorate(block);
+      expect(button.getAttribute('size')).toBe('sm');
+      expect(button.getAttribute('aria-label')).toBe('Edit');
+      expect(button.getAttribute('treatment')).toBe('default');
     });
 
     it('reads values by content, so skipped or reordered rows do not shift the others', () => {

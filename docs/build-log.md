@@ -225,6 +225,20 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   "do not merge" (to be closed). Next: rebuild the XE Icon Button block with `ib_` grouped fields
   on a new branch from `main`.
 
+### 2026-10-09 — XE Icon Button rebuilt with `ib_` grouped fields
+
+- After #20 merged, rebuilt the XE Icon Button block on `feature/xe-icon-button-ib` from `main`
+  (`refactor/primitive-utility` left untouched, reference only). Plan approved by the user:
+  `ib_` prefix, component unchanged.
+- Component check: `xe-icon-button.js` matches the Icon Button docs already received (props,
+  defaults, slot, aria-label forwarding, disabled, 48×48) — its docs-spec test passes; no changes.
+- Model renamed to the `ib` element group; decorator / stories / tests moved to the grouped
+  markup. Guard test added so no field name ends in a field-collapse suffix (Title / Type / Text /
+  Alt / MimeType), which Universal Editor would merge into another field.
+- Checked: `build:json` (ib_ariaLabel … ib_target), lint, 159 unit tests, Storybook — 21 XE Icon
+  Button / XE Icon / XE Navbar / Icon Button stories, axe 0; every block story 48×48 with the right
+  label, link and target.
+
 ---
 
 ## Issue tracker

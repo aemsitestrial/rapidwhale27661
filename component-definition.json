@@ -626,11 +626,11 @@
                 "template": {
                   "name": "XE Icon Button",
                   "model": "xe-icon-button",
-                  "ariaLabel": "Settings",
-                  "icon": "faGear",
-                  "size": "md",
-                  "treatment": "default",
-                  "target": "_self"
+                  "ib_ariaLabel": "Settings",
+                  "ib_icon": "faGear",
+                  "ib_size": "md",
+                  "ib_treatment": "default",
+                  "ib_target": "_self"
                 }
               }
             }

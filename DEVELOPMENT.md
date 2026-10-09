@@ -451,6 +451,11 @@ before building. When a component is built, mark it ✅ here and add it to the t
     for new-tab links the block appends "(opens in a new window)" if the label doesn't mention it.
     Exports `buildPrimitive` / `decorate` / `decoratePrimitive` (props > authored > `DEFAULTS`) —
     ready for the footer's social links.
+    **Model field names (2026-10-09): `ib_ariaLabel`, `ib_icon`, `ib_size`, `ib_treatment`,
+    `ib_href`, `ib_target`** — the `ib` element group (like XE Icon's `ic_`), so Universal Editor
+    delivers them as **one cell with an element per field** (the link as `<p><a>`); the "Open In"
+    condition reads `ib_href`. The decorator reads the grouped cell by content, and still reads
+    one-row-per-field markup. No field name ends in Title / Type / Text / Alt (field collapse).
   - Used by **XE Navbar** for ☰ (open menu) and ✕ (close menu) — replaced its private 44px button.
 
 - **Action Link — `<xe-action-link link-type href target>`** *(DS status: Ready)* — ✅ built

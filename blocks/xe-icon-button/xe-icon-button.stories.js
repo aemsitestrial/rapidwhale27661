@@ -5,21 +5,32 @@ import model from './_xe-icon-button.json';
 
 /*
  * Builds the markup Universal Editor delivers for an xe-icon-button block, before decoration.
- * One row per saved field, in JCR alphabetical order: ariaLabel, href, icon, size, target,
- * treatment. Empty fields are skipped, as Universal Editor does.
+ * The ib_* fields are one element group ("ib"), so they arrive as ONE row with ONE cell holding
+ * an element per field, in model order — ib_ariaLabel, ib_icon, ib_size, ib_treatment, ib_href
+ * (as <p><a>), ib_target. Empty fields are skipped, as Universal Editor does.
  */
 export function buildBlock({
-  ariaLabel = '', href = '', icon = '', size = '', target = '', treatment = '',
+  ariaLabel = '', icon = '', size = '', treatment = '', href = '', target = '',
 } = {}) {
   const block = document.createElement('div');
   block.className = 'xe-icon-button block';
-  [ariaLabel, href, icon, size, target, treatment].filter(Boolean).forEach((value) => {
-    const row = document.createElement('div');
-    const cell = document.createElement('div');
-    cell.textContent = value;
-    row.append(cell);
-    block.append(row);
+  const row = document.createElement('div');
+  const cell = document.createElement('div');
+  [ariaLabel, icon, size, treatment, href, target].forEach((value, i) => {
+    if (!value) return;
+    const p = document.createElement('p');
+    if (i === 4) {
+      const a = document.createElement('a');
+      a.href = value;
+      a.textContent = value;
+      p.append(a);
+    } else {
+      p.textContent = value;
+    }
+    cell.append(p);
   });
+  row.append(cell);
+  block.append(row);
   return block;
 }
 
@@ -46,19 +57,27 @@ export default {
   parameters: { layout: 'fullscreen', a11y: { config: { rules: [] } } },
   render: (args) => renderInPage(args),
   argTypes: {
-    ariaLabel: { description: 'Accessible Label (required)', control: 'text' },
-    icon: { control: 'select', options: options('icon') },
-    size: { control: 'select', options: options('size') },
-    treatment: { control: 'inline-radio', options: options('treatment') },
-    href: { description: 'Link (optional)', control: 'text' },
-    target: { description: 'Open In — only used with a link', control: 'inline-radio', options: options('target') },
+    ariaLabel: { name: 'ib_ariaLabel', description: 'Accessible Label (required)', control: 'text' },
+    icon: {
+      name: 'ib_icon', description: 'Icon', control: 'select', options: options('ib_icon'),
+    },
+    size: {
+      name: 'ib_size', description: 'Icon Size', control: 'select', options: options('ib_size'),
+    },
+    treatment: {
+      name: 'ib_treatment', description: 'Treatment', control: 'inline-radio', options: options('ib_treatment'),
+    },
+    href: { name: 'ib_href', description: 'Link (optional)', control: 'text' },
+    target: {
+      name: 'ib_target', description: 'Open In — only used with a link', control: 'inline-radio', options: options('ib_target'),
+    },
   },
   args: {
-    ariaLabel: template.ariaLabel,
-    icon: template.icon,
-    size: template.size,
-    treatment: template.treatment,
-    target: template.target,
+    ariaLabel: template.ib_ariaLabel,
+    icon: template.ib_icon,
+    size: template.ib_size,
+    treatment: template.ib_treatment,
+    target: template.ib_target,
   },
 };
 

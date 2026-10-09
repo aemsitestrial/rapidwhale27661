@@ -7167,7 +7167,7 @@
     "fields": [
       {
         "component": "text",
-        "name": "ariaLabel",
+        "name": "ib_ariaLabel",
         "label": "Accessible Label (aria-label)",
         "description": "Required. What the button does, read by screen readers, e.g. \"Xcel Energy on Facebook\". For new-tab links \"(opens in a new window)\" is added if missing.",
         "valueType": "string",
@@ -7175,7 +7175,7 @@
       },
       {
         "component": "select",
-        "name": "icon",
+        "name": "ib_icon",
         "label": "Icon",
         "valueType": "string",
         "value": "faGear",
@@ -7309,7 +7309,7 @@
       },
       {
         "component": "select",
-        "name": "size",
+        "name": "ib_size",
         "label": "Icon Size",
         "description": "The touch target is always 48×48px.",
         "valueType": "string",
@@ -7347,7 +7347,7 @@
       },
       {
         "component": "select",
-        "name": "treatment",
+        "name": "ib_treatment",
         "label": "Treatment",
         "valueType": "string",
         "value": "default",
@@ -7368,21 +7368,21 @@
       },
       {
         "component": "text",
-        "name": "href",
+        "name": "ib_href",
         "label": "Link (optional)",
         "description": "Page path or URL, e.g. /profile or https://facebook.com/xcelenergy. Leave empty for a button.",
         "valueType": "string"
       },
       {
         "component": "select",
-        "name": "target",
+        "name": "ib_target",
         "label": "Open In",
         "valueType": "string",
         "value": "_self",
         "condition": {
           "!!": [
             {
-              "var": "href"
+              "var": "ib_href"
             }
           ]
         },
