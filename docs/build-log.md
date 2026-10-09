@@ -220,6 +220,10 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - Checked: `build:json` (model: ic_icon, ic_size), lint, 156 unit tests, Storybook — 24 block
   stories render, axe 0.
 - I-39 closed (GitHub access has worked since).
+- PR #20 checks: build ✅ · PageSpeed mobile 99 / desktop 100 · on its test link `/ignite` and the
+  home page XE Icons render (old markup). Merged at the user's request; #18 / #19 marked
+  "do not merge" (to be closed). Next: rebuild the XE Icon Button block with `ib_` grouped fields
+  on a new branch from `main`.
 
 ---
 

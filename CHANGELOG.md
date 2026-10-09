@@ -8,7 +8,9 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-09 — XE Icon: Color removed, fields renamed to `ic_icon` / `ic_size`
 
-Branch `feature/xe-icon-ic-fields` (fresh from `main`) — PR open for review, **not merged yet**.
+[#20](https://github.com/aemsitestrial/rapidwhale27661/pull/20), merged into `main` on 2026-10-09 at
+the user's request. Checks: build ✅ · AEM PageSpeed mobile **99** / desktop **100** (CLS 0) · 0
+files deleted.
 Replaces PR #18, whose branch had accidentally deleted the XE Banner, XE Feature Cards, XE Icon
 and XE Icon Button blocks (build-log #I-52).
 
