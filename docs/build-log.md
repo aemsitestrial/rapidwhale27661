@@ -267,6 +267,15 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   render with no errors, CLS 0; an `ib_` XE Icon Button loaded through the real block loader. PR #23
   checks: build ✅ · PageSpeed 100 / 100. Merged at the user's request.
 
+### 2026-10-12 — XE Icon guide
+
+- A teammate asked for "a Storybook" for XE Icon; the team lead asked where Storybook is. Explained:
+  XE Icon already has stories (Design System Primitives › Media › Icon; Blocks › XE Icon), and
+  Storybook runs locally (`npm run storybook`) — it isn't hosted anywhere yet. The user actually
+  wanted a written guide to copy with the block → `docs/xe-icon.md`.
+- Follow-up option (not done): publish the built Storybook as a shared site so the team has a link.
+- PR #24 (docs only) — build ✅, PageSpeed 99; merged at the user's request.
+
 ---
 
 ## Issue tracker

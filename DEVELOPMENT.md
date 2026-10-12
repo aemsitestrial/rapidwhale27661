@@ -357,7 +357,9 @@ before building. When a component is built, mark it ✅ here and add it to the t
 
 **Documented specs received so far** (build from these when the component is needed):
 
-- **Icon — `<xe-icon icon size>`** *(Design System Primitives › Media › Icon)* — ✅ built
+- **Icon — `<xe-icon icon size>`** *(Design System Primitives › Media › Icon)* — 📘 full guide:
+  **[`docs/xe-icon.md`](docs/xe-icon.md)** (authors, developers, copy checklist, adding icons,
+  troubleshooting) — ✅ built
   2026-10-07 (`scripts/components/xe-icon.js`), standalone block 2026-10-08 (`blocks/xe-icon/`) ·
   **Docs status:** props **Verified** against the Ignite Storybook (2026-10-08) · icons and size
   values **Partial** (Path A stand-in).
@@ -758,6 +760,8 @@ Rules:
 **Copy checklist (for moving a finished primitive to another project).** These blocks are built and
 tested here and then copied by hand to another project, so every primitive PR ends with this list:
 - the block folder(s) — including any block it reuses (XE Icon Button → also `blocks/xe-icon/`);
+- the block's guide in `docs/` if it has one (e.g. `docs/xe-icon.md`) — so the other project has
+  the instructions too;
 - **`scripts/utils/primitive.js`** — **required by every primitive block** (`getBlockProps`);
 - **`scripts/icons.js`** — **required by every block that shows an icon** (XE Icon, XE Icon Button,
   XE Banner, XE Feature Cards, XE Navbar). It registers the icons; without it every icon fails — a
