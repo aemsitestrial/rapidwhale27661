@@ -6,6 +6,16 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-12 — XE Icon guide document
+
+Branch `docs/xe-icon-guide` — PR open for review, **not merged yet**. Docs only.
+
+- New **`docs/xe-icon.md`** — one guide that travels with the block: what it is, authoring
+  (fields, icon list, tips), sizes / color / accessibility, where it's used, how it works (files,
+  icon registration, grouped markup, decorator, Storybook and tests), **copy checklist** for the
+  other project (`scripts/icons.js` marked required), adding a new icon, troubleshooting, history.
+- Linked from DEVELOPMENT.md (Icon spec + copy checklist), AGENTS.md and the UE authoring guide.
+
 ## 2026-10-09 — Shared `getBlockProps` for primitive blocks
 
 [#23](https://github.com/aemsitestrial/rapidwhale27661/pull/23), merged into `main` on 2026-10-09 at the user's request.

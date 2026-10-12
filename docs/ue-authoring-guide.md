@@ -163,6 +163,8 @@ be shown (design system rule).
 
 ## 8. XE Icon — step by step
 
+Full guide (authors + developers): [`docs/xe-icon.md`](xe-icon.md).
+
 | Field | What to enter |
 |---|---|
 | Icon | Pick from the list (every icon the site has). Names are never typed |
