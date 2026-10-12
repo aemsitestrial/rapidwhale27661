@@ -252,6 +252,21 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   AI help. Added the "Model field prefix rule" + copy checklist to `DEVELOPMENT.md` and a pointer in
   `AGENTS.md`. PR #22 (docs only) — build ✅, merged at the user's request.
 
+### 2026-10-09 — Shared `getBlockProps`; `scripts/icons.js` in the copy checklist
+
+- The user copied the XE Icon block to the other project: it works, but first failed with a Font
+  Awesome error — `scripts/icons.js` hadn't been copied. Copy checklist now lists it explicitly
+  (with `scripts/components/icons/`) and says why. → #I-54
+- User's target shape for the blocks reviewed before coding: `...(el ?? [])` would throw (an element
+  isn't iterable) and `decorate` must keep returning the element (XE Banner / XE Feature Cards use
+  it). Agreed: a 4th `options` argument so dropdown values are matched by content.
+- Built `scripts/utils/primitive.js` and moved XE Icon / XE Icon Button onto it. Checked: lint,
+  171 tests (159 existing unchanged + 12 new), `build:json` (no model change), Storybook — 24
+  XE Icon / XE Icon Button / XE Banner / XE Feature Cards stories render, axe 0.
+- Quality check on the branch preview: published home page / `/ignite` icons, banner icons and header
+  render with no errors, CLS 0; an `ib_` XE Icon Button loaded through the real block loader. PR #23
+  checks: build ✅ · PageSpeed 100 / 100. Merged at the user's request.
+
 ---
 
 ## Issue tracker
@@ -315,6 +330,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-51 | 10-09 | Real XE Icon rows arrived as icon, size, color (model order) — not alphabetical as our JCR rule said | The "JCR saves alphabetically" assumption doesn't hold for this block's delivered markup | ✅ Content-based reading handled it; DEVELOPMENT.md rule now says: read by content, keep model order = alphabetical for position-based blocks |
 | I-52 | 10-09 | PR #18 branch deleted the XE Banner, XE Feature Cards, XE Icon and XE Icon Button blocks (+5 / −2,190); a pushed fix was force-replaced | Accidental commits ("xe-icon …") while fixing build errors — tests deleted with the code, so the build still passed | ✅ Not merged. Replaced by a fresh branch from `main` with only the intended changes. Lesson: check a PR's diff size and deletions before merging; never force-push shared branches |
 | I-53 | 10-09 | Renaming XE Icon fields to `ic_icon` / `ic_size` would make every XE Icon render nothing | Element grouping renders `ic_*` fields as one cell (a `<p>` each); the decorator read one value per row. The saved property names change too | ✅ Decorator reads grouped cells and old markup. ⏳ Authors re-select Icon + Size on the 4 existing XE Icon blocks before republishing |
+| I-54 | 10-09 | Other project: XE Icon block showed a Font Awesome error / no icons after copying | `scripts/icons.js` (which registers the icons) wasn't copied — the copy checklist listed it only in passing | ✅ Checklist now lists `scripts/icons.js` + `scripts/components/icons/` as required, with the reason; `scripts/utils/primitive.js` added |
 
 ### Content, Universal Editor & publishing
 
