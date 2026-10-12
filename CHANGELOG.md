@@ -8,7 +8,8 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-12 — XE Icon guide removed
 
-Branch `docs/remove-xe-icon-guide` — PR open for review, **not merged yet**. Docs only.
+[#25](https://github.com/aemsitestrial/rapidwhale27661/pull/25), merged into `main` on 2026-10-12 at the user's request.
+Docs only. Checks: build ✅ · AEM PageSpeed 99.
 
 - `docs/xe-icon.md` (added in #24) removed at the user's request — the team uses Storybook for
   XE Icon instead. Its links in DEVELOPMENT.md, AGENTS.md and the UE authoring guide are removed.
