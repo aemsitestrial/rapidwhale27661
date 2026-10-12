@@ -274,6 +274,7 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   Storybook runs locally (`npm run storybook`) — it isn't hosted anywhere yet. The user actually
   wanted a written guide to copy with the block → `docs/xe-icon.md`.
 - Follow-up option (not done): publish the built Storybook as a shared site so the team has a link.
+- PR #24 (docs only) — build ✅, PageSpeed 99; merged at the user's request.
 
 ---
 

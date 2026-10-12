@@ -8,7 +8,8 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-12 — XE Icon guide document
 
-Branch `docs/xe-icon-guide` — PR open for review, **not merged yet**. Docs only.
+[#24](https://github.com/aemsitestrial/rapidwhale27661/pull/24), merged into `main` on 2026-10-12 at the user's request.
+Docs only. Checks: build ✅ · AEM PageSpeed 99.
 
 - New **`docs/xe-icon.md`** — one guide that travels with the block: what it is, authoring
   (fields, icon list, tips), sizes / color / accessibility, where it's used, how it works (files,
