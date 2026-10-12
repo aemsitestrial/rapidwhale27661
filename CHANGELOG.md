@@ -6,6 +6,16 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-12 — Local test page for XE Icon
+
+[#27](https://github.com/aemsitestrial/rapidwhale27661/pull/27), merged into `main` on 2026-10-12 at the user's request.
+No site code changes. Checks: build ✅ · AEM PageSpeed 99.
+
+- New **`drafts/xe-icon.html`**: a local test page with XE Icon blocks in the markup Universal
+  Editor delivers (grouped `ic_` cell) — default, xs–xl, several icons, edge cases. Open it with
+  `npx -y @adobe/aem-cli up --html-folder drafts` → `http://localhost:3000/drafts/xe-icon`.
+- DEVELOPMENT.md: "Testing a block on the local dev server"; AGENTS.md: the command.
+
 ## 2026-10-12 — XE Icon guide removed
 
 [#25](https://github.com/aemsitestrial/rapidwhale27661/pull/25), merged into `main` on 2026-10-12 at the user's request.

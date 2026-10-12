@@ -51,6 +51,7 @@ bug/issue we hit — check it before debugging, and log new ones there), and
 ```bash
 npm install                 # dependencies (also builds Commerce drop-ins)
 npx -y @adobe/aem-cli up --no-open --forward-browser-logs   # local dev server on :3000
+npx -y @adobe/aem-cli up --html-folder drafts               # + local test pages, e.g. /drafts/xe-icon
 npm run lint                # ESLint + Stylelint (CI)
 npm test                    # Vitest unit tests (CI)
 npm run storybook           # Storybook on :6006

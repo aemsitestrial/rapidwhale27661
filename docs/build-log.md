@@ -281,6 +281,18 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   restart) was given as a prompt for that project.
 - PR #25 (docs only) — build ✅, PageSpeed 99; merged at the user's request.
 
+### 2026-10-12 — Local test page for XE Icon; PR #26 closed
+
+- PR #26 (`feature/xe-icon-path-b`, the Ignite bundle / Path B) reviewed: it imported
+  `scripts/ignite/…` files that don't exist in this repo, removed `decoratePrimitive` /
+  `buildPrimitive` (XE Banner / XE Feature Cards import them) and was based on an older `main`
+  (4 conflicts; build failed). Decision (user, option B): **Path B stays in the other project; this
+  repo stays the Path A sandbox.** PR closed unmerged; branch deleted.
+- The user asked how to test XE Icon on localhost:3000 like their `/logo` page → `drafts/xe-icon.html`
+  (served with `aem up --html-folder drafts`). Checked on the local server: 13 icons render at the
+  right sizes, the unknown icon renders nothing, no errors.
+- PR #27 — build ✅, PageSpeed 99, test page served on the branch preview; merged at the user's request.
+
 ---
 
 ## Issue tracker
