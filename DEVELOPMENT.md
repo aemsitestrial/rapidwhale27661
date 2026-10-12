@@ -772,6 +772,20 @@ tested here and then copied by hand to another project, so every primitive PR en
 - on a project that loads `@ignite/web` (Path B): don't copy our `scripts/components/xe-*.js` —
   change the component import line at the top of the block file instead.
 
+#### Testing a block on the local dev server (localhost:3000)
+
+Two ways, both with your local code:
+- **A real page:** author a page in Universal Editor (e.g. `/xe-icon`, or the existing `/ignite`),
+  publish it to preview, run `npx -y @adobe/aem-cli up` and open `http://localhost:3000/<page>` —
+  the content comes from preview, the code from your computer.
+- **A local test page (no authoring):** `drafts/<block>.html` holds the block markup exactly as
+  Universal Editor delivers it (prefixed fields = one grouped cell, a `<p>` per field). Run
+  `npx -y @adobe/aem-cli up --html-folder drafts` and open `http://localhost:3000/drafts/<block>`.
+  Available: **`drafts/xe-icon.html`** — default, all sizes, several icons, and edge cases (size
+  skipped, old one-row markup with the removed color, unknown icon). Copy it to the other project
+  with the block to test there the same way. (It's also served at `/drafts/xe-icon.html` on the
+  branch preview.)
+
 ### Block adapter pattern
 ```js
 import '../../scripts/components/xe-banner.js';
