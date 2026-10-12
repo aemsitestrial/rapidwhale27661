@@ -8,7 +8,8 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-12 — Local test page for XE Icon
 
-Branch `test/xe-icon-local-page` — PR open for review, **not merged yet**. No site code changes.
+[#27](https://github.com/aemsitestrial/rapidwhale27661/pull/27), merged into `main` on 2026-10-12 at the user's request.
+No site code changes. Checks: build ✅ · AEM PageSpeed 99.
 
 - New **`drafts/xe-icon.html`**: a local test page with XE Icon blocks in the markup Universal
   Editor delivers (grouped `ic_` cell) — default, xs–xl, several icons, edge cases. Open it with

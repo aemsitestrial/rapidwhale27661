@@ -291,6 +291,7 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
 - The user asked how to test XE Icon on localhost:3000 like their `/logo` page → `drafts/xe-icon.html`
   (served with `aem up --html-folder drafts`). Checked on the local server: 13 icons render at the
   right sizes, the unknown icon renders nothing, no errors.
+- PR #27 — build ✅, PageSpeed 99, test page served on the branch preview; merged at the user's request.
 
 ---
 
