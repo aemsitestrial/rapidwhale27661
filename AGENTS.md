@@ -10,8 +10,7 @@ two files below; this file only points to them so every agent and skill starts f
 
 Also useful: **`CHANGELOG.md`** (what's been built, open items), **`docs/build-log.md`** (every
 bug/issue we hit — check it before debugging, and log new ones there), and
-**`docs/ue-authoring-guide.md`** (how authors use the XE blocks in Universal Editor). Per-block
-guides: **`docs/xe-icon.md`**.
+**`docs/ue-authoring-guide.md`** (how authors use the XE blocks in Universal Editor).
 
 ## Non-negotiables (summary — details in the files above)
 - **Workflow:** feature branch → PR → `main`. Never push straight to `main`.

@@ -275,6 +275,11 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   wanted a written guide to copy with the block → `docs/xe-icon.md`.
 - Follow-up option (not done): publish the built Storybook as a shared site so the team has a link.
 - PR #24 (docs only) — build ✅, PageSpeed 99; merged at the user's request.
+- Same day: the user's Storybook covers XE Icon, so the guide isn't needed — `docs/xe-icon.md`
+  removed with its links (docs only). Storybook troubleshooting for the other project (Storybook
+  10.6: empty sidebar → `stories` glob; Markdown table in MDX → `remark-gfm`; "Connection lost" →
+  restart) was given as a prompt for that project.
+- PR #25 (docs only) — build ✅, PageSpeed 99; merged at the user's request.
 
 ---
 

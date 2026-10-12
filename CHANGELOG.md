@@ -6,6 +6,16 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-12 — XE Icon guide removed
+
+[#25](https://github.com/aemsitestrial/rapidwhale27661/pull/25), merged into `main` on 2026-10-12 at the user's request.
+Docs only. Checks: build ✅ · AEM PageSpeed 99.
+
+- `docs/xe-icon.md` (added in #24) removed at the user's request — the team uses Storybook for
+  XE Icon instead. Its links in DEVELOPMENT.md, AGENTS.md and the UE authoring guide are removed.
+  The XE Icon spec (DEVELOPMENT.md), the copy checklist ("Model field prefix rule") and the
+  authoring steps (UE authoring guide § 8) are unchanged.
+
 ## 2026-10-12 — XE Icon guide document
 
 [#24](https://github.com/aemsitestrial/rapidwhale27661/pull/24), merged into `main` on 2026-10-12 at the user's request.
