@@ -48,6 +48,58 @@ bug/issue we hit — check it before debugging, and log new ones there), and
 - **PR description:** follow `.github/pull_request_template.md` (issue link, Before/After test URLs)
   and include a `URL for testing:` section with the branch preview URL:
   `https://<branch-with-dashes>--rapidwhale27661--aemsitestrial.aem.page/`
+- **Commits and PRs:** follow the Commit Message Convention below. **No AI attribution lines** in
+  commits or PR descriptions.
+
+## Commit Message Convention
+
+All commits in this project **must** follow [Conventional Commits](https://www.conventionalcommits.org/). Read this before every commit or push.
+
+### Format
+
+```
+<type>(<scope>): <short description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Required types
+
+| Type | When to use |
+|---|---|
+| `feat` | New feature or block |
+| `fix` | Bug fix |
+| `docs` | Documentation only |
+| `style` | Formatting, no logic change |
+| `refactor` | Code restructure, no feature/fix |
+| `test` | Adding or updating tests |
+| `chore` | Build scripts, config, tooling |
+| `revert` | Reverting a previous commit |
+
+### Rules
+
+- **Type and scope are lowercase.** e.g. `feat(xe-icon):` not `Feat(XE-Icon):`
+- **Scope is the block or area changed.** e.g. `feat(xe-icon-button):`, `fix(xe-logo):`
+- **Description is imperative, present tense.** e.g. `add disabled toggle` not `added disabled toggle`
+- **Include the ticket ID in the description when there is one.** e.g.
+  `feat(xe-icon-button): CT54-879 — add xe-icon-button primitive block`. Ask the user for it;
+  leave it out if there's no ticket.
+- **Breaking changes** get a `!` after the scope and a `BREAKING CHANGE:` footer.
+- **No AI attribution lines.** No `Co-Authored-By: Claude` or `Generated with Claude Code` — in
+  commits **or PR descriptions**. Author is Adrian Bartolome only.
+- **Merging a PR whose commits break these rules:** squash-merge it with a message that follows
+  them (no force-push needed).
+
+### Examples
+
+```
+feat(xe-icon-button): CT54-879 — add xe-icon-button primitive block
+fix(xe-icon-button): rename ic_icon to classes_icon for consistency
+docs(xe-logo): update authoring model table
+refactor(primitive): export getLinkBlockProps as named export
+```
 
 ## Commands
 ```bash

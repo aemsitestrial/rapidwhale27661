@@ -16,6 +16,8 @@ Branch `fix/xe-icon-button-text-link` — PR open for review, **not merged yet**
   with the real markup.
 - Correction: `classes_icon` **is** delivered as a class (build-log I-56 corrected); stories are
   back to the icon as a class. Authoring guide: how to enter a Link.
+- AGENTS.md: **Commit Message Convention** added (Conventional Commits, ticket ID when there is one,
+  no AI attribution lines in commits or PRs; squash-merge PRs whose commits don't follow it).
 
 ## 2026-10-13 — Fix: XE Icon Button empty without a link; old markup readable again
 
