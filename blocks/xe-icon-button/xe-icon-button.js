@@ -26,12 +26,12 @@ import {
   ICON_BUTTON_SIZES, ICON_BUTTON_TREATMENTS,
 } from '../../scripts/components/xe-icon-button.js';
 import { safeHref } from '../../scripts/components/xe-link-helpers.js';
-import { buildIcon } from '../xe-icon/xe-icon.js';
+import { buildIcon, ICON_OPTIONS } from '../xe-icon/xe-icon.js';
 import { getLinkBlockProps } from '../../scripts/utils/primitive.js';
 
 export const DEFAULTS = {
   ariaLabel: '',
-  icon: 'faGear',
+  icon: ICON_OPTIONS[0],
   size: 'md',
   treatment: 'default',
   disabled: false,
@@ -42,10 +42,11 @@ export const DEFAULTS = {
 export const NEW_WINDOW_NOTE = '(opens in a new window)';
 
 // link_cta + link_ctaText → read from <a href="…">label</a>
-// classes_size, classes_treatment, classes_disabled, classes_target → read from block classList
+// classes_icon, classes_size, classes_treatment, classes_disabled, classes_target → block classList
 const FIELDS = {
   cta: DEFAULTS.href,
   ctaText: DEFAULTS.ariaLabel,
+  icon: ICON_OPTIONS,
   size: ICON_BUTTON_SIZES,
   treatment: ICON_BUTTON_TREATMENTS,
   disabled: false,
@@ -83,15 +84,8 @@ export function buildPrimitive(props = {}) {
  */
 export default function decorate(block, props = {}) {
   const {
-    cta, ctaText, size, treatment, disabled, target,
+    cta, ctaText, icon, size, treatment, disabled, target,
   } = getLinkBlockProps(block, FIELDS);
-
-  // ic_icon: FA name — scan only leaf elements so concatenated text doesn't bleed across values
-  const iconText = [block, ...block.querySelectorAll('*')]
-    .filter((el) => el.childElementCount === 0)
-    .map((el) => el.textContent.trim())
-    .find((t) => /^fa[A-Z]\w*$/.test(t));
-  const icon = props.icon || iconText || DEFAULTS.icon;
 
   const button = buildPrimitive({
     ariaLabel: ctaText, icon, size, treatment, disabled, href: cta, target, ...props,

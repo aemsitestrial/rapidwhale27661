@@ -6,14 +6,15 @@ import model from './_xe-icon-button.json';
 /*
  * Builds the markup Universal Editor delivers for an xe-icon-button block, before decoration.
  * link_cta + link_ctaText → <p><a href="...">label</a></p> (bare <p><a>label</a></p> when no href)
- * ic_icon → <p>faIconName</p>
- * classes_size, classes_treatment, classes_disabled, classes_target → CSS classes on the block div
+ * classes_icon, classes_size, classes_treatment, classes_disabled, classes_target → CSS classes
  */
 export function buildBlock({
   ariaLabel = '', icon = '', size = '', treatment = '', href = '', target = '', disabled = false,
 } = {}) {
   const block = document.createElement('div');
   const classes = ['xe-icon-button', 'block'];
+  // icon is classes_icon — stored as CSS class (toClassName-normalized, e.g. faGear → fagear)
+  if (icon) classes.push(icon.toLowerCase());
   if (size) classes.push(size);
   if (treatment) classes.push(treatment);
   if (disabled) classes.push('disabled');
@@ -30,13 +31,6 @@ export function buildBlock({
     if (href) a.href = href;
     a.textContent = ariaLabel;
     p.append(a);
-    cell.append(p);
-  }
-
-  // ic_icon → content field, <p> with FA name
-  if (icon) {
-    const p = document.createElement('p');
-    p.textContent = icon;
     cell.append(p);
   }
 
@@ -70,7 +64,7 @@ export default {
   argTypes: {
     ariaLabel: { name: 'link_ctaText', description: 'Accessible Label (required)', control: 'text' },
     icon: {
-      name: 'ic_icon', description: 'Icon', control: 'select', options: options('ic_icon'),
+      name: 'classes_icon', description: 'Icon', control: 'select', options: options('classes_icon'),
     },
     size: {
       name: 'classes_size', description: 'Size', control: 'select', options: options('classes_size'),
@@ -88,7 +82,7 @@ export default {
   },
   args: {
     ariaLabel: template.link_ctaText,
-    icon: template.ic_icon,
+    icon: template.classes_icon,
     size: template.classes_size,
     treatment: template.classes_treatment,
   },

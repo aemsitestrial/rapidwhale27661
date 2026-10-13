@@ -12,7 +12,7 @@
               "model": "xe-icon-button",
               "link_cta": "",
               "link_ctaText": "Action",
-              "ic_icon": "faGear",
+              "classes_icon": "faGear",
               "classes_size": "md",
               "classes_treatment": "default",
               "classes_disabled": false
@@ -43,7 +43,7 @@
         },
         {
           "component": "select",
-          "name": "ic_icon",
+          "name": "classes_icon",
           "label": "Icon",
           "valueType": "string",
           "value": "faGear",

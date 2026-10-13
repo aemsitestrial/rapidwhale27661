@@ -32,7 +32,7 @@ describe('xe-icon-button block', () => {
     it('has the agreed fields in the right groups, in order, matching DEFAULTS', () => {
       const names = fields.map((f) => f.name);
       expect(names).toEqual([
-        'link_cta', 'link_ctaText', 'ic_icon',
+        'link_cta', 'link_ctaText', 'classes_icon',
         'classes_size', 'classes_treatment', 'classes_disabled', 'classes_target',
       ]);
       expect(Object.keys(DEFAULTS)).toEqual([
@@ -40,7 +40,7 @@ describe('xe-icon-button block', () => {
       ]);
       expect(Object.keys(template)).toEqual([
         'name', 'model',
-        'link_cta', 'link_ctaText', 'ic_icon',
+        'link_cta', 'link_ctaText', 'classes_icon',
         'classes_size', 'classes_treatment', 'classes_disabled',
       ]);
     });
@@ -57,8 +57,8 @@ describe('xe-icon-button block', () => {
     });
 
     it('offers every registered icon and the documented sizes / treatments as dropdowns', () => {
-      expect(field('ic_icon').component).toBe('select');
-      expect([...values('ic_icon')].sort()).toEqual([...registeredIconNames()].sort());
+      expect(field('classes_icon').component).toBe('select');
+      expect([...values('classes_icon')].sort()).toEqual([...registeredIconNames()].sort());
       expect(values('classes_size')).toEqual(['xxs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']);
       expect(field('classes_size').value).toBe('md');
       expect(values('classes_treatment')).toEqual(['default', 'filled', 'outlined']);
@@ -77,7 +77,7 @@ describe('xe-icon-button block', () => {
     it('renders the palette template as a labelled <button>', () => {
       const block = render({
         ariaLabel: template.link_ctaText,
-        icon: template.ic_icon,
+        icon: template.classes_icon,
         size: template.classes_size,
         treatment: template.classes_treatment,
       });
@@ -121,18 +121,17 @@ describe('xe-icon-button block', () => {
       expect(button.getAttribute('aria-label')).toBe('Settings');
     });
 
-    it('renders nothing without the required label or a registered icon', () => {
+    it('renders nothing without the required label', () => {
       expect(render({ icon: 'faGear' }).children).toHaveLength(0);
-      expect(render({ ariaLabel: 'Settings', icon: 'faUnknown' }).children).toHaveLength(0);
     });
 
-    it('reads the block UE delivers: link+label from <a>, icon from <p>, options from classList', () => {
+    it('reads the block UE delivers: link+label from <a>, icon+options from classList', () => {
       const block = buildBlock({
         ariaLabel: 'View profile', icon: 'faUser', size: 'lg', treatment: 'outlined', href: '/profile', target: '_blank',
       });
       expect(block.children).toHaveLength(1);
-      // Two <p> elements: one wrapping the <a>, one for ic_icon
-      expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(2);
+      // One <p> wrapping the <a>; icon is now a CSS class, not a content row
+      expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(1);
       const button = decorate(block);
       expect(button.getAttribute('aria-label')).toBe(`View profile ${NEW_WINDOW_NOTE}`);
       expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faUser');
@@ -142,15 +141,14 @@ describe('xe-icon-button block', () => {
       expect(button.getAttribute('target')).toBe('_blank');
     });
 
-    it('reads icon from any <p> by FA name; size and treatment always from classList', () => {
+    it('reads icon, size and treatment from classList — order irrelevant', () => {
       const block = buildBlock({ ariaLabel: 'Edit', icon: 'faPen', size: 'sm' });
-      const cell = block.firstElementChild.firstElementChild;
-      // Swap <p> order — icon is still found by FA name pattern, not position
-      cell.prepend(cell.lastElementChild);
+      // All options come from classList; no DOM order dependency
       const button = decorate(block);
       expect(button.getAttribute('size')).toBe('sm');
       expect(button.getAttribute('aria-label')).toBe('Edit');
       expect(button.getAttribute('treatment')).toBe('default');
+      expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faPen');
     });
 
     it('drops unsafe links', () => {
