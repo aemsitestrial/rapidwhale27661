@@ -627,7 +627,7 @@
                   "name": "XE Icon Button",
                   "model": "xe-icon-button",
                   "link_cta": "",
-                  "link_ctaText": "Action",
+                  "link_label": "Settings",
                   "classes_icon": "faGear",
                   "classes_size": "md",
                   "classes_treatment": "default",

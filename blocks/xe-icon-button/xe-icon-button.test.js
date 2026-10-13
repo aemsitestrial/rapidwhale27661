@@ -32,7 +32,7 @@ describe('xe-icon-button block', () => {
     it('has the agreed fields in the right groups, in order, matching DEFAULTS', () => {
       const names = fields.map((f) => f.name);
       expect(names).toEqual([
-        'link_cta', 'link_ctaText', 'classes_icon',
+        'link_cta', 'link_label', 'classes_icon',
         'classes_size', 'classes_treatment', 'classes_disabled', 'classes_target',
       ]);
       expect(Object.keys(DEFAULTS)).toEqual([
@@ -40,20 +40,20 @@ describe('xe-icon-button block', () => {
       ]);
       expect(Object.keys(template)).toEqual([
         'name', 'model',
-        'link_cta', 'link_ctaText', 'classes_icon',
+        'link_cta', 'link_label', 'classes_icon',
         'classes_size', 'classes_treatment', 'classes_disabled',
       ]);
     });
 
-    it('has no field name Universal Editor would silently collapse', () => {
-      // link_ctaText is the intentional paired-field name for link_cta — Text suffix is by design
-      const notPaired = fields.filter((f) => !f.name.startsWith('link_') || !f.name.endsWith('Text'));
-      notPaired.forEach((f) => expect(f.name, f.name).not.toMatch(/(Title|Type|MimeType|Alt|Text)$/));
+    it('has no field name Universal Editor would collapse into another (Title / Type / Text / Alt)', () => {
+      // A *Text field is the text OF a link — Universal Editor drops it when the link is empty,
+      // which is how link_ctaText made unlinked icon buttons disappear (build-log I-55)
+      fields.forEach((f) => expect(f.name, f.name).not.toMatch(/(Title|Type|MimeType|Alt|Text)$/));
     });
 
     it('requires the accessible label (Ignite: aria-label is required)', () => {
-      expect(field('link_ctaText').component).toBe('text');
-      expect(field('link_ctaText').required).toBe(true);
+      expect(field('link_label').component).toBe('text');
+      expect(field('link_label').required).toBe(true);
     });
 
     it('offers every registered icon and the documented sizes / treatments as dropdowns', () => {
@@ -76,19 +76,19 @@ describe('xe-icon-button block', () => {
   describe('decorate() — standalone', () => {
     it('renders the palette template as a labelled <button>', () => {
       const block = render({
-        ariaLabel: template.link_ctaText,
+        ariaLabel: template.link_label,
         icon: template.classes_icon,
         size: template.classes_size,
         treatment: template.classes_treatment,
       });
       expect(block.children).toHaveLength(1);
       const button = block.querySelector(':scope > xe-icon-button');
-      expect(button.getAttribute('aria-label')).toBe('Action');
+      expect(button.getAttribute('aria-label')).toBe('Settings');
       expect(button.getAttribute('treatment')).toBe('default');
       expect(button.getAttribute('size')).toBe('md');
       expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faGear');
       expect(control(button).localName).toBe('button');
-      expect(control(button).getAttribute('aria-label')).toBe('Action');
+      expect(control(button).getAttribute('aria-label')).toBe('Settings');
     });
 
     it('renders a link with the chosen treatment and size', () => {
@@ -125,13 +125,59 @@ describe('xe-icon-button block', () => {
       expect(render({ icon: 'faGear' }).children).toHaveLength(0);
     });
 
-    it('reads the block UE delivers: link+label from <a>, icon+options from classList', () => {
+    it('renders WITHOUT a link — the label is its own field (the I-55 bug)', () => {
+      // What Universal Editor delivers for: Link empty, Label "Action", Close icon, Small
+      const block = document.createElement('div');
+      block.className = 'xe-icon-button block faxmark sm default';
+      block.innerHTML = '<div><div><p>Action</p></div></div>';
+      document.body.append(block);
+      const button = decorate(block);
+      expect(button).not.toBeNull();
+      expect(button.getAttribute('aria-label')).toBe('Action');
+      expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faXmark');
+      expect(button.getAttribute('size')).toBe('sm');
+      expect(button.hasAttribute('href')).toBe(false);
+      expect(control(button).localName).toBe('button');
+    });
+
+    it('reads a link and its label as two values of the link group', () => {
+      const block = document.createElement('div');
+      block.className = 'xe-icon-button block fauser md filled';
+      block.innerHTML = '<div><div><p><a href="/profile">/profile</a></p><p>View profile</p></div></div>';
+      const button = decorate(block);
+      expect(button.getAttribute('href')).toBe('/profile');
+      expect(button.getAttribute('aria-label')).toBe('View profile');
+      expect(button.getAttribute('treatment')).toBe('filled');
+    });
+
+    it('still reads blocks saved with the earlier link_ctaText field (label = the link text)', () => {
+      const block = document.createElement('div');
+      block.className = 'xe-icon-button block fagear md default';
+      block.innerHTML = '<div><div><p><a href="/settings">Open settings</a></p></div></div>';
+      const button = decorate(block);
+      expect(button.getAttribute('aria-label')).toBe('Open settings');
+      expect(button.getAttribute('href')).toBe('/settings');
+    });
+
+    it('still reads blocks published with the ib_ fields (real /ignite markup, 2026-10-13)', () => {
+      const block = document.createElement('div');
+      block.className = 'xe-icon-button block';
+      block.innerHTML = '<div><div><p>Settings</p><p>faGear</p><p>md</p><p>default</p><p>_self</p></div></div>';
+      const button = decorate(block);
+      expect(button).not.toBeNull();
+      expect(button.getAttribute('aria-label')).toBe('Settings');
+      expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faGear');
+      expect(button.getAttribute('size')).toBe('md');
+      expect(button.getAttribute('treatment')).toBe('default');
+    });
+
+    it('reads the block UE delivers: link + label in the link cell, icon + options from classList', () => {
       const block = buildBlock({
         ariaLabel: 'View profile', icon: 'faUser', size: 'lg', treatment: 'outlined', href: '/profile', target: '_blank',
       });
       expect(block.children).toHaveLength(1);
-      // One <p> wrapping the <a>; icon is now a CSS class, not a content row
-      expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(1);
+      // The link and the label are two <p>s in one cell; icon / options are CSS classes
+      expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(2);
       const button = decorate(block);
       expect(button.getAttribute('aria-label')).toBe(`View profile ${NEW_WINDOW_NOTE}`);
       expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faUser');

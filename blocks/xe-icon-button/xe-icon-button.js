@@ -27,7 +27,7 @@ import {
 } from '../../scripts/components/xe-icon-button.js';
 import { safeHref } from '../../scripts/components/xe-link-helpers.js';
 import { buildIcon, ICON_OPTIONS } from '../xe-icon/xe-icon.js';
-import { getLinkBlockProps } from '../../scripts/utils/primitive.js';
+import { getLinkBlockProps, defined } from '../../scripts/utils/primitive.js';
 
 export const DEFAULTS = {
   ariaLabel: '',
@@ -41,11 +41,11 @@ export const DEFAULTS = {
 
 export const NEW_WINDOW_NOTE = '(opens in a new window)';
 
-// link_cta + link_ctaText → read from <a href="…">label</a>
+// link_cta → <a href>; link_label → a <p> of its own, so the label exists with or without a link
 // classes_icon, classes_size, classes_treatment, classes_disabled, classes_target → block classList
 const FIELDS = {
   cta: DEFAULTS.href,
-  ctaText: DEFAULTS.ariaLabel,
+  label: DEFAULTS.ariaLabel,
   icon: ICON_OPTIONS,
   size: ICON_BUTTON_SIZES,
   treatment: ICON_BUTTON_TREATMENTS,
@@ -84,12 +84,15 @@ export function buildPrimitive(props = {}) {
  */
 export default function decorate(block, props = {}) {
   const {
-    cta, ctaText, icon, size, treatment, disabled, target,
+    cta, ctaText, label, icon, size, treatment, disabled, target,
   } = getLinkBlockProps(block, FIELDS);
+  // The label is link_label. Fallback for blocks saved with the earlier link_ctaText field: the
+  // link's own text (when it isn't just the URL).
+  const ariaLabel = label || (ctaText && ctaText !== cta ? ctaText : '');
 
-  const button = buildPrimitive({
-    ariaLabel: ctaText, icon, size, treatment, disabled, href: cta, target, ...props,
-  });
+  const button = buildPrimitive(defined({
+    ariaLabel, icon, size, treatment, disabled, href: cta, target, ...props,
+  }));
   block.replaceChildren(...(button ? [button] : []));
   return button;
 }

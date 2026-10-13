@@ -6,6 +6,25 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-13 — Fix: XE Icon Button empty without a link; old markup readable again
+
+Branch `fix/xe-icon-button-label` — PR open for review, **not merged yet**.
+
+- **Bug (from #29):** an XE Icon Button with **no Link** rendered nothing — its label field
+  `link_ctaText` is, for Universal Editor, the text *of* the link, so with no link it was never
+  written, and a button without an accessible label isn't rendered. Fix: the label is now
+  **`link_label`** (required), written with or without a link.
+- **Old markup readable again** (lost in #28 / #29): XE Icon reads its size from content when there
+  is no size class (home page icons were all showing md); XE Icon Button reads the `ib_` grouped
+  markup (`/ignite`'s button was gone) and the `link_ctaText` markup.
+- `getLinkBlockProps` (scripts/utils/primitive.js) reads free-text fields (the label) and, for old
+  markup, dropdown values in content; fields not found are left to `DEFAULTS`.
+- Stories/tests now build the markup Universal Editor really delivers (+6 tests, 176 total).
+- Docs: DEVELOPMENT.md "Model field prefix rule" rewritten for `classes_` / `link_` / `ic_`;
+  AGENTS.md; authoring guide. ⚠️ Re-type the **Accessible Label** of XE Icon Buttons authored with
+  #29's field before republishing.
+- Also records #28 / #29 (merged 2026-10-13 by the team: `classes_` / `link_` / `ic_` fields).
+
 ## 2026-10-12 — Local test page for XE Icon
 
 [#27](https://github.com/aemsitestrial/rapidwhale27661/pull/27), merged into `main` on 2026-10-12 at the user's request.

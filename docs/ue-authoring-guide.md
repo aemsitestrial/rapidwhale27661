@@ -190,6 +190,8 @@ be shown (design system rule).
 | Link | Optional — a page path (`/profile`) or full URL (`https://facebook.com/xcelenergy`) |
 | Open In | Appears once Link is set: Same tab or **New tab** for other websites |
 
+(Since 2026-10-13 the button shows **with or without a Link** — earlier it stayed empty without one. If an older XE Icon Button shows nothing, re-type its Accessible Label and republish.)
+
 **Layout tips**
 - For New tab links, "(opens in a new window)" is added to the label automatically if you didn't
   write it.

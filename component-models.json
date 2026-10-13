@@ -7174,7 +7174,7 @@
       },
       {
         "component": "text",
-        "name": "link_ctaText",
+        "name": "link_label",
         "label": "Accessible Label",
         "description": "Required. Describes the action to screen readers (aria-label).",
         "valueType": "string",

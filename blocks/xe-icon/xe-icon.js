@@ -54,7 +54,12 @@ export default function decorate(block, props = {}) {
     .find((t) => /^fa[A-Z]\w*$/.test(t));
   const icon = props.icon || iconText || DEFAULTS.icon;
   // classes_size: size token applied as a CSS class on the block
-  const size = props.size || ICON_SIZES.find((s) => block.classList.contains(s)) || DEFAULTS.size;
+  // (blocks published before classes_size have the size as a cell value — read that too)
+  const leafTexts = [block, ...block.querySelectorAll('*')]
+    .filter((el) => el.childElementCount === 0)
+    .map((el) => el.textContent.trim());
+  const size = props.size || ICON_SIZES.find((s) => block.classList.contains(s))
+    || ICON_SIZES.find((s) => leafTexts.includes(s)) || DEFAULTS.size;
   const el = buildPrimitive({ icon, size });
   block.replaceChildren(...(el ? [el] : []));
   return el;
