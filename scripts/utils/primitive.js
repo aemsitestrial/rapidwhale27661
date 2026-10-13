@@ -124,6 +124,14 @@ export function getLinkBlockProps(block, defaults, props = {}) {
   const isLinkField = (name) => Object.hasOwn(defaults, `${name}Text`)
     || ['cta', ...LINK_KEYS].includes(name);
 
+  const isLinkText = (name) => name.endsWith('Text') && isLinkField(name.slice(0, -4));
+  const freeTextFields = Object.entries(defaults)
+    .filter(([name, value]) => typeof value === 'string' && !isLinkField(name) && !isLinkText(name));
+  const freeTexts = texts.filter((t) => !isOptionText(t) && !URL_PATTERN.test(t));
+  // A link that isn't a page path or URL (e.g. "test") is written as plain text, before the
+  // other link_ fields (model order) — so extra text values at the front are links, not labels
+  freeTexts.splice(0, Math.max(0, freeTexts.length - freeTextFields.length));
+
   const values = {};
   Object.entries(defaults).forEach(([name, value]) => {
     if (typeof value === 'boolean') {
@@ -139,11 +147,8 @@ export function getLinkBlockProps(block, defaults, props = {}) {
         values[`${name}Text`] = a.textContent.trim();
       }
     } else if (!Object.hasOwn(values, name)) {
-      const text = texts.find((t) => !isOptionText(t) && !URL_PATTERN.test(t));
-      if (text !== undefined) {
-        values[name] = text;
-        texts.splice(texts.indexOf(text), 1);
-      }
+      const text = freeTexts.shift();
+      if (text !== undefined) values[name] = text;
     }
   });
   return { ...values, ...defined(props) };

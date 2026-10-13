@@ -159,6 +159,19 @@ describe('xe-icon-button block', () => {
       expect(button.getAttribute('treatment')).toBe('filled');
     });
 
+    it('a Link that isn\'t a page or URL is plain text — it is not taken as the label (real /ignite)', () => {
+      // Real published /ignite markup, 2026-10-13: Link "test", Accessible Label "Settings"
+      const block = document.createElement('div');
+      block.className = 'xe-icon-button block fagear 2xl outlined blank';
+      block.innerHTML = '<div><div><p>test</p><p>Settings</p></div></div>';
+      const button = decorate(block);
+      expect(button.getAttribute('aria-label')).toBe('Settings');
+      expect(button.hasAttribute('href')).toBe(false);
+      expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faGear');
+      expect(button.getAttribute('size')).toBe('2xl');
+      expect(button.getAttribute('treatment')).toBe('outlined');
+    });
+
     it('still reads blocks saved with the earlier link_ctaText field (label = the link text)', () => {
       const block = document.createElement('div');
       block.className = 'xe-icon-button block fagear md default';
@@ -184,10 +197,9 @@ describe('xe-icon-button block', () => {
       const block = buildBlock({
         ariaLabel: 'View profile', icon: 'faUser', size: 'lg', treatment: 'outlined', href: '/profile', target: '_blank',
       });
-      // The link and the label are two <p>s in one cell; the icon is its own row; the other
-      // options are CSS classes
+      // The link and the label are two <p>s in one cell; the icon and the options are CSS classes
       expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(2);
-      expect(block.children).toHaveLength(2);
+      expect(block.children).toHaveLength(1);
       const button = decorate(block);
       expect(button.getAttribute('aria-label')).toBe(`View profile ${NEW_WINDOW_NOTE}`);
       expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faUser');
@@ -199,7 +211,7 @@ describe('xe-icon-button block', () => {
 
     it('reads icon, size and treatment by content — order irrelevant', () => {
       const block = buildBlock({ ariaLabel: 'Edit', icon: 'faPen', size: 'sm' });
-      // Options come from classList, the icon from its row; no DOM order dependency
+      // Icon and options come from classList; no DOM order dependency
       const button = decorate(block);
       expect(button.getAttribute('size')).toBe('sm');
       expect(button.getAttribute('aria-label')).toBe('Edit');
