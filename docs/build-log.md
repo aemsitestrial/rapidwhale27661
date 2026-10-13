@@ -306,7 +306,12 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   tests passed. → #I-55
 - Fix on `fix/xe-icon-button-label`: label field `link_label`; `getLinkBlockProps` reads free text
   and old-markup values; XE Icon reads size from content as a fallback; stories/tests use real
-  markup; docs updated. Checked: `build:json`, lint, 176 tests.
+  markup; docs updated. Checked: `build:json`, lint, 177 tests.
+- Real Universal Editor output for #29's model (published `/ignite`):
+  `<div class="xe-icon-button sm default"><div><div></div></div><div><div>faXmark</div></div></div>`
+  — the link cell is **empty** (I-55 confirmed) and **`classes_icon` isn't a class** (capital letters)
+  but its own row, so #29's code couldn't find the icon either. The fix reads dropdown values from
+  content as a fallback; this exact markup is now in the tests and stories. → #I-56
 
 ---
 
@@ -373,6 +378,7 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-53 | 10-09 | Renaming XE Icon fields to `ic_icon` / `ic_size` would make every XE Icon render nothing | Element grouping renders `ic_*` fields as one cell (a `<p>` each); the decorator read one value per row. The saved property names change too | ✅ Decorator reads grouped cells and old markup. ⏳ Authors re-select Icon + Size on the 4 existing XE Icon blocks before republishing |
 | I-54 | 10-09 | Other project: XE Icon block showed a Font Awesome error / no icons after copying | `scripts/icons.js` (which registers the icons) wasn't copied — the copy checklist listed it only in passing | ✅ Checklist now lists `scripts/icons.js` + `scripts/components/icons/` as required, with the reason; `scripts/utils/primitive.js` added |
 | I-55 | 10-13 | XE Icon Button rendered nothing when its Link was empty (after #29) | Label field `link_ctaText` = text of the link `link_cta` (field collapse) — not written without a link; button needs a label. Stories built impossible markup, so tests passed | ✅ Label renamed `link_label`; real-markup tests; rule: no `…Text` field names, test in Universal Editor with optional fields empty |
+| I-56 | 10-13 | `classes_icon` (e.g. `faXmark`) isn't added to the block's classes; size / treatment are | Observed in published markup — likely because icon names have capital letters | ✅ `getLinkBlockProps` falls back to content for dropdown values; stories / tests use the real markup |
 
 ### Content, Universal Editor & publishing
 

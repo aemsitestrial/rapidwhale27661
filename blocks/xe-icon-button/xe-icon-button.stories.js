@@ -7,15 +7,15 @@ import model from './_xe-icon-button.json';
  * Builds the markup Universal Editor delivers for an xe-icon-button block, before decoration.
  * link_cta → <p><a href="…">…</a></p>, only when a link is set (Universal Editor writes no link
  *   element when it's empty); link_label → its own <p>, always — both in the one "link" group cell
- * classes_icon, classes_size, classes_treatment, classes_disabled, classes_target → CSS classes
+ * classes_size, classes_treatment, classes_disabled, classes_target → CSS classes on the block
+ * classes_icon → its OWN ROW (Universal Editor doesn't turn "faXmark" into a class — observed on
+ *   the published /ignite page, 2026-10-13)
  */
 export function buildBlock({
   ariaLabel = '', icon = '', size = '', treatment = '', href = '', target = '', disabled = false,
 } = {}) {
   const block = document.createElement('div');
   const classes = ['xe-icon-button', 'block'];
-  // icon is classes_icon — stored as CSS class (toClassName-normalized, e.g. faGear → fagear)
-  if (icon) classes.push(icon.toLowerCase());
   if (size) classes.push(size);
   if (treatment) classes.push(treatment);
   if (disabled) classes.push('disabled');
@@ -43,6 +43,14 @@ export function buildBlock({
 
   row.append(cell);
   block.append(row);
+  // classes_icon → a row with the icon name
+  if (icon) {
+    const iconRow = document.createElement('div');
+    const iconCell = document.createElement('div');
+    iconCell.textContent = icon;
+    iconRow.append(iconCell);
+    block.append(iconRow);
+  }
   return block;
 }
 

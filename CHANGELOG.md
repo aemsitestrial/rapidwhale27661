@@ -19,7 +19,7 @@ Branch `fix/xe-icon-button-label` — PR open for review, **not merged yet**.
   markup (`/ignite`'s button was gone) and the `link_ctaText` markup.
 - `getLinkBlockProps` (scripts/utils/primitive.js) reads free-text fields (the label) and, for old
   markup, dropdown values in content; fields not found are left to `DEFAULTS`.
-- Stories/tests now build the markup Universal Editor really delivers (+6 tests, 176 total).
+- Stories/tests now build the markup Universal Editor really delivers (+7 tests, 177 total). Real `/ignite` markup showed `classes_icon` arrives as its own row, not a class — read from content (build-log I-56).
 - Docs: DEVELOPMENT.md "Model field prefix rule" rewritten for `classes_` / `link_` / `ic_`;
   AGENTS.md; authoring guide. ⚠️ Re-type the **Accessible Label** of XE Icon Buttons authored with
   #29's field before republishing.

@@ -727,7 +727,7 @@ can be copied with only its component import changed (PR #28 / #29):
 
 | Prefix | Universal Editor delivers it as | Use for |
 |---|---|---|
-| **`classes_`** | **CSS classes on the block** ("Element Grouping for Block Options") | Dropdowns and toggles: icon, size, treatment, disabled, target |
+| **`classes_`** | **CSS classes on the block** ("Element Grouping for Block Options") — **but values with capitals (icon names like `faXmark`) arrive as their own row instead** (observed on the published `/ignite`, 2026-10-13) | Dropdowns and toggles: size, treatment, disabled, target — and icon (read from content) |
 | **`link_`** | One cell: the link as `<p><a href>…</a></p>` (**only when a link is set**) + each other `link_` field as its own `<p>` | A link and the text that goes with it (e.g. the accessible label) |
 | **`ic_`** (block's own short prefix) | One cell, a `<p>` per field | Content values, e.g. XE Icon's icon name |
 
@@ -750,9 +750,10 @@ Rules:
    field collapse treats such a field as an attribute of another field — e.g. `link_ctaText` is the
    *text of the link `link_cta`*, and **with no link it isn't written at all**. That's how
    unlinked XE Icon Buttons rendered nothing (build-log I-55). Each block's test checks this.
-6. **Read values by content, never by position**: `classes_` values from the block's classes,
-   `link_` values from the link cell (`getLinkBlockProps` in `scripts/utils/primitive.js`), other
-   values by what they are (an `fa…` name, a size…). Ignore unknown values.
+6. **Read values by content, never by position**: `classes_` values from the block's classes **or,
+   if not there, from content** (icon names arrive as content), `link_` values from the link cell
+   (`getLinkBlockProps` in `scripts/utils/primitive.js`), other values by what they are (an `fa…`
+   name, a size…). Ignore unknown values.
 7. **Renaming fields of a block that's already in use** changes the saved property names: the
    decorator must **keep reading the old markup** (XE Icon and XE Icon Button read every earlier
    format — tested with real published markup), and authors re-pick the values in Universal Editor
