@@ -8,7 +8,7 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-13 — Fix: XE Icon Button label when the Link isn't a page or URL
 
-Branch `fix/xe-icon-button-text-link` — PR open for review, **not merged yet**.
+Branch `fix/xe-icon-button-text-link` — **PR #31**, squash-merged 2026-10-13 (Adrian asked to merge).
 
 - After re-authoring `/ignite` (Link `test`, Label "Settings"), the button rendered but screen
   readers announced **"test"**: a Link that isn't a page path or URL is saved as plain text, and the
