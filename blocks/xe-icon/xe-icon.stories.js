@@ -5,19 +5,19 @@ import model from './_xe-icon.json';
 
 /*
  * Builds the markup Universal Editor delivers for an xe-icon block, before decoration.
- * ic_icon and ic_size are one element group ("ic"), so they arrive as ONE row with ONE cell
- * holding a <p> per field, in model order; empty fields are skipped.
+ * ic_icon arrives as ONE row with ONE cell holding a <p> with the FA name.
+ * classes_size is applied as a CSS class on the block (not a content row).
  */
 export function buildBlock({ icon = '', size = '' } = {}) {
   const block = document.createElement('div');
-  block.className = 'xe-icon block';
+  block.className = ['xe-icon', 'block', ...(size ? [size] : [])].join(' ');
   const row = document.createElement('div');
   const cell = document.createElement('div');
-  [icon, size].filter(Boolean).forEach((value) => {
+  if (icon) {
     const p = document.createElement('p');
-    p.textContent = value;
+    p.textContent = icon;
     cell.append(p);
-  });
+  }
   row.append(cell);
   block.append(row);
   return block;

@@ -83,3 +83,76 @@ export function getBlockProps(el, defaults, overrides = {}, options = {}) {
     ...defined(overrides),
   };
 }
+
+// Normalize a string to a CSS class name (lowercase, non-alphanumeric → hyphen, trim hyphens)
+function toClassName(name) {
+  return typeof name === 'string'
+    ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+    : '';
+}
+
+/**
+ * Reads the properties of a block whose model uses link_ and classes_ field prefixes.
+ *   link_cta + link_ctaText → collapsed into one <a href="{cta}">{ctaText}</a>
+ *   classes_size, classes_... → select, the selected value as a CSS class on the block
+ *   classes_disabled → boolean, class "disabled" present when true
+ * The kind of each field comes from its default value:
+ *   a string with a matching {name}Text key → link field, read from <a>
+ *   false → boolean class toggle
+ *   an array → select, matched against block classList
+ * @param {Element} block - the block element
+ * @param {Object} defaults - default value by field name, without the group prefix
+ * @param {Object} [props] - overrides set by code
+ * @returns {Object} property value by field name
+ */
+export function getLinkBlockProps(block, defaults, props = {}) {
+  const classes = [...block.classList].map(toClassName);
+  const hasClass = (name) => classes.includes(toClassName(String(name)));
+  const links = [...block.querySelectorAll('a')];
+  const values = {};
+  Object.entries(defaults).forEach(([name, value]) => {
+    if (typeof value === 'boolean') {
+      values[name] = hasClass(name);
+    } else if (Array.isArray(value)) {
+      values[name] = value.find((option) => option && hasClass(option)) ?? value[0];
+    } else if (Object.hasOwn(defaults, `${name}Text`)) {
+      const a = links.shift();
+      values[name] = a?.getAttribute('href') || value;
+      values[`${name}Text`] = a?.textContent.trim() || defaults[`${name}Text`];
+    } else if (!Object.hasOwn(values, name)) {
+      values[name] = value;
+    }
+  });
+  return { ...values, ...props };
+}
+
+/**
+ * Returns true when href points to a different hostname (external link).
+ * @param {string} href
+ * @returns {boolean}
+ */
+export function isExternalLink(href) {
+  if (!href) return false;
+  try {
+    const url = new URL(href, window.location.href);
+    return ['http:', 'https:'].includes(url.protocol) && url.hostname !== window.location.hostname;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Resolves linkType and target for external links:
+ * an external href gets linkType "external" and target "_blank" unless the author overrode them.
+ * @param {Object} props - block props with href, linkType, target
+ * @returns {Object} props with resolved linkType and target
+ */
+export function resolveLinkProps(props) {
+  if (!isExternalLink(props.href)) return props;
+  const linkType = String(props.linkType || 'auto').toLowerCase();
+  return {
+    ...props,
+    linkType: linkType === 'auto' ? 'external' : props.linkType,
+    target: props.target || '_blank',
+  };
+}
