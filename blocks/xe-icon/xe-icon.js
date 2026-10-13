@@ -1,5 +1,8 @@
 import '../../scripts/icons.js';
-import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.js';
+import { isIconRegistered, ICON_SIZES, registeredIconNames } from '../../scripts/components/xe-icon.js';
+
+// All registered icon names — used by xe-icon-button (classes_icon) to read the icon from classList
+export const ICON_OPTIONS = registeredIconNames();
 
 /*
  * xe-icon — standalone block for <xe-icon> (Ignite: Design System Primitives › Media › Icon),

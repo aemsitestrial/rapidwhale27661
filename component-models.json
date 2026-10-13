@@ -7182,7 +7182,7 @@
       },
       {
         "component": "select",
-        "name": "ic_icon",
+        "name": "classes_icon",
         "label": "Icon",
         "valueType": "string",
         "value": "faGear",
