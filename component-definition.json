@@ -610,7 +610,7 @@
                   "name": "XE Icon",
                   "model": "xe-icon",
                   "ic_icon": "faArrowRight",
-                  "ic_size": "md"
+                  "classes_size": "md"
                 }
               }
             }
@@ -626,11 +626,12 @@
                 "template": {
                   "name": "XE Icon Button",
                   "model": "xe-icon-button",
-                  "ib_ariaLabel": "Settings",
-                  "ib_icon": "faGear",
-                  "ib_size": "md",
-                  "ib_treatment": "default",
-                  "ib_target": "_self"
+                  "link_cta": "",
+                  "link_ctaText": "Action",
+                  "ic_icon": "faGear",
+                  "classes_size": "md",
+                  "classes_treatment": "default",
+                  "classes_disabled": false
                 }
               }
             }

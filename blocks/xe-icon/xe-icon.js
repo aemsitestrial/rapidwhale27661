@@ -1,6 +1,5 @@
 import '../../scripts/icons.js';
 import { isIconRegistered, ICON_SIZES } from '../../scripts/components/xe-icon.js';
-import { getBlockProps } from '../../scripts/utils/primitive.js';
 
 /*
  * xe-icon — standalone block for <xe-icon> (Ignite: Design System Primitives › Media › Icon),
@@ -11,11 +10,8 @@ import { getBlockProps } from '../../scripts/utils/primitive.js';
  *                                   cell to this primitive (XE Banner, XE Feature Cards)
  * Precedence: props > authored values > DEFAULTS.
  *
- * Fields: ic_icon, ic_size — the two Ignite props, in the "ic" element group, so Universal Editor
- * delivers them as ONE cell with a <p> per field (aem.live "Element grouping"). Authored values
- * are read by the shared getBlockProps (scripts/utils/primitive.js) — by content (an fa… name →
- * icon, a size option → size), never by position; anything else — e.g. an old color value — is
- * ignored. Blocks published before the rename (one row per field) are read too.
+ * Fields: ic_icon (content field — FA name as text), classes_size (CSS class on block).
+ * ic_icon is read from the block's first <p> text content; classes_size from block.classList.
  * The icon inherits the surrounding text color (Ignite).
  *
  * Accessibility: the icon is always decorative (aria-hidden) — Ignite has no label prop; the
@@ -25,14 +21,11 @@ import { getBlockProps } from '../../scripts/utils/primitive.js';
  * (registers the icons — required), scripts/components/xe-icon.js and scripts/components/icons/.
  */
 
-// Ordered to match the model fields (ic_icon, ic_size)
+// Ordered to match the model fields (ic_icon, classes_size)
 export const DEFAULTS = {
   icon: '',
   size: 'md',
 };
-
-// Allowed values of each dropdown field — how getBlockProps recognizes them
-const OPTIONS = { size: ICON_SIZES };
 
 export function buildPrimitive(props = {}) {
   const { icon, size } = { ...DEFAULTS, ...props };
@@ -43,14 +36,25 @@ export function buildPrimitive(props = {}) {
   return el;
 }
 
+// Alias used by xe-icon-button and other compositions
+export { buildPrimitive as buildIcon };
+
 /**
  * Renders the icon in place of the element's content and returns it (or null when the icon
  * isn't registered, e.g. "none").
  */
 export default function decorate(block, props = {}) {
-  const icon = buildPrimitive(getBlockProps(block, DEFAULTS, props, OPTIONS));
-  block.replaceChildren(...(icon ? [icon] : []));
-  return icon;
+  // ic_icon: FA name — scan only leaf elements so concatenated text doesn't bleed across values
+  const iconText = [block, ...block.querySelectorAll('*')]
+    .filter((el) => el.childElementCount === 0)
+    .map((el) => el.textContent.trim())
+    .find((t) => /^fa[A-Z]\w*$/.test(t));
+  const icon = props.icon || iconText || DEFAULTS.icon;
+  // classes_size: size token applied as a CSS class on the block
+  const size = props.size || ICON_SIZES.find((s) => block.classList.contains(s)) || DEFAULTS.size;
+  const el = buildPrimitive({ icon, size });
+  block.replaceChildren(...(el ? [el] : []));
+  return el;
 }
 
 export { decorate as decoratePrimitive };

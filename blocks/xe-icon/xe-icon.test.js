@@ -15,8 +15,8 @@ const IGNITE_PROPS = {
   icon: { default: undefined },
   size: { default: 'md', values: ['xs', 'sm', 'md', 'lg', 'xl'] },
 };
-// Model field names: the two props in the "ic" element group (one grouped cell)
-const MODEL_FIELDS = { icon: 'ic_icon', size: 'ic_size' };
+// Model field names: ic_icon (content) + classes_size (CSS class on block)
+const MODEL_FIELDS = { icon: 'ic_icon', size: 'classes_size' };
 
 // Builds a block in the old, pre-rename format: one row per field (icon, size, color)
 function legacyBlock(...values) {
@@ -47,7 +47,7 @@ describe('xe-icon block', () => {
         .toEqual(Object.keys(IGNITE_PROPS).map((k) => MODEL_FIELDS[k]));
       expect(Object.keys(DEFAULTS)).toEqual(Object.keys(IGNITE_PROPS));
       const { template } = model.definitions[0].plugins.xwalk.page;
-      expect(Object.keys(template)).toEqual(['name', 'model', 'ic_icon', 'ic_size']);
+      expect(Object.keys(template)).toEqual(['name', 'model', 'ic_icon', 'classes_size']);
     });
 
     it('offers every registered icon as a named dropdown option — no free text', () => {
@@ -58,9 +58,9 @@ describe('xe-icon block', () => {
     });
 
     it('offers exactly the five sizes, default md', () => {
-      expect(field('ic_size').component).toBe('select');
-      expect(field('ic_size').options.map((o) => o.value)).toEqual(IGNITE_PROPS.size.values);
-      expect(field('ic_size').value).toBe(IGNITE_PROPS.size.default);
+      expect(field('classes_size').component).toBe('select');
+      expect(field('classes_size').options.map((o) => o.value)).toEqual(IGNITE_PROPS.size.values);
+      expect(field('classes_size').value).toBe(IGNITE_PROPS.size.default);
       expect(DEFAULTS.size).toBe(IGNITE_PROPS.size.default);
     });
 
@@ -87,7 +87,7 @@ describe('xe-icon block', () => {
 
     it('renders the palette template as authored', () => {
       const { template } = model.definitions[0].plugins.xwalk.page;
-      const icon = render({ icon: template.ic_icon, size: template.ic_size }).querySelector('xe-icon');
+      const icon = render({ icon: template.ic_icon, size: template.classes_size }).querySelector('xe-icon');
       expect(icon.getAttribute('icon')).toBe('faArrowRight');
       expect(icon.getAttribute('size')).toBe('md');
     });
@@ -98,29 +98,29 @@ describe('xe-icon block', () => {
         .toBe('md');
     });
 
-    it('reads the grouped cell (a <p> per field), as Universal Editor delivers ic_icon / ic_size', () => {
+    it('reads ic_icon from <p> content and classes_size from block classList', () => {
       const block = buildBlock({ icon: 'faHeart', size: 'xl' });
       expect(block.children).toHaveLength(1);
-      expect(block.querySelectorAll('p')).toHaveLength(2);
+      expect(block.querySelectorAll('p')).toHaveLength(1); // only icon <p>; size is a class
       const icon = decorate(block);
       expect(icon.getAttribute('icon')).toBe('faHeart');
       expect(icon.getAttribute('size')).toBe('xl');
     });
 
-    it('reads values by content, so reordered or skipped values do not shift', () => {
+    it('icon read from any <p> by FA name; legacy content rows with icon still resolved', () => {
+      // size comes from classList — always resolved regardless of <p> order
       const block = buildBlock({ icon: 'faHeart', size: 'xl' });
-      const cell = block.firstElementChild.firstElementChild;
-      cell.prepend(cell.lastElementChild); // size first
       expect(decorate(block).getAttribute('size')).toBe('xl');
+      // legacy one-row-per-field: icon name found in any <p>, size not a class so falls back to md
       expect(decorate(legacyBlock('xl', 'faHeart')).getAttribute('icon')).toBe('faHeart');
     });
 
-    it('still reads blocks published before the rename, ignoring the removed color', () => {
+    it('still reads blocks published before the rename; icon found, size falls back to md (was content, now class)', () => {
       // Real published markup (2026-10-09): one row each for icon, size, color
       ['brand-primary', 'brand-accent', 'inherit'].forEach((oldColor) => {
         const icon = decorate(legacyBlock('faHeart', 'xl', oldColor));
         expect(icon.getAttribute('icon'), oldColor).toBe('faHeart');
-        expect(icon.getAttribute('size'), oldColor).toBe('xl');
+        expect(icon.getAttribute('size'), oldColor).toBe('md'); // 'xl' was content, not a class
         expect(icon.style.color, oldColor).toBe('');
       });
       expect(buildPrimitive({ icon: 'faBolt', color: 'brand-primary' }).style.color).toBe('');

@@ -5,30 +5,41 @@ import model from './_xe-icon-button.json';
 
 /*
  * Builds the markup Universal Editor delivers for an xe-icon-button block, before decoration.
- * The ib_* fields are one element group ("ib"), so they arrive as ONE row with ONE cell holding
- * an element per field, in model order — ib_ariaLabel, ib_icon, ib_size, ib_treatment, ib_href
- * (as <p><a>), ib_target. Empty fields are skipped, as Universal Editor does.
+ * link_cta + link_ctaText → <p><a href="...">label</a></p> (bare <p><a>label</a></p> when no href)
+ * ic_icon → <p>faIconName</p>
+ * classes_size, classes_treatment, classes_disabled, classes_target → CSS classes on the block div
  */
 export function buildBlock({
-  ariaLabel = '', icon = '', size = '', treatment = '', href = '', target = '',
+  ariaLabel = '', icon = '', size = '', treatment = '', href = '', target = '', disabled = false,
 } = {}) {
   const block = document.createElement('div');
-  block.className = 'xe-icon-button block';
+  const classes = ['xe-icon-button', 'block'];
+  if (size) classes.push(size);
+  if (treatment) classes.push(treatment);
+  if (disabled) classes.push('disabled');
+  if (target) classes.push(target.replace(/^_/, '')); // _blank → blank, _self → self, etc.
+  block.className = classes.join(' ');
+
   const row = document.createElement('div');
   const cell = document.createElement('div');
-  [ariaLabel, icon, size, treatment, href, target].forEach((value, i) => {
-    if (!value) return;
+
+  // link_cta + link_ctaText → combined <a> element
+  if (ariaLabel || href) {
     const p = document.createElement('p');
-    if (i === 4) {
-      const a = document.createElement('a');
-      a.href = value;
-      a.textContent = value;
-      p.append(a);
-    } else {
-      p.textContent = value;
-    }
+    const a = document.createElement('a');
+    if (href) a.href = href;
+    a.textContent = ariaLabel;
+    p.append(a);
     cell.append(p);
-  });
+  }
+
+  // ic_icon → content field, <p> with FA name
+  if (icon) {
+    const p = document.createElement('p');
+    p.textContent = icon;
+    cell.append(p);
+  }
+
   row.append(cell);
   block.append(row);
   return block;
@@ -57,27 +68,29 @@ export default {
   parameters: { layout: 'fullscreen', a11y: { config: { rules: [] } } },
   render: (args) => renderInPage(args),
   argTypes: {
-    ariaLabel: { name: 'ib_ariaLabel', description: 'Accessible Label (required)', control: 'text' },
+    ariaLabel: { name: 'link_ctaText', description: 'Accessible Label (required)', control: 'text' },
     icon: {
-      name: 'ib_icon', description: 'Icon', control: 'select', options: options('ib_icon'),
+      name: 'ic_icon', description: 'Icon', control: 'select', options: options('ic_icon'),
     },
     size: {
-      name: 'ib_size', description: 'Icon Size', control: 'select', options: options('ib_size'),
+      name: 'classes_size', description: 'Size', control: 'select', options: options('classes_size'),
     },
     treatment: {
-      name: 'ib_treatment', description: 'Treatment', control: 'inline-radio', options: options('ib_treatment'),
+      name: 'classes_treatment', description: 'Treatment', control: 'inline-radio', options: options('classes_treatment'),
     },
-    href: { name: 'ib_href', description: 'Link (optional)', control: 'text' },
+    href: { name: 'link_cta', description: 'Link (optional)', control: 'text' },
     target: {
-      name: 'ib_target', description: 'Open In — only used with a link', control: 'inline-radio', options: options('ib_target'),
+      name: 'classes_target', description: 'Open In — only used with a link', control: 'inline-radio', options: options('classes_target'),
+    },
+    disabled: {
+      name: 'classes_disabled', description: 'Disabled', control: 'boolean',
     },
   },
   args: {
-    ariaLabel: template.ib_ariaLabel,
-    icon: template.ib_icon,
-    size: template.ib_size,
-    treatment: template.ib_treatment,
-    target: template.ib_target,
+    ariaLabel: template.link_ctaText,
+    icon: template.ic_icon,
+    size: template.classes_size,
+    treatment: template.classes_treatment,
   },
 };
 

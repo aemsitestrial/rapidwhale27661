@@ -7166,16 +7166,23 @@
     "id": "xe-icon-button",
     "fields": [
       {
+        "component": "aem-content",
+        "name": "link_cta",
+        "label": "Link (optional)",
+        "description": "Page path or URL. Leave empty for a plain button.",
+        "valueType": "string"
+      },
+      {
         "component": "text",
-        "name": "ib_ariaLabel",
-        "label": "Accessible Label (aria-label)",
-        "description": "Required. What the button does, read by screen readers, e.g. \"Xcel Energy on Facebook\". For new-tab links \"(opens in a new window)\" is added if missing.",
+        "name": "link_ctaText",
+        "label": "Accessible Label",
+        "description": "Required. Describes the action to screen readers (aria-label).",
         "valueType": "string",
         "required": true
       },
       {
         "component": "select",
-        "name": "ib_icon",
+        "name": "ic_icon",
         "label": "Icon",
         "valueType": "string",
         "value": "faGear",
@@ -7309,9 +7316,8 @@
       },
       {
         "component": "select",
-        "name": "ib_size",
-        "label": "Icon Size",
-        "description": "The touch target is always 48×48px.",
+        "name": "classes_size",
+        "label": "Size",
         "valueType": "string",
         "value": "md",
         "options": [
@@ -7340,20 +7346,20 @@
             "value": "xl"
           },
           {
-            "name": "2× Extra Large",
+            "name": "2x Large",
             "value": "2xl"
           }
         ]
       },
       {
         "component": "select",
-        "name": "ib_treatment",
+        "name": "classes_treatment",
         "label": "Treatment",
         "valueType": "string",
         "value": "default",
         "options": [
           {
-            "name": "Default (icon only)",
+            "name": "Default",
             "value": "default"
           },
           {
@@ -7367,33 +7373,38 @@
         ]
       },
       {
-        "component": "text",
-        "name": "ib_href",
-        "label": "Link (optional)",
-        "description": "Page path or URL, e.g. /profile or https://facebook.com/xcelenergy. Leave empty for a button.",
-        "valueType": "string"
+        "component": "toggle",
+        "name": "classes_disabled",
+        "label": "Disabled",
+        "valueType": "boolean",
+        "value": false
       },
       {
         "component": "select",
-        "name": "ib_target",
+        "name": "classes_target",
         "label": "Open In",
         "valueType": "string",
-        "value": "_self",
-        "condition": {
-          "!!": [
-            {
-              "var": "ib_href"
-            }
-          ]
-        },
+        "value": "",
         "options": [
           {
-            "name": "Same tab",
+            "name": "Same tab (default)",
+            "value": ""
+          },
+          {
+            "name": "New tab (_blank)",
+            "value": "_blank"
+          },
+          {
+            "name": "Same tab (_self)",
             "value": "_self"
           },
           {
-            "name": "New tab",
-            "value": "_blank"
+            "name": "Parent frame (_parent)",
+            "value": "_parent"
+          },
+          {
+            "name": "Top frame (_top)",
+            "value": "_top"
           }
         ]
       }
@@ -7538,7 +7549,7 @@
       },
       {
         "component": "select",
-        "name": "ic_size",
+        "name": "classes_size",
         "label": "Size",
         "valueType": "string",
         "value": "md",

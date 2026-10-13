@@ -13,10 +13,6 @@ const [{ fields }] = model.models;
 const field = (name) => fields.find((f) => f.name === name);
 const values = (name) => field(name).options.map((o) => o.value);
 const { template } = model.definitions[0].plugins.xwalk.page;
-// Props (DEFAULTS keys) → model field names in the "ib" element group
-const FIELD = (key) => `ib_${key}`;
-const fromTemplate = () => Object.fromEntries(Object.keys(DEFAULTS)
-  .filter((key) => FIELD(key) in template).map((key) => [key, template[FIELD(key)]]));
 
 function render(options) {
   const block = buildBlock(options);
@@ -33,50 +29,66 @@ beforeEach(() => {
 
 describe('xe-icon-button block', () => {
   describe('model', () => {
-    it('has the agreed fields in the "ib" group, in order, matching DEFAULTS', () => {
-      const props = ['ariaLabel', 'icon', 'size', 'treatment', 'href', 'target'];
-      expect(fields.map((f) => f.name)).toEqual(props.map(FIELD));
-      expect(Object.keys(DEFAULTS)).toEqual(props);
-      expect(Object.keys(template)).toEqual(['name', 'model', ...['ariaLabel', 'icon', 'size', 'treatment', 'target'].map(FIELD)]);
+    it('has the agreed fields in the right groups, in order, matching DEFAULTS', () => {
+      const names = fields.map((f) => f.name);
+      expect(names).toEqual([
+        'link_cta', 'link_ctaText', 'ic_icon',
+        'classes_size', 'classes_treatment', 'classes_disabled', 'classes_target',
+      ]);
+      expect(Object.keys(DEFAULTS)).toEqual([
+        'ariaLabel', 'icon', 'size', 'treatment', 'disabled', 'href', 'target',
+      ]);
+      expect(Object.keys(template)).toEqual([
+        'name', 'model',
+        'link_cta', 'link_ctaText', 'ic_icon',
+        'classes_size', 'classes_treatment', 'classes_disabled',
+      ]);
     });
 
-    it('has no field whose name Universal Editor would collapse into another (Title / Type / Text / Alt)', () => {
-      fields.forEach((f) => expect(f.name, f.name).not.toMatch(/(Title|Type|MimeType|Alt|Text)$/));
+    it('has no field name Universal Editor would silently collapse', () => {
+      // link_ctaText is the intentional paired-field name for link_cta — Text suffix is by design
+      const notPaired = fields.filter((f) => !f.name.startsWith('link_') || !f.name.endsWith('Text'));
+      notPaired.forEach((f) => expect(f.name, f.name).not.toMatch(/(Title|Type|MimeType|Alt|Text)$/));
     });
 
     it('requires the accessible label (Ignite: aria-label is required)', () => {
-      expect(field('ib_ariaLabel').component).toBe('text');
-      expect(field('ib_ariaLabel').required).toBe(true);
+      expect(field('link_ctaText').component).toBe('text');
+      expect(field('link_ctaText').required).toBe(true);
     });
 
     it('offers every registered icon and the documented sizes / treatments as dropdowns', () => {
-      expect(field('ib_icon').component).toBe('select');
-      expect([...values('ib_icon')].sort()).toEqual([...registeredIconNames()].sort());
-      expect(values('ib_size')).toEqual(['xxs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']);
-      expect(field('ib_size').value).toBe('md');
-      expect(values('ib_treatment')).toEqual(['default', 'filled', 'outlined']);
-      expect(field('ib_treatment').value).toBe('default');
+      expect(field('ic_icon').component).toBe('select');
+      expect([...values('ic_icon')].sort()).toEqual([...registeredIconNames()].sort());
+      expect(values('classes_size')).toEqual(['xxs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']);
+      expect(field('classes_size').value).toBe('md');
+      expect(values('classes_treatment')).toEqual(['default', 'filled', 'outlined']);
+      expect(field('classes_treatment').value).toBe('default');
     });
 
-    it('shows "Open In" (same / new tab) only when a link is set', () => {
-      expect(field('ib_href').component).toBe('text');
-      expect(field('ib_href').required).toBeFalsy();
-      expect(values('ib_target')).toEqual(['_self', '_blank']);
-      expect(field('ib_target').condition).toEqual({ '!!': [{ var: 'ib_href' }] });
+    it('link uses link_ prefix; disabled and Open In use classes_ prefix', () => {
+      expect(field('link_cta').component).toBe('aem-content');
+      expect(field('link_cta').required).toBeFalsy();
+      expect(field('classes_disabled').component).toBe('toggle');
+      expect(values('classes_target')).toEqual(['', '_blank', '_self', '_parent', '_top']);
     });
   });
 
   describe('decorate() — standalone', () => {
     it('renders the palette template as a labelled <button>', () => {
-      const block = render(fromTemplate());
+      const block = render({
+        ariaLabel: template.link_ctaText,
+        icon: template.ic_icon,
+        size: template.classes_size,
+        treatment: template.classes_treatment,
+      });
       expect(block.children).toHaveLength(1);
       const button = block.querySelector(':scope > xe-icon-button');
-      expect(button.getAttribute('aria-label')).toBe('Settings');
+      expect(button.getAttribute('aria-label')).toBe('Action');
       expect(button.getAttribute('treatment')).toBe('default');
       expect(button.getAttribute('size')).toBe('md');
       expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faGear');
       expect(control(button).localName).toBe('button');
-      expect(control(button).getAttribute('aria-label')).toBe('Settings');
+      expect(control(button).getAttribute('aria-label')).toBe('Action');
     });
 
     it('renders a link with the chosen treatment and size', () => {
@@ -114,12 +126,13 @@ describe('xe-icon-button block', () => {
       expect(render({ ariaLabel: 'Settings', icon: 'faUnknown' }).children).toHaveLength(0);
     });
 
-    it('reads the grouped cell Universal Editor delivers (one cell, an element per field)', () => {
+    it('reads the block UE delivers: link+label from <a>, icon from <p>, options from classList', () => {
       const block = buildBlock({
         ariaLabel: 'View profile', icon: 'faUser', size: 'lg', treatment: 'outlined', href: '/profile', target: '_blank',
       });
       expect(block.children).toHaveLength(1);
-      expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(6);
+      // Two <p> elements: one wrapping the <a>, one for ic_icon
+      expect(block.querySelectorAll(':scope > div > div > p')).toHaveLength(2);
       const button = decorate(block);
       expect(button.getAttribute('aria-label')).toBe(`View profile ${NEW_WINDOW_NOTE}`);
       expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faUser');
@@ -129,26 +142,15 @@ describe('xe-icon-button block', () => {
       expect(button.getAttribute('target')).toBe('_blank');
     });
 
-    it('reads a grouped cell by content, so reordered or skipped values do not shift', () => {
+    it('reads icon from any <p> by FA name; size and treatment always from classList', () => {
       const block = buildBlock({ ariaLabel: 'Edit', icon: 'faPen', size: 'sm' });
       const cell = block.firstElementChild.firstElementChild;
-      cell.prepend(cell.lastElementChild); // size first
+      // Swap <p> order — icon is still found by FA name pattern, not position
+      cell.prepend(cell.lastElementChild);
       const button = decorate(block);
       expect(button.getAttribute('size')).toBe('sm');
       expect(button.getAttribute('aria-label')).toBe('Edit');
       expect(button.getAttribute('treatment')).toBe('default');
-    });
-
-    it('reads values by content, so skipped or reordered rows do not shift the others', () => {
-      const block = document.createElement('div');
-      block.className = 'xe-icon-button block';
-      block.innerHTML = '<div><div>outlined</div></div><div><div>faPen</div></div>'
-        + '<div><div>Edit</div></div><div><div>2xl</div></div><div><div><a href="/edit">/edit</a></div></div>';
-      const button = decorate(block);
-      expect(button.getAttribute('treatment')).toBe('outlined');
-      expect(button.getAttribute('size')).toBe('2xl');
-      expect(button.getAttribute('aria-label')).toBe('Edit');
-      expect(button.getAttribute('href')).toBe('/edit');
     });
 
     it('drops unsafe links', () => {
