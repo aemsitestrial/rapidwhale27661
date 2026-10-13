@@ -115,12 +115,12 @@ describe('xe-icon block', () => {
       expect(decorate(legacyBlock('xl', 'faHeart')).getAttribute('icon')).toBe('faHeart');
     });
 
-    it('still reads blocks published before the rename; icon found, size falls back to md (was content, now class)', () => {
+    it('still reads blocks published before the rename — icon and the authored size', () => {
       // Real published markup (2026-10-09): one row each for icon, size, color
       ['brand-primary', 'brand-accent', 'inherit'].forEach((oldColor) => {
         const icon = decorate(legacyBlock('faHeart', 'xl', oldColor));
         expect(icon.getAttribute('icon'), oldColor).toBe('faHeart');
-        expect(icon.getAttribute('size'), oldColor).toBe('md'); // 'xl' was content, not a class
+        expect(icon.getAttribute('size'), oldColor).toBe('xl'); // the size in content is read too
         expect(icon.style.color, oldColor).toBe('');
       });
       expect(buildPrimitive({ icon: 'faBolt', color: 'brand-primary' }).style.color).toBe('');
@@ -129,6 +129,26 @@ describe('xe-icon block', () => {
     it('renders nothing for an unknown or missing icon', () => {
       expect(render({ icon: 'faUnknown' }).children).toHaveLength(0);
       expect(render({}).children).toHaveLength(0);
+    });
+  });
+
+  describe('blocks published with older field names', () => {
+    it('reads the size from content when there is no size class (real home page markup)', () => {
+      ['xl', 'lg', 'md'].forEach((size) => {
+        const block = document.createElement('div');
+        block.className = 'xe-icon block';
+        block.innerHTML = `<div><div>faHeart</div></div><div><div>${size}</div></div><div><div>inherit</div></div>`;
+        const icon = decorate(block);
+        expect(icon.getAttribute('icon'), size).toBe('faHeart');
+        expect(icon.getAttribute('size'), size).toBe(size);
+      });
+    });
+
+    it('prefers the size class (classes_size) over a size in content', () => {
+      const block = document.createElement('div');
+      block.className = 'xe-icon block lg';
+      block.innerHTML = '<div><div><p>faHeart</p><p>xl</p></div></div>';
+      expect(decorate(block).getAttribute('size')).toBe('lg');
     });
   });
 

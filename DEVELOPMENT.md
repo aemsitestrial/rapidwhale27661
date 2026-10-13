@@ -720,40 +720,49 @@ Rules:
 - **Transfer to another project:** follow the **copy checklist** at the end of "Model field prefix
   rule" below.
 
-#### Model field prefix rule (agreed 2026-10-09)
+#### Model field prefix rule (agreed 2026-10-09, updated 2026-10-13)
 
-Every primitive block's model puts **all its fields in one element group** by giving them the same
-short prefix: `<prefix>_<field>`. Universal Editor then delivers the block as **one cell with one
-element per field** (a `<p>`; a link as `<p><a>`; aem.live "Element grouping"), and the primitive
-can be reused inside compositions without field-name clashes.
+Primitive block models use **field-group prefixes**, matching the other project (Path B) so a block
+can be copied with only its component import changed (PR #28 / #29):
 
-| Block | Prefix | Fields |
+| Prefix | Universal Editor delivers it as | Use for |
 |---|---|---|
-| XE Icon (`blocks/xe-icon/`) | **`ic_`** | `ic_icon`, `ic_size` |
-| XE Icon Button (`blocks/xe-icon-button/`) | **`ib_`** | `ib_ariaLabel`, `ib_icon`, `ib_size`, `ib_treatment`, `ib_href`, `ib_target` |
-| *next primitive* | *pick a new 2-letter prefix, add it here* | |
+| **`classes_`** | **CSS classes on the block** ("Element Grouping for Block Options") — **but values with capitals (icon names like `faXmark`) arrive as their own row instead** (observed on the published `/ignite`, 2026-10-13) | Dropdowns and toggles: size, treatment, disabled, target — and icon (read from content) |
+| **`link_`** | One cell: the link as `<p><a href>…</a></p>` (**only when a link is set**) + each other `link_` field as its own `<p>` | A link and the text that goes with it (e.g. the accessible label) |
+| **`ic_`** (block's own short prefix) | One cell, a `<p>` per field | Content values, e.g. XE Icon's icon name |
+
+| Block | Fields |
+|---|---|
+| XE Icon (`blocks/xe-icon/`) | `ic_icon` (select), `classes_size` (select) |
+| XE Icon Button (`blocks/xe-icon-button/`) | `link_cta` (optional link), **`link_label`** (required accessible label), `classes_icon`, `classes_size`, `classes_treatment`, `classes_disabled`, `classes_target` |
+| *next primitive* | *same pattern; list it here* |
 
 Rules:
-1. **One prefix per block, on every field** — and on the template defaults
-   (`"template": { …, "ic_icon": "faArrowRight", "ic_size": "md" }`). Pick a short, unused prefix
-   (usually 2 letters from the block name) and **add it to the table above** before building.
-2. **`DEFAULTS` keys are the props without the prefix** (`icon`, `size`), in the same order as
-   the model fields. Conditions use the prefixed name (`{ "!!": [{ "var": "ib_href" }] }`).
+1. **Prefix every field** — and the template defaults (`"template": { …, "ic_icon": "faArrowRight",
+   "classes_size": "md" }`). Add the block to the table above.
+2. **`DEFAULTS` keys are the props without the prefix** (`icon`, `size`). Conditions use the
+   prefixed name.
 3. **Design-token options are dropdowns** (`select`): icons (every registered icon, by name),
    sizes, treatments. No free text, no color picker.
 4. **Interactive primitives** (buttons, links) have a **required** accessible-label field
-   (`<prefix>_ariaLabel`); decorative ones (XE Icon) don't.
-5. **No field name may end in `Title`, `Type`, `MimeType`, `Alt` or `Text`** — Universal Editor's
-   field collapse would merge it into another field. Each block's test checks this.
-6. **The decorator reads the grouped cell by content** — one value per element; match each value by
-   what it is (an `fa…` name, a size, a treatment, a link…), never by position, and ignore unknown
-   values. It should also read one-row-per-field markup. Use the shared `getBlockProps` for this
-   (see "Read authored values with the shared getBlockProps" above).
+   (`link_label`); decorative ones (XE Icon) don't.
+5. **No field name may end in `Title`, `Type`, `MimeType`, `Alt` or `Text`.** Universal Editor's
+   field collapse treats such a field as an attribute of another field — e.g. `link_ctaText` is the
+   *text of the link `link_cta`*, and **with no link it isn't written at all**. That's how
+   unlinked XE Icon Buttons rendered nothing (build-log I-55). Each block's test checks this.
+6. **Read values by content, never by position**: `classes_` values from the block's classes **or,
+   if not there, from content** (icon names arrive as content), `link_` values from the link cell
+   (`getLinkBlockProps` in `scripts/utils/primitive.js`), other values by what they are (an `fa…`
+   name, a size…). Ignore unknown values.
 7. **Renaming fields of a block that's already in use** changes the saved property names: the
-   decorator must keep reading the old markup, and authors must re-pick the values in Universal
-   Editor before republishing (build-log I-53). New blocks start with the prefix from day one.
-8. **Stories and tests build the grouped markup** (one row, one cell, an element per field) so they
-   match what Universal Editor delivers.
+   decorator must **keep reading the old markup** (XE Icon and XE Icon Button read every earlier
+   format — tested with real published markup), and authors re-pick the values in Universal Editor
+   before republishing (build-log I-53, I-55).
+8. **Stories and tests build the markup Universal Editor really delivers** — classes for
+   `classes_`, no link element when the link is empty. (#29's stories built `<a>label</a>` without a
+   link, which Universal Editor never produces — so the tests passed while the block was empty.)
+9. **Test in Universal Editor before merging**: insert the block from the palette and try it with
+   optional fields empty.
 
 **Copy checklist (for moving a finished primitive to another project).** These blocks are built and
 tested here and then copied by hand to another project, so every primitive PR ends with this list:

@@ -5,16 +5,17 @@ import model from './_xe-icon-button.json';
 
 /*
  * Builds the markup Universal Editor delivers for an xe-icon-button block, before decoration.
- * link_cta + link_ctaText → <p><a href="...">label</a></p> (bare <p><a>label</a></p> when no href)
- * classes_icon, classes_size, classes_treatment, classes_disabled, classes_target → CSS classes
+ * link_cta → <p><a href="…">…</a></p>, only when a link is set (Universal Editor writes no link
+ *   element when it's empty); link_label → its own <p>, always — both in the one "link" group cell
+ * classes_size, classes_treatment, classes_disabled, classes_target → CSS classes on the block
+ * classes_icon → its OWN ROW (Universal Editor doesn't turn "faXmark" into a class — observed on
+ *   the published /ignite page, 2026-10-13)
  */
 export function buildBlock({
   ariaLabel = '', icon = '', size = '', treatment = '', href = '', target = '', disabled = false,
 } = {}) {
   const block = document.createElement('div');
   const classes = ['xe-icon-button', 'block'];
-  // icon is classes_icon — stored as CSS class (toClassName-normalized, e.g. faGear → fagear)
-  if (icon) classes.push(icon.toLowerCase());
   if (size) classes.push(size);
   if (treatment) classes.push(treatment);
   if (disabled) classes.push('disabled');
@@ -24,18 +25,32 @@ export function buildBlock({
   const row = document.createElement('div');
   const cell = document.createElement('div');
 
-  // link_cta + link_ctaText → combined <a> element
-  if (ariaLabel || href) {
+  // link_cta → <p><a href>href</a></p> (no link text field, so the text is the URL)
+  if (href) {
     const p = document.createElement('p');
     const a = document.createElement('a');
-    if (href) a.href = href;
-    a.textContent = ariaLabel;
+    a.href = href;
+    a.textContent = href;
     p.append(a);
+    cell.append(p);
+  }
+  // link_label → <p>label</p>, with or without a link
+  if (ariaLabel) {
+    const p = document.createElement('p');
+    p.textContent = ariaLabel;
     cell.append(p);
   }
 
   row.append(cell);
   block.append(row);
+  // classes_icon → a row with the icon name
+  if (icon) {
+    const iconRow = document.createElement('div');
+    const iconCell = document.createElement('div');
+    iconCell.textContent = icon;
+    iconRow.append(iconCell);
+    block.append(iconRow);
+  }
   return block;
 }
 
@@ -62,7 +77,7 @@ export default {
   parameters: { layout: 'fullscreen', a11y: { config: { rules: [] } } },
   render: (args) => renderInPage(args),
   argTypes: {
-    ariaLabel: { name: 'link_ctaText', description: 'Accessible Label (required)', control: 'text' },
+    ariaLabel: { name: 'link_label', description: 'Accessible Label (required)', control: 'text' },
     icon: {
       name: 'classes_icon', description: 'Icon', control: 'select', options: options('classes_icon'),
     },
@@ -81,7 +96,7 @@ export default {
     },
   },
   args: {
-    ariaLabel: template.link_ctaText,
+    ariaLabel: template.link_label,
     icon: template.classes_icon,
     size: template.classes_size,
     treatment: template.classes_treatment,

@@ -93,13 +93,18 @@ function toClassName(name) {
 
 /**
  * Reads the properties of a block whose model uses link_ and classes_ field prefixes.
- *   link_cta + link_ctaText → collapsed into one <a href="{cta}">{ctaText}</a>
- *   classes_size, classes_... → select, the selected value as a CSS class on the block
+ *   link_cta (+ optional link_ctaText) → <a href="{cta}">{ctaText}</a>; with no link, Universal
+ *     Editor writes NOTHING for a *Text field (field collapse) — so labels must not be *Text fields
+ *   link_label, link_… (plain text) → a <p> in the link group cell, written even without a link
+ *   classes_size, classes_… → select, the selected value as a CSS class on the block
  *   classes_disabled → boolean, class "disabled" present when true
  * The kind of each field comes from its default value:
- *   a string with a matching {name}Text key → link field, read from <a>
+ *   a string named cta / href / url / link / src, or with a {name}Text key → link, read from <a>
+ *   another string → free text, read from the cell's text (not inside a link)
  *   false → boolean class toggle
- *   an array → select, matched against block classList
+ *   an array → select, matched against block classList — or, for blocks authored before the
+ *     classes_ fields, against the cell's text values
+ * Anything not found is left out, so the caller's DEFAULTS apply (spread with defined()).
  * @param {Element} block - the block element
  * @param {Object} defaults - default value by field name, without the group prefix
  * @param {Object} [props] - overrides set by code
@@ -109,21 +114,39 @@ export function getLinkBlockProps(block, defaults, props = {}) {
   const classes = [...block.classList].map(toClassName);
   const hasClass = (name) => classes.includes(toClassName(String(name)));
   const links = [...block.querySelectorAll('a')];
+  // Text values outside links, one per grouped <p> / row cell
+  const texts = valueNodes(block)
+    .filter((node) => !(node.localName === 'a' || node.querySelector?.('a')))
+    .map((node) => node.textContent.trim())
+    .filter(Boolean);
+  const options = Object.values(defaults).filter(Array.isArray).flat().filter(Boolean);
+  const isOptionText = (text) => options.includes(text) || ICON_PATTERN.test(text);
+  const isLinkField = (name) => Object.hasOwn(defaults, `${name}Text`)
+    || ['cta', ...LINK_KEYS].includes(name);
+
   const values = {};
   Object.entries(defaults).forEach(([name, value]) => {
     if (typeof value === 'boolean') {
       values[name] = hasClass(name);
     } else if (Array.isArray(value)) {
-      values[name] = value.find((option) => option && hasClass(option)) ?? value[0];
-    } else if (Object.hasOwn(defaults, `${name}Text`)) {
+      const found = value.find((option) => option && hasClass(option))
+        ?? value.find((option) => option && texts.includes(option));
+      if (found !== undefined) values[name] = found;
+    } else if (isLinkField(name)) {
       const a = links.shift();
-      values[name] = a?.getAttribute('href') || value;
-      values[`${name}Text`] = a?.textContent.trim() || defaults[`${name}Text`];
+      if (a) {
+        values[name] = a.getAttribute('href') || '';
+        values[`${name}Text`] = a.textContent.trim();
+      }
     } else if (!Object.hasOwn(values, name)) {
-      values[name] = value;
+      const text = texts.find((t) => !isOptionText(t) && !URL_PATTERN.test(t));
+      if (text !== undefined) {
+        values[name] = text;
+        texts.splice(texts.indexOf(text), 1);
+      }
     }
   });
-  return { ...values, ...props };
+  return { ...values, ...defined(props) };
 }
 
 /**

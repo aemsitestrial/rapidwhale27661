@@ -293,6 +293,26 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   right sizes, the unknown icon renders nothing, no errors.
 - PR #27 — build ✅, PageSpeed 99, test page served on the branch preview; merged at the user's request.
 
+### 2026-10-13 — #28 / #29 field pattern; XE Icon Button label fix
+
+- #28 and #29 (team) moved XE Icon / XE Icon Button to the other project's `classes_` / `link_` /
+  `ic_` field pattern. Review of #29 (before it was merged): checks green, no deletions — but the
+  new code didn't read blocks authored with the earlier fields (home page XE Icons all md;
+  `/ignite`'s XE Icon Button gone, live), the docs still described `ic_` / `ib_`, and an
+  unlinked button looked risky. → #I-53
+- After re-authoring, the XE Icon Button still showed nothing in Universal Editor: **Link empty →
+  `link_ctaText` (field collapse: the link's text) isn't written → no label → nothing rendered.**
+  The stories built `<a>label</a>` without a link, which Universal Editor never produces, so the
+  tests passed. → #I-55
+- Fix in **PR #30** (`fix/xe-icon-button-label`, merged 2026-10-13): label field `link_label`; `getLinkBlockProps` reads free text
+  and old-markup values; XE Icon reads size from content as a fallback; stories/tests use real
+  markup; docs updated. Checked: `build:json`, lint, 177 tests.
+- Real Universal Editor output for #29's model (published `/ignite`):
+  `<div class="xe-icon-button sm default"><div><div></div></div><div><div>faXmark</div></div></div>`
+  — the link cell is **empty** (I-55 confirmed) and **`classes_icon` isn't a class** (capital letters)
+  but its own row, so #29's code couldn't find the icon either. The fix reads dropdown values from
+  content as a fallback; this exact markup is now in the tests and stories. → #I-56
+
 ---
 
 ## Issue tracker
@@ -357,6 +377,8 @@ Status: ✅ fixed · ⏳ open · ℹ️ known behavior / note
 | I-52 | 10-09 | PR #18 branch deleted the XE Banner, XE Feature Cards, XE Icon and XE Icon Button blocks (+5 / −2,190); a pushed fix was force-replaced | Accidental commits ("xe-icon …") while fixing build errors — tests deleted with the code, so the build still passed | ✅ Not merged. Replaced by a fresh branch from `main` with only the intended changes. Lesson: check a PR's diff size and deletions before merging; never force-push shared branches |
 | I-53 | 10-09 | Renaming XE Icon fields to `ic_icon` / `ic_size` would make every XE Icon render nothing | Element grouping renders `ic_*` fields as one cell (a `<p>` each); the decorator read one value per row. The saved property names change too | ✅ Decorator reads grouped cells and old markup. ⏳ Authors re-select Icon + Size on the 4 existing XE Icon blocks before republishing |
 | I-54 | 10-09 | Other project: XE Icon block showed a Font Awesome error / no icons after copying | `scripts/icons.js` (which registers the icons) wasn't copied — the copy checklist listed it only in passing | ✅ Checklist now lists `scripts/icons.js` + `scripts/components/icons/` as required, with the reason; `scripts/utils/primitive.js` added |
+| I-55 | 10-13 | XE Icon Button rendered nothing when its Link was empty (after #29) | Label field `link_ctaText` = text of the link `link_cta` (field collapse) — not written without a link; button needs a label. Stories built impossible markup, so tests passed | ✅ Label renamed `link_label`; real-markup tests; rule: no `…Text` field names, test in Universal Editor with optional fields empty |
+| I-56 | 10-13 | `classes_icon` (e.g. `faXmark`) isn't added to the block's classes; size / treatment are | Observed in published markup — likely because icon names have capital letters | ✅ `getLinkBlockProps` falls back to content for dropdown values; stories / tests use the real markup |
 
 ### Content, Universal Editor & publishing
 

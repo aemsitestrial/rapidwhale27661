@@ -11,7 +11,7 @@
               "name": "XE Icon Button",
               "model": "xe-icon-button",
               "link_cta": "",
-              "link_ctaText": "Action",
+              "link_label": "Settings",
               "classes_icon": "faGear",
               "classes_size": "md",
               "classes_treatment": "default",
@@ -35,7 +35,7 @@
         },
         {
           "component": "text",
-          "name": "link_ctaText",
+          "name": "link_label",
           "label": "Accessible Label",
           "description": "Required. Describes the action to screen readers (aria-label).",
           "valueType": "string",

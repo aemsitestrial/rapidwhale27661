@@ -32,12 +32,14 @@ bug/issue we hit — check it before debugging, and log new ones there), and
   content. Author options that map to design tokens (sizes, colors) are **dropdowns**, never free
   text or a color picker. Interactive primitives (buttons, links) need a **required** accessible
   label field.
-- **Primitive model fields use one prefix per block** (`ic_` XE Icon, `ib_` XE Icon Button) —
-  see `DEVELOPMENT.md` → "Model field prefix rule". Register a new prefix in its table first, and
-  finish every primitive PR with its **copy checklist** (the user copies blocks to another project
-  that has no AI help). Blocks read their fields with the shared `getBlockProps`
-  (`scripts/utils/primitive.js`); the checklist always includes `scripts/utils/primitive.js` and,
-  for anything with an icon, `scripts/icons.js` + `scripts/components/icons/`.
+- **Primitive model fields use group prefixes** — `classes_` (dropdowns / toggles → block
+  classes), `link_` (a link + its label), `ic_` (content) — see `DEVELOPMENT.md` → "Model field
+  prefix rule". **Never name a field `…Text` / `…Title` / `…Type` / `…Alt`** (Universal Editor
+  drops it when its link is empty — build-log I-55). Stories/tests must build the markup Universal
+  Editor really delivers, and renamed fields must keep old markup working. Finish every primitive
+  PR with its **copy checklist** (the user copies blocks to another project that has no AI help);
+  it always includes `scripts/utils/primitive.js` and, for anything with an icon,
+  `scripts/icons.js` + `scripts/components/icons/`.
 - **Commits:** check `git log` after every commit before pushing (see build-log #I-46).
 - **Every new or changed block** has a `.stories.js` and `.test.js`; `npm test` and `npm run lint`
   must pass, and Storybook's a11y panel must show 0 violations.
