@@ -8,7 +8,7 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-13 — Fix: XE Icon Button empty without a link; old markup readable again
 
-Branch `fix/xe-icon-button-label` — PR open for review, **not merged yet**.
+Branch `fix/xe-icon-button-label` — **PR #30**, merged 2026-10-13 (Adrian asked to merge).
 
 - **Bug (from #29):** an XE Icon Button with **no Link** rendered nothing — its label field
   `link_ctaText` is, for Universal Editor, the text *of* the link, so with no link it was never

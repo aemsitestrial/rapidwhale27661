@@ -304,7 +304,7 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   `link_ctaText` (field collapse: the link's text) isn't written → no label → nothing rendered.**
   The stories built `<a>label</a>` without a link, which Universal Editor never produces, so the
   tests passed. → #I-55
-- Fix on `fix/xe-icon-button-label`: label field `link_label`; `getLinkBlockProps` reads free text
+- Fix in **PR #30** (`fix/xe-icon-button-label`, merged 2026-10-13): label field `link_label`; `getLinkBlockProps` reads free text
   and old-markup values; XE Icon reads size from content as a fallback; stories/tests use real
   markup; docs updated. Checked: `build:json`, lint, 177 tests.
 - Real Universal Editor output for #29's model (published `/ignite`):
