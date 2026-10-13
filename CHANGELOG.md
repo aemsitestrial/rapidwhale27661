@@ -6,6 +6,17 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-13 — Fix: XE Icon Button label when the Link isn't a page or URL
+
+Branch `fix/xe-icon-button-text-link` — PR open for review, **not merged yet**.
+
+- After re-authoring `/ignite` (Link `test`, Label "Settings"), the button rendered but screen
+  readers announced **"test"**: a Link that isn't a page path or URL is saved as plain text, and the
+  reader took it as the label. Fixed in `getLinkBlockProps` (scripts/utils/primitive.js); +1 test
+  with the real markup.
+- Correction: `classes_icon` **is** delivered as a class (build-log I-56 corrected); stories are
+  back to the icon as a class. Authoring guide: how to enter a Link.
+
 ## 2026-10-13 — Fix: XE Icon Button empty without a link; old markup readable again
 
 Branch `fix/xe-icon-button-label` — **PR #30**, merged 2026-10-13 (Adrian asked to merge).

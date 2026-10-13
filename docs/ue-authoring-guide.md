@@ -192,6 +192,8 @@ be shown (design system rule).
 
 (Since 2026-10-13 the button shows **with or without a Link** — earlier it stayed empty without one. If an older XE Icon Button shows nothing, re-type its Accessible Label and republish.)
 
+**Link:** choose the page with the picker, or type a path starting with `/` (e.g. `/test`) or a full URL (`https://…`). Anything else (e.g. just `test`) isn't saved as a link, so the button won't link anywhere.
+
 **Layout tips**
 - For New tab links, "(opens in a new window)" is added to the label automatically if you didn't
   write it.

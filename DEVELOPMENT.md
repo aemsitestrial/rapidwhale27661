@@ -727,8 +727,8 @@ can be copied with only its component import changed (PR #28 / #29):
 
 | Prefix | Universal Editor delivers it as | Use for |
 |---|---|---|
-| **`classes_`** | **CSS classes on the block** ("Element Grouping for Block Options") — **but values with capitals (icon names like `faXmark`) arrive as their own row instead** (observed on the published `/ignite`, 2026-10-13) | Dropdowns and toggles: size, treatment, disabled, target — and icon (read from content) |
-| **`link_`** | One cell: the link as `<p><a href>…</a></p>` (**only when a link is set**) + each other `link_` field as its own `<p>` | A link and the text that goes with it (e.g. the accessible label) |
+| **`classes_`** | **CSS classes on the block**, lowercased ("Element Grouping for Block Options") — e.g. `class="xe-icon-button fagear 2xl outlined blank"` | Dropdowns and toggles: icon, size, treatment, disabled, target |
+| **`link_`** | One cell: the link as `<p><a href>…</a></p>` (**only when a link is set**; a value that isn't a page path or URL, e.g. `test`, arrives as plain text `<p>test</p>`) + each other `link_` field as its own `<p>` | A link and the text that goes with it (e.g. the accessible label) |
 | **`ic_`** (block's own short prefix) | One cell, a `<p>` per field | Content values, e.g. XE Icon's icon name |
 
 | Block | Fields |
@@ -751,7 +751,7 @@ Rules:
    *text of the link `link_cta`*, and **with no link it isn't written at all**. That's how
    unlinked XE Icon Buttons rendered nothing (build-log I-55). Each block's test checks this.
 6. **Read values by content, never by position**: `classes_` values from the block's classes **or,
-   if not there, from content** (icon names arrive as content), `link_` values from the link cell
+   if not there, from content** (older markup), `link_` values from the link cell
    (`getLinkBlockProps` in `scripts/utils/primitive.js`), other values by what they are (an `fa…`
    name, a size…). Ignore unknown values.
 7. **Renaming fields of a block that's already in use** changes the saved property names: the
