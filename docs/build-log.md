@@ -319,6 +319,14 @@ number (`#I-nn`) in the tracker — even small ones. Update the status when it's
   showed a new bug: the Link `test` isn't a page or URL, so it arrives as **plain text**, and the
   button took it as its label (screen readers said "test", not "Settings"). → #I-57
 
+### 2026-10-13 — Icon dropdown limited to the Ignite docs icons
+
+- Adrian asked to drop icons that aren't in the docs from the XE Icon dropdown (XE Icon Button
+  reuses it). Kept 13 (the Ignite Storybook list). Risk handled: XE Icon Button's reader used the
+  dropdown list to find the icon class — trimming it would have turned `/ignite`'s gear into the
+  default icon. Split into `ICON_OPTIONS` (dropdown) and `ICON_NAMES` (reading, every registered
+  icon); test added. Storybook checked: 13 options in the Icon, XE Icon and XE Icon Button controls.
+
 ---
 
 ## Issue tracker

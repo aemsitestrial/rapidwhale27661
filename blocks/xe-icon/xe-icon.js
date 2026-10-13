@@ -1,8 +1,18 @@
 import '../../scripts/icons.js';
 import { isIconRegistered, ICON_SIZES, registeredIconNames } from '../../scripts/components/xe-icon.js';
 
-// All registered icon names — used by xe-icon-button (classes_icon) to read the icon from classList
-export const ICON_OPTIONS = registeredIconNames();
+// The authoring dropdown (ic_icon here, classes_icon in xe-icon-button): the 13 icons of the Ignite
+// docs (Design System Primitives › Media › Icon), in the docs' order. Keep the models' options in
+// sync — xe-icon.test.js checks it.
+export const ICON_OPTIONS = [
+  'faPlus', 'faDownload', 'faBolt', 'faArrowRight', 'faExternalLink', 'faChevronRight',
+  'faChevronDown', 'faHeart', 'faUser', 'faLightbulb', 'faStar', 'faRocket', 'faFire',
+];
+
+// Every registered icon — used to READ authored values, so blocks saved with an icon that's no
+// longer in the dropdown (e.g. faGear) keep rendering. The navbar, links and footer need the
+// other registered icons, so they stay registered (scripts/icons.js).
+export const ICON_NAMES = registeredIconNames();
 
 /*
  * xe-icon — standalone block for <xe-icon> (Ignite: Design System Primitives › Media › Icon),

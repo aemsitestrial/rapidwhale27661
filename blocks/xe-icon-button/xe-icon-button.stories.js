@@ -105,19 +105,20 @@ export const FilledLink = {
   },
 };
 
-// The block adds "(opens in a new window)" to the label
-export const SocialLinkNewTab = {
+// The block adds "(opens in a new window)" to the label. Stories only use icons authors can pick
+// (the 13 in the XE Icon dropdown).
+export const ExternalLinkNewTab = {
   args: {
-    ariaLabel: 'Xcel Energy on Facebook',
-    icon: 'faSquareFacebook',
+    ariaLabel: 'Visit xcelenergy.com',
+    icon: 'faExternalLink',
     size: 'xl',
-    href: 'https://facebook.com/xcelenergy',
+    href: 'https://www.xcelenergy.com',
     target: '_blank',
   },
 };
 
 export const OutlinedLarge = {
   args: {
-    ariaLabel: 'Edit', icon: 'faPen', treatment: 'outlined', size: 'lg',
+    ariaLabel: 'Add to favorites', icon: 'faHeart', treatment: 'outlined', size: 'lg',
   },
 };
