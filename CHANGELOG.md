@@ -8,7 +8,7 @@ are tracked in **`docs/build-log.md`**.
 
 ## 2026-10-13 — XE Icon / XE Icon Button: icon dropdown = the 13 Ignite docs icons
 
-Branch `feature/xe-icon-docs-icons` — PR open for review, **not merged yet**.
+Branch `feature/xe-icon-docs-icons` — **PR #32**, merged 2026-10-14 (Adrian asked to merge).
 
 - The Icon dropdown of **XE Icon** and **XE Icon Button** (one list, `ICON_OPTIONS` in
   `blocks/xe-icon/xe-icon.js`) now offers only the 13 icons of the Ignite docs: Plus, Download,
