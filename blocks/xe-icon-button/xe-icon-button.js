@@ -26,7 +26,7 @@ import {
   ICON_BUTTON_SIZES, ICON_BUTTON_TREATMENTS,
 } from '../../scripts/components/xe-icon-button.js';
 import { safeHref } from '../../scripts/components/xe-link-helpers.js';
-import { buildIcon, ICON_OPTIONS } from '../xe-icon/xe-icon.js';
+import { buildIcon, ICON_OPTIONS, ICON_NAMES } from '../xe-icon/xe-icon.js';
 import { getLinkBlockProps, defined } from '../../scripts/utils/primitive.js';
 
 export const DEFAULTS = {
@@ -46,7 +46,7 @@ export const NEW_WINDOW_NOTE = '(opens in a new window)';
 const FIELDS = {
   cta: DEFAULTS.href,
   label: DEFAULTS.ariaLabel,
-  icon: ICON_OPTIONS,
+  icon: ICON_NAMES, // read any registered icon; the dropdown offers ICON_OPTIONS
   size: ICON_BUTTON_SIZES,
   treatment: ICON_BUTTON_TREATMENTS,
   disabled: false,

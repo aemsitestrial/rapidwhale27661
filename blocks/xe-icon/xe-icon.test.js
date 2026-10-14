@@ -1,7 +1,9 @@
 import {
   describe, it, expect, beforeEach,
 } from 'vitest';
-import decorate, { buildPrimitive, decoratePrimitive, DEFAULTS } from './xe-icon.js';
+import decorate, {
+  buildPrimitive, decoratePrimitive, DEFAULTS, ICON_OPTIONS,
+} from './xe-icon.js';
 import { buildBlock } from './xe-icon.stories.js';
 import { registeredIconNames } from '../../scripts/components/xe-icon.js';
 /* eslint-disable import/extensions -- the block models are JSON */
@@ -50,10 +52,17 @@ describe('xe-icon block', () => {
       expect(Object.keys(template)).toEqual(['name', 'model', 'ic_icon', 'classes_size']);
     });
 
-    it('offers every registered icon as a named dropdown option — no free text', () => {
+    it('offers the 13 Ignite docs icons as named dropdown options — no free text', () => {
       expect(field('ic_icon').component).toBe('select');
       const values = field('ic_icon').options.map((o) => o.value);
-      expect([...values].sort()).toEqual([...registeredIconNames()].sort());
+      expect(ICON_OPTIONS).toEqual([
+        'faPlus', 'faDownload', 'faBolt', 'faArrowRight', 'faExternalLink', 'faChevronRight',
+        'faChevronDown', 'faHeart', 'faUser', 'faLightbulb', 'faStar', 'faRocket', 'faFire',
+      ]);
+      expect([...values].sort()).toEqual([...ICON_OPTIONS].sort());
+      values.forEach((v) => expect(registeredIconNames(), v).toContain(v));
+      expect(values).toContain(model.definitions[0].plugins.xwalk.page.template.ic_icon);
+      expect(values).toContain(field('ic_icon').value);
       field('ic_icon').options.forEach((o) => expect(o.name, o.value).not.toMatch(/^fa[A-Z]/));
     });
 
@@ -133,6 +142,13 @@ describe('xe-icon block', () => {
   });
 
   describe('blocks published with older field names', () => {
+    it('still renders an icon that is no longer in the dropdown (e.g. faGear)', () => {
+      const block = document.createElement('div');
+      block.className = 'xe-icon block lg';
+      block.innerHTML = '<div><div><p>faGear</p></div></div>';
+      expect(decorate(block).getAttribute('icon')).toBe('faGear');
+    });
+
     it('reads the size from content when there is no size class (real home page markup)', () => {
       ['xl', 'lg', 'md'].forEach((size) => {
         const block = document.createElement('div');

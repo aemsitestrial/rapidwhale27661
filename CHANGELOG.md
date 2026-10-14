@@ -6,6 +6,19 @@ are tracked in **`docs/build-log.md`**.
 
 ---
 
+## 2026-10-13 — XE Icon / XE Icon Button: icon dropdown = the 13 Ignite docs icons
+
+Branch `feature/xe-icon-docs-icons` — **PR #32**, merged 2026-10-14 (Adrian asked to merge).
+
+- The Icon dropdown of **XE Icon** and **XE Icon Button** (one list, `ICON_OPTIONS` in
+  `blocks/xe-icon/xe-icon.js`) now offers only the 13 icons of the Ignite docs: Plus, Download,
+  Bolt, Arrow Right, External Link, Chevron Right, Chevron Down, Heart, User, Light Bulb, Star,
+  Rocket, Fire (was all 31 registered icons). Storybook's Icon control shows the same 13.
+- Blocks already using another icon (e.g. the gear on `/ignite`) **keep rendering** — the blocks
+  read every registered icon (`ICON_NAMES`); nothing was un-registered (navbar, links, footer).
+- XE Icon Button palette default: **Add** / faPlus (was Settings / faGear). Block stories use only
+  listed icons. +1 test (179). DEVELOPMENT.md: "Editing the icon dropdown" how-to; authoring guide.
+
 ## 2026-10-13 — Fix: XE Icon Button label when the Link isn't a page or URL
 
 Branch `fix/xe-icon-button-text-link` — **PR #31**, squash-merged 2026-10-13 (Adrian asked to merge).

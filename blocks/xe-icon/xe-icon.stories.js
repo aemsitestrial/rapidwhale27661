@@ -47,7 +47,7 @@ export default {
   render: (args) => renderInPage(args),
   argTypes: {
     icon: {
-      description: 'Icon (the authoring dropdown — every registered icon)',
+      description: 'Icon (the authoring dropdown — the 13 Ignite docs icons)',
       control: 'select',
       options: iconField.options.map((option) => option.value),
     },

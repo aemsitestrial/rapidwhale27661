@@ -6,6 +6,7 @@ import decorate, {
 } from './xe-icon-button.js';
 import { buildBlock } from './xe-icon-button.stories.js';
 import { registeredIconNames } from '../../scripts/components/xe-icon.js';
+import { ICON_OPTIONS } from '../xe-icon/xe-icon.js';
 // eslint-disable-next-line import/extensions -- the block model is JSON
 import model from './_xe-icon-button.json';
 
@@ -56,9 +57,12 @@ describe('xe-icon-button block', () => {
       expect(field('link_label').required).toBe(true);
     });
 
-    it('offers every registered icon and the documented sizes / treatments as dropdowns', () => {
+    it('offers the XE Icon dropdown icons and the documented sizes / treatments as dropdowns', () => {
       expect(field('classes_icon').component).toBe('select');
-      expect([...values('classes_icon')].sort()).toEqual([...registeredIconNames()].sort());
+      expect([...values('classes_icon')].sort()).toEqual([...ICON_OPTIONS].sort());
+      values('classes_icon').forEach((v) => expect(registeredIconNames(), v).toContain(v));
+      expect(values('classes_icon')).toContain(template.classes_icon);
+      expect(values('classes_icon')).toContain(field('classes_icon').value);
       expect(values('classes_size')).toEqual(['xxs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']);
       expect(field('classes_size').value).toBe('md');
       expect(values('classes_treatment')).toEqual(['default', 'filled', 'outlined']);
@@ -83,12 +87,12 @@ describe('xe-icon-button block', () => {
       });
       expect(block.children).toHaveLength(1); // decorated: one <xe-icon-button>
       const button = block.querySelector(':scope > xe-icon-button');
-      expect(button.getAttribute('aria-label')).toBe('Settings');
+      expect(button.getAttribute('aria-label')).toBe('Add');
       expect(button.getAttribute('treatment')).toBe('default');
       expect(button.getAttribute('size')).toBe('md');
-      expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faGear');
+      expect(button.querySelector('xe-icon').getAttribute('icon')).toBe('faPlus');
       expect(control(button).localName).toBe('button');
-      expect(control(button).getAttribute('aria-label')).toBe('Settings');
+      expect(control(button).getAttribute('aria-label')).toBe('Add');
     });
 
     it('renders a link with the chosen treatment and size', () => {

@@ -24,7 +24,7 @@ Authors only ever place **blocks**. Each block is rendered by design system web 
 | **XE Banner** | `xe-banner` + `xe-icon` + `xe-button` | A message band: icon, big heading, short message, one button |
 | **XE Feature Cards** | `xe-feature-cards` + `xe-card` + `xe-action-link` | A full-width band of 2–3 tall cards that draw users into narrative/brand content |
 | **XE Icon** | `xe-icon` | A single decorative icon. Screen readers skip it — never use it to carry meaning on its own |
-| **XE Icon Button** | `xe-icon-button` + `xe-icon` | A single clickable icon (e.g. a social media link). Always needs an Accessible Label |
+| **XE Icon Button** | `xe-icon-button` + `xe-icon` | A single clickable icon. Always needs an Accessible Label |
 
 > **The site header is an XE Navbar.** Every page's header shows the XE Navbar from the
 > **`xe-navbar`** page. To change the header everywhere, edit that page and publish it — you don't
@@ -165,7 +165,7 @@ be shown (design system rule).
 
 | Field | What to enter |
 |---|---|
-| Icon | Pick from the list (every icon the site has). Names are never typed |
+| Icon | Pick from the list — the 13 icons of the design system docs (Plus, Download, Bolt, Arrow Right, External Link, Chevron Right, Chevron Down, Heart, User, Light Bulb, Star, Rocket, Fire). Names are never typed |
 | Size | Extra Small, Small, **Medium (default)**, Large or Extra Large |
 
 **Layout tips**
@@ -184,7 +184,7 @@ be shown (design system rule).
 | Field | What to enter |
 |---|---|
 | Accessible Label | **Required.** What the button does, in words — e.g. "Xcel Energy on Facebook" or "View profile". Screen readers read this instead of the icon |
-| Icon | Pick from the list |
+| Icon | Pick from the list — the same 13 icons as XE Icon |
 | Icon Size | Extra Extra Small → 2× Extra Large; **Medium (default)**. The clickable area is always 48×48px |
 | Treatment | **Default** (icon only) · Filled (red square) · Outlined (grey border) |
 | Link | Optional — a page path (`/profile`) or full URL (`https://facebook.com/xcelenergy`) |
@@ -197,7 +197,7 @@ be shown (design system rule).
 **Layout tips**
 - For New tab links, "(opens in a new window)" is added to the label automatically if you didn't
   write it.
-- Social media icons: Default treatment, Icon Size **Extra Large**, Open In **New tab**.
+- Social media icons aren't in the Icon list (since 2026-10-13: only the design system docs icons). Buttons added earlier with one keep showing it.
 - (Developers: these fields are saved as `ib_ariaLabel`, `ib_icon`, `ib_size`, `ib_treatment`,
   `ib_href`, `ib_target` since 2026-10-09. No page used the block before the change.)
 - Without a Link the block is a button with no action — always set a Link on content pages.

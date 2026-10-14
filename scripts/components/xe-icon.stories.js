@@ -1,4 +1,4 @@
-import { registeredIconNames } from './xe-icon.js';
+import './xe-icon.js';
 import '../icons.js';
 
 /*
@@ -49,9 +49,9 @@ export default {
   argTypes: {
     name: {
       name: 'icon',
-      description: 'Font Awesome icon name (must be registered with registerIcons())',
+      description: 'Font Awesome icon name — the 13 icons of the Ignite docs',
       control: 'select',
-      options: registeredIconNames(),
+      options: DOCS_ICONS,
     },
     size: {
       description: 'Size on the design token scale',

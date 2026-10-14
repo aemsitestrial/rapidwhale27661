@@ -627,8 +627,8 @@
                   "name": "XE Icon Button",
                   "model": "xe-icon-button",
                   "link_cta": "",
-                  "link_label": "Settings",
-                  "classes_icon": "faGear",
+                  "link_label": "Add",
+                  "classes_icon": "faPlus",
                   "classes_size": "md",
                   "classes_treatment": "default",
                   "classes_disabled": false

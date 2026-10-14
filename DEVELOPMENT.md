@@ -366,7 +366,8 @@ before building. When a component is built, mark it ✅ here and add it to the t
     e.g. `faArrowRight`) · `size` (string, default `md`: `xs` · `sm` · `md` · `lg` · `xl`).
     Nothing else — no `label`, no size-override custom property.
   - **Standalone XE Icon block** (`blocks/xe-icon/`, any section): model fields `icon` (select —
-    every registered icon as a named option; authors never type names) and `size` (select —
+    **the 13 icons of the Ignite docs** as named options — `ICON_OPTIONS` in
+    `blocks/xe-icon/xe-icon.js`, since 2026-10-13; authors never type names) and `size` (select —
     Extra Small / Small / Medium (default) / Large / Extra Large) — exactly the two Ignite props.
     **Model field names: `ic_icon`, `ic_size`** (2026-10-09) — the `ic` element group, so
     Universal Editor delivers them as **one cell with a `<p>` per field**; the decorator reads each
@@ -445,7 +446,7 @@ before building. When a component is built, mark it ✅ here and add it to the t
     documented, so they're private.
   - DS stories: Default, Treatments, Sizes, States, As a link; we add Usage (the docs' examples).
   - **Standalone XE Icon Button block** — fields: **Accessible Label** (text, required) · **Icon**
-    (select, every registered icon) · **Icon Size** (select, 7 sizes, default Medium) ·
+    (select, the same 13 icons as XE Icon — `ICON_OPTIONS`) · **Icon Size** (select, 7 sizes, default Medium) ·
     **Treatment** (select) · **Link** (text, optional) · **Open In** (Same tab / New tab — shown
     only when Link is set, UE `condition`). Without a label or a registered icon nothing renders;
     for new-tab links the block appends "(opens in a new window)" if the label doesn't mention it.
@@ -742,7 +743,8 @@ Rules:
    "classes_size": "md" }`). Add the block to the table above.
 2. **`DEFAULTS` keys are the props without the prefix** (`icon`, `size`). Conditions use the
    prefixed name.
-3. **Design-token options are dropdowns** (`select`): icons (every registered icon, by name),
+3. **Design-token options are dropdowns** (`select`): icons (the Ignite docs icons, by name —
+   see "Editing the icon dropdown" below),
    sizes, treatments. No free text, no color picker.
 4. **Interactive primitives** (buttons, links) have a **required** accessible-label field
    (`link_label`); decorative ones (XE Icon) don't.
@@ -763,6 +765,43 @@ Rules:
    link, which Universal Editor never produces — so the tests passed while the block was empty.)
 9. **Test in Universal Editor before merging**: insert the block from the palette and try it with
    optional fields empty.
+
+#### Editing the icon dropdown (XE Icon / XE Icon Button)
+
+The list authors pick from is **`ICON_OPTIONS`** in `blocks/xe-icon/xe-icon.js` — today the 13
+icons of the Ignite docs. XE Icon Button imports it, so **one list drives both blocks**. To add or
+remove an icon:
+
+1. **The icon must be registered** — `scripts/icons.js` (`registerIcons({ … })`). To add a new
+   one, import it from `scripts/components/icons/fa-free.js` (Path A) and register it there.
+2. Edit **`ICON_OPTIONS`** in `blocks/xe-icon/xe-icon.js`.
+3. Edit the **`options`** of the icon field in **both** models, with the same values and a readable
+   `name` (e.g. `{ "name": "Arrow Right", "value": "faArrowRight" }`):
+   `blocks/xe-icon/_xe-icon.json` (`ic_icon`) and `blocks/xe-icon-button/_xe-icon-button.json`
+   (`classes_icon`). The template default (`ic_icon` / `classes_icon`) must be in the list.
+4. Storybook's Icon control is `DOCS_ICONS` in `scripts/components/xe-icon.stories.js` — keep it
+   in sync. Block stories should only use icons from the list.
+5. Run `npm run build:json`, `npm test` (the tests check that the models, `ICON_OPTIONS` and the
+   registration agree) and `npm run lint`.
+6. **Removing an icon from the dropdown doesn't break pages** that already use it — the blocks read
+   every registered icon (`ICON_NAMES`). Only **un-registering** it (step 1) would. In Universal
+   Editor the field then shows no selection for those blocks until an author picks a new icon.
+   The navbar, links and footer use registered icons outside the dropdown — never un-register those.
+
+**In the other project (Path B, Ignite)** there's no `scripts/icons.js`: `blocks/xe-icon/xe-icon.js`
+registers the icons itself, and **`scripts/ignite/icons/xe-icon-registry.js`** plays the role of
+`scripts/icons.js` (every icon it exports is registered). Step 1 there = export the icon from that
+registry. When copying `blocks/xe-icon/xe-icon.js` over, **keep that project's imports** instead of
+`import '../../scripts/icons.js'`, and read every registered icon from the registry:
+
+```js
+import { registerIcons } from '../../scripts/ignite/bundle/primitives/media/icon/xe-icon.js';
+import * as allIcons from '../../scripts/ignite/icons/xe-icon-registry.js';
+
+registerIcons(allIcons);
+export const ICON_OPTIONS = [/* the 13 docs icons, as in this project */];
+export const ICON_NAMES = Object.keys(allIcons); // every registered icon (for reading)
+```
 
 **Copy checklist (for moving a finished primitive to another project).** These blocks are built and
 tested here and then copied by hand to another project, so every primitive PR ends with this list:
