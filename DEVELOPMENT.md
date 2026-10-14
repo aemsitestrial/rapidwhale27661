@@ -788,6 +788,21 @@ remove an icon:
    Editor the field then shows no selection for those blocks until an author picks a new icon.
    The navbar, links and footer use registered icons outside the dropdown — never un-register those.
 
+**In the other project (Path B, Ignite)** there's no `scripts/icons.js`: `blocks/xe-icon/xe-icon.js`
+registers the icons itself, and **`scripts/ignite/icons/xe-icon-registry.js`** plays the role of
+`scripts/icons.js` (every icon it exports is registered). Step 1 there = export the icon from that
+registry. When copying `blocks/xe-icon/xe-icon.js` over, **keep that project's imports** instead of
+`import '../../scripts/icons.js'`, and read every registered icon from the registry:
+
+```js
+import { registerIcons } from '../../scripts/ignite/bundle/primitives/media/icon/xe-icon.js';
+import * as allIcons from '../../scripts/ignite/icons/xe-icon-registry.js';
+
+registerIcons(allIcons);
+export const ICON_OPTIONS = [/* the 13 docs icons, as in this project */];
+export const ICON_NAMES = Object.keys(allIcons); // every registered icon (for reading)
+```
+
 **Copy checklist (for moving a finished primitive to another project).** These blocks are built and
 tested here and then copied by hand to another project, so every primitive PR ends with this list:
 - the block folder(s) — including any block it reuses (XE Icon Button → also `blocks/xe-icon/`);
